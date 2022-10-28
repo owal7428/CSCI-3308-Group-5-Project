@@ -13,3 +13,7 @@ A wesbite allowing a curated selection of flights/travel related items based on 
 
 Vision Statement: 
 For adventurers, who want to broaden their horizons with their own tailored experience. The [product name] is a travel manager that provides personalized search and booking capabilities based on preferences. Unlike booking.com, our product creates a full itinerary based on multiple filters, such as: location, weather, and price. 
+
+
+Communication Plan:
+We plan on communicating through mainly Discord and I-message, but we may also use Zoom or Google Calendar to schedule and complete meetings.
