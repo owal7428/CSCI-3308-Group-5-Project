@@ -43,6 +43,8 @@ app.use(bodyParser.urlencoded({
 })
 );
 
+app.use(express.static(__dirname + '/resources'));
+
 app.get("/", (req, res) => {
     res.redirect("/login");
 });
