@@ -21,3 +21,9 @@ For adventurers, who want to broaden their horizons with their own tailored expe
 
 Communication Plan:
 We plan on communicating through mainly Discord and I-message, but we may also use Zoom or Google Calendar to schedule and complete meetings.
+
+TA Weekly Meeting Time:
+Thursdays 3:30 pm
+
+Group Meeting Time:
+TBD
