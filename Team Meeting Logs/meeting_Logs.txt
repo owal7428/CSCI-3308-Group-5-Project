@@ -1,5 +1,5 @@
 First TA Meeting: 
 DONE:
-Completed wireframes, project board, use cases and showed to Nikita
+Completed wireframes, project board, and use cases. We showed this to Nikita, and receieved feedback for tasks going forward.
 TODO:
-Work on breaking down project board and finalize which API's to use, start working on login and registration pages
+Work on breaking down project board into smaller tasks, finalize which API's to use, and start working on login and registration pages
