@@ -1,1 +1,5 @@
-testing
+First Meeting: 
+DONE:
+Completed wireframes, project board, use cases and showed to Nikita
+TODO:
+Work on breaking down project board and finalize which API's to use, start working on login and registration pages
