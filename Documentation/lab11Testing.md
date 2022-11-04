@@ -28,8 +28,8 @@ Register Endpoint:
   - Pass incomplete form to throw "complete form" and disable submit button 
 
 Register Test Cases:
-- Valid: {username: vincent, password: myPassword123!, email: vincent@vincentbowen.com}
-- Invalid: {username: john brown, password: , email: johnbrown@colorado.edu}
+- Valid: {username: vincent, password: myPassword123!, email: vincent@vincentbowen.com}, expect 200
+- Invalid: {username: john brown, password: , email: johnbrown@colorado.edu}, expect 400
 
 Login Page;
 - Test for successful rendering of landing page 
