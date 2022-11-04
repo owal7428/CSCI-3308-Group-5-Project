@@ -41,6 +41,15 @@ Login Endpoint:
 - Test that username does not match database
   - Pass not matching username to throw "invalid username/password"
 
-
+Calendar:
+- Test for all required fields of add event form
+  - Pass complete form to expect successful add of event
+  - Pass incomplete form to throw "please complete required fields" and disable submit button
+- Test for valid date/time
+  - Pass valid date/time to expect no error 
+  - Pass invalid date/time to throw "please enter a valid date" and disable submit button 
+- Test for overlapping times 
+  - Pass non-overlapping times to expect no error
+  - Pass overlapping times to throw "times cannot overlap for events" 
 
 
