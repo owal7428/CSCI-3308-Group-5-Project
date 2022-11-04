@@ -17,7 +17,7 @@ const dbConfig = {
   
 const db = pgp(dbConfig);
   
-// test your database
+// test the database
 db.connect()
     .then(obj => {
         console.log('Database connection successful'); // you can view this message in the docker compose logs
@@ -43,8 +43,11 @@ app.use(bodyParser.urlencoded({
 })
 );
 
+// set access for static files in the /resources folder
+// for example, in ejs: href="/css/style.css" would reference the file "/resources/css/style.css"
 app.use(express.static(__dirname + '/resources'));
 
+// Sets "/" location to redirect to /login page. We may want to change this to /home (or have /home located here at /)
 app.get("/", (req, res) => {
     res.redirect("/login");
 });
@@ -53,6 +56,7 @@ app.get("/register", (req, res) => {
     res.render("pages/register");
 });
 
+// Handles user registration from a /register POST request
 app.post("/register", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -74,6 +78,7 @@ app.get("/login", (req, res) => {
     res.render("pages/login");
 });
 
+// Handles user login from a /login POST request.
 app.post("/login", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
