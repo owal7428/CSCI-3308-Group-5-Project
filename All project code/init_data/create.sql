@@ -1,1 +1,2 @@
-CREATE TABLE IF NOT EXISTS test(testvar int);
+DROP TABLE IF EXISTS users;
+CREATE TABLE IF NOT EXISTS users(username VARCHAR(25), password VARCHAR(60) NOT NULL);
