@@ -1,3 +1,10 @@
+.DS_Store
+
+# draw.io
+*.bkp
+*.dtmp
+*.drawio
+
 # Logs
 logs
 *.log
