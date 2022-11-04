@@ -1,3 +1,7 @@
+People planning a trip will be the target users of our web service.
+
+All tests will be performed in the development enviroment.
+
 User Test Acceptance Cases:
 Home Page:
 -Test for successful rendering of login/register page
