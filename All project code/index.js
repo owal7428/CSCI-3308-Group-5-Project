@@ -112,26 +112,17 @@ app.get("/profile", (req, res) => {
     let month;
     let day;
     let year;
-    let today = new Date();
 
-    if(req.query.month) {
+    if(req.query.month && req.query.day && req.query.year) {
         month = parseInt(req.query.month);
-    }
-    else {
-        month = today.getMonth();
-    }
-
-    if(req.query.day) {
         day = parseInt(req.query.day);
-    }
-    else {
-        day = today.getDate();
-    }
-
-    if(req.query.year) {
         year = parseInt(req.query.year);
     }
     else {
+        let today = new Date();
+        today.setDate(today.getDate() - today.getDay());
+        month = today.getMonth() + 1;
+        day = today.getDate();
         year = today.getFullYear();
     }
 
