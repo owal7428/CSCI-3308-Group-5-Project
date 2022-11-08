@@ -108,7 +108,39 @@ app.post("/login", (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-    res.render("pages/profile");
+
+    let month;
+    let day;
+    let year;
+    let today = new Date();
+
+    if(req.query.month) {
+        month = parseInt(req.query.month);
+    }
+    else {
+        month = today.getMonth();
+    }
+
+    if(req.query.day) {
+        day = parseInt(req.query.day);
+    }
+    else {
+        day = today.getDate();
+    }
+
+    if(req.query.year) {
+        year = parseInt(req.query.year);
+    }
+    else {
+        year = today.getFullYear();
+    }
+
+    res.render("pages/profile", {date: {
+        weekday: 'Sunday',
+        month: month,
+        day: day,
+        year: year
+    }});
 });
 
 // Authentication Middleware.
