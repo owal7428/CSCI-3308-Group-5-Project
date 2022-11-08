@@ -107,6 +107,10 @@ app.post("/login", (req, res) => {
     });
 });
 
+app.get("/profile", (req, res) => {
+    res.render("pages/profile");
+});
+
 // Authentication Middleware.
 const auth = (req, res, next) => {
     if (!req.session.user) {
