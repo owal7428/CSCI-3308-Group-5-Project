@@ -44,6 +44,10 @@ Login Endpoint:
   - Pass matching username and not matching password to throw "invalid username/password"
 - Test that username does not match database
   - Pass not matching username to throw "invalid username/password"
+ 
+Login Test Cases:
+- Valid: {username: vincent, password: myPassword123!, email: vincent@vincentbowen.com}, expect 200
+- Invalid: {username: john brown, password: , email: johnbrown@colorado.edu}, expect 400
 
 Calendar:
 - Test for all required fields of add event form
