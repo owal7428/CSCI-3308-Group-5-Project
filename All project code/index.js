@@ -180,7 +180,7 @@ app.get('/search', (req, res) => {
         // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
         url: `api.meteomatics.com/${validdatetime}/${parameters}/${location}/${format}`,
         method: 'GET',
-        dataType: 'json',
+        dataType: format,
         params: {
             "apikey": req.session.user.api_key
             // additional parameters to send to meteomatics.com go here
