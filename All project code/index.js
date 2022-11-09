@@ -168,9 +168,17 @@ app.get("/logout", (req, res) => {
 app.get('/search', (req, res) => {
     // Request parameters passed in as queries
 
+    // TODO take these values from the user/context
+    let validdatetime = ``; // the time we want the data for. Can be a single in time, or a range of time, with specified intervals.
+    let location = ``; // the location we want the data for. 1 location per query (in basic package)
+    let parameters = ``; // the data parameters we want back. 10 parameters per query, each separated with commas.
+
+    const format = `json` // currently intending to only use JSON formatting, but left as a constant here in case that changes.
+
     // make axios API call
     axios({
-        url: ``,
+        // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
+        url: `api.meteomatics.com/${validdatetime}/${parameters}/${location}/${format}`,
         method: 'GET',
         dataType: 'json',
         params: {
