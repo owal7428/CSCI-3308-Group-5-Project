@@ -164,5 +164,37 @@ app.get("/logout", (req, res) => {
     res.render("pages/logout");
 });
 
+// Weather API access: using meteomatics.com
+app.get('/search', (req, res) => {
+    // Request parameters passed in as queries
+
+    // make axios API call
+    axios({
+        url: ``,
+        method: 'GET',
+        dataType: 'json',
+        params: {
+            "apikey": req.session.user.api_key
+            // additional parameters to send to meteomatics.com go here
+        }
+    })
+        .then(results => {
+            // Send some parameters
+            res.render('pages/visit.ejs', {
+                // Parameters to send to the user on the webpage go here
+                // message: `Axios API call succeeded! Events: ${results.data._embedded.events}`,
+            });
+        })
+        .catch(error => {
+            // Handle errors (API call may have failed!)
+            console.log(error);
+            res.render('pages/visit.ejs', {
+                message: `Axios API call failed! Error: ${error}`,
+                error: true
+            });
+        });
+
+});
+
 app.listen(3000);
 console.log('Server is listening on port 3000');
