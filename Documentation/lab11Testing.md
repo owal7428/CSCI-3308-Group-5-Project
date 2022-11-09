@@ -13,7 +13,7 @@ Register Page:
 
 Register Endpoint:
 - Test for repeat Username
-  - Pass unique username to expect successful input
+  - Pass unique username to expect successful input into database
   - Pass repeat username to throw "username already exists error" and disable submit button
 - Test for meeting password requirements
   - Best practice for strong passwords 
@@ -26,6 +26,10 @@ Register Endpoint:
 - Test for all required fields of form
   - Pass complete form to expect successful registration
   - Pass incomplete form to throw "complete form" and disable submit button 
+
+Register Test Cases:
+- Valid: {username: vincent, password: myPassword123!, email: vincent@vincentbowen.com}, expect 200
+- Invalid: {username: john brown, password: , email: johnbrown@colorado.edu}, expect 400
 
 Login Page;
 - Test for successful rendering of landing page 
@@ -40,6 +44,10 @@ Login Endpoint:
   - Pass matching username and not matching password to throw "invalid username/password"
 - Test that username does not match database
   - Pass not matching username to throw "invalid username/password"
+ 
+Login Test Cases:
+- Valid: {username: vincent, password: myPassword123!, email: vincent@vincentbowen.com}, expect 200
+- Invalid: {username: john brown, password: , email: johnbrown@colorado.edu}, expect 400
 
 Calendar:
 - Test for all required fields of add event form

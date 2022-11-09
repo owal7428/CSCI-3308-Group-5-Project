@@ -1,0 +1,90 @@
+
+
+<div class="container">
+    <h2>Calendar</h2>
+    <div class="row" id="calendar">
+        <% let currDate = date.day; %>
+        <% let currMonth = date.month; %>
+        <% let currYear = date.year; %>
+        <% let maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] %>
+        <% if (currYear % 4 === 0) { %>
+            <% if (currYear % 100 === 0) { %>
+                <% if (currYear % 400 === 0) { %>
+                    <% maxDays[1] = 29; %>
+                <% } %>
+            <% } else { %>
+                <% maxDays[1] = 29; %>
+            <% } %>
+        <% } %>
+        <% const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; %>
+        <% for(i = 0; i < 7; i++) { %>
+        <div class="col-sm m-1 bg-white rounded px-1 px-md-2">
+            <div class="h6 text-center position-relative py-2"><%- weekDays[i] %></div>
+            <div class="p text-center position-relative py-2">
+                <% if (currDate > maxDays[currMonth - 1]) { %>
+                    <% currDate -= maxDays[currMonth - 1]; %>
+                    <% if (currMonth === 12) { %>
+                        <% currMonth = 1; %>
+                        <% currYear++; %>
+                    <% } else { %>
+                        <% currMonth++; %>
+                    <% } %>
+                <% } %>
+                <% if(currDate < 1) { %>
+                    <% if(currMonth === 1) { %>
+                        <% currMonth = 12; %>
+                        <% currYear--; %>
+                    <% } else { %>
+                    <% currMonth--; %>
+                <% } %>
+                    <% currDate = maxDays[currMonth - 1]; %>
+                <% } %>
+                <%- `${currMonth}/${currDate}/${currYear}` %>
+            </div>
+        </div>
+        <% currDate++; %>
+        <% } %>
+    </div>
+    <div class="row" style="margin-left: 45%;">
+        <form action="/profile" method="GET">
+
+            <% let lessDate = date.day - 7; %>
+            <% let lessMonth = date.month; %>
+            <% let lessYear = date.year; %>
+            <% if(lessDate < 1) { %>
+                <% if(lessMonth === 1) { %>
+                    <% lessMonth = 12; %>
+                    <% lessYear--; %>
+                <% } else { %>
+                    <% lessMonth--; %>
+                <% } %>
+                <% lessDate += maxDays[lessMonth - 1]; %>
+            <% } %>
+
+            <input type="number" value=<%- lessDate %> name="day" hidden>
+            <input type="number" value=<%- lessMonth %> name="month" hidden>
+            <input type="number" value=<%- lessYear %> name="year" hidden>
+            <button type="submit">Previous</button>
+        </form>
+        <form action="/profile" method="GET">
+
+            <% let addDate = date.day + 7; %>
+            <% let addMonth = date.month; %>
+            <% let addYear = date.year; %>
+            <% if (addDate > maxDays[addMonth - 1]) { %>
+                <% addDate -= maxDays[addMonth - 1]; %>
+                <% if (addMonth === 12) { %>
+                    <% addMonth = 1; %>
+                    <% addYear++; %>
+                <% } else { %>
+                    <% addMonth++; %>
+                <% } %>
+            <% } %>
+
+            <input type="number" value=<%- addDate %> name="day" hidden>
+            <input type="number" value=<%- addMonth %> name="month" hidden>
+            <input type="number" value=<%- addYear %> name="year" hidden>
+            <button type="submit">Next</button>
+        </form>
+    </div>  
+</div>
