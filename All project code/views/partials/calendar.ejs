@@ -4,6 +4,7 @@
         <% let currDate = date.day; %>
         <% let currMonth = date.month; %>
         <% let currYear = date.year; %>
+        <% let currWeek = date.week; %>
         <% let maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31] %>
         <% if (currYear % 4 === 0) { %>
             <% if (currYear % 100 === 0) { %>
@@ -16,7 +17,11 @@
         <% } %>
         <% const weekDays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']; %>
         <% for(i = 0; i < 7; i++) { %>
-        <div class="col-sm m-1 bg-white rounded px-1 px-md-2">
+        <div class="col-sm m-1 bg-white rounded px-1 px-md-2"
+        <% if (currWeek === 0 && date.currDay === currDate) { %>
+            style="color: blue;"
+        <% } %>
+        >
             <div class="h6 text-center position-relative py-2"><%- weekDays[i] %></div>
             <div class="p text-center position-relative py-2">
                 <% if (currDate > maxDays[currMonth - 1]) { %>
@@ -62,6 +67,7 @@
             <input type="number" value=<%- lessDate %> name="day" hidden>
             <input type="number" value=<%- lessMonth %> name="month" hidden>
             <input type="number" value=<%- lessYear %> name="year" hidden>
+            <input type="number" value=<%- (currWeek - 1) %> name="week" hidden>
             <button type="submit">Previous</button>
         </form>
         <form action="/profile" method="GET">
@@ -82,6 +88,7 @@
             <input type="number" value=<%- addDate %> name="day" hidden>
             <input type="number" value=<%- addMonth %> name="month" hidden>
             <input type="number" value=<%- addYear %> name="year" hidden>
+            <input type="number" value=<%- (currWeek + 1) %> name="week" hidden>
             <button type="submit">Next</button>
         </form>
     </div>  

@@ -112,25 +112,32 @@ app.get("/profile", (req, res) => {
     let month;
     let day;
     let year;
+    let week;
+    let currDay;
+    let today = new Date();
+    currDay = today.getDate();
 
-    if(req.query.month && req.query.day && req.query.year) {
+    if(req.query.month && req.query.day && req.query.year && req.query.week) {
         month = parseInt(req.query.month);
         day = parseInt(req.query.day);
         year = parseInt(req.query.year);
+        week = parseInt(req.query.week);
     }
     else {
-        let today = new Date();
         today.setDate(today.getDate() - today.getDay());
         month = today.getMonth() + 1;
         day = today.getDate();
         year = today.getFullYear();
+        week = 0;
     }
 
     res.render("pages/profile", {date: {
         weekday: 'Sunday',
         month: month,
         day: day,
-        year: year
+        year: year,
+        week: week,
+        currDay: currDay
     }});
 });
 
