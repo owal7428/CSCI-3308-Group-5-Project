@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS users;
 CREATE TABLE IF NOT EXISTS users(
-    username VARCHAR(25) PRIMARY KEY, 
-    password VARCHAR(60) NOT NULL
+    username VARCHAR(32) PRIMARY KEY, 
+    password VARCHAR(128) NOT NULL
 );
