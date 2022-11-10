@@ -109,32 +109,30 @@ app.post("/login", (req, res) => {
 
 app.get("/profile", (req, res) => {
 
-    let month;
-    let day;
-    let year;
-    let week;
-    let currDay;
+    let month; //Stores the month to be displayed
+    let displayday; //Stores the day to be displayed. For purposes of the ejs logic this will always be set to the Sunday at the beginning of the week that includes the day to be viewed
+    let year; //Stores the year to be displayed
+    let week; //Stores the offset week from the current day. Used to keep track of the dates shown in relation to the current day
     let today = new Date();
-    currDay = today.getDate();
+    const currDay = today.getDate();  //Stores the actual current day, used specifically for highlighting the current day
 
-    if(req.query.month && req.query.day && req.query.year && req.query.week) {
+    if(req.query.month && req.query.day && req.query.year && req.query.week) { //If a full request is sent in, all values are forwarded to the frontent as-is
         month = parseInt(req.query.month);
         day = parseInt(req.query.day);
         year = parseInt(req.query.year);
         week = parseInt(req.query.week);
     }
-    else {
-        today.setDate(today.getDate() - today.getDay());
-        month = today.getMonth() + 1;
+    else { //Default. If anything is missing from the request it will just reset to the current actual day
+        today.setDate(today.getDate() - today.getDay()); //This normalizes the date being sent so that the frontend is always sent a Sunday
+        month = today.getMonth() + 1; //getMonth returns 0-11 so +1 is used to transform it to a calendar-readable format
         day = today.getDate();
         year = today.getFullYear();
-        week = 0;
+        week = 0; //Default has a week offset of 0
     }
 
     res.render("pages/profile", {date: {
-        weekday: 'Sunday',
         month: month,
-        day: day,
+        day: displayday,
         year: year,
         week: week,
         currDay: currDay
