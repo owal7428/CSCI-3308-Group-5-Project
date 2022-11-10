@@ -259,7 +259,7 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
         // return;
     }
 
-    let url = `api.meteomatics.com/${validdatetime}/${parameters}/${location}/${dataFormat}`;
+    let url = `https://api.meteomatics.com/${validdatetime}/${parameters}/${location}/${dataFormat}`;
 
     if (optionalParameters != undefined) {
         url += `/${optionalParameters}`
@@ -272,6 +272,7 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
 
 // Weather API access: using meteomatics.com
 app.get('/search', (req, res) => {
+    console.log("Running /search GET request")
     // Request parameters passed in as queries
 
     // TODO take these values from the user/context
@@ -282,25 +283,29 @@ app.get('/search', (req, res) => {
     let location = ``; // the location we want the data for. 1 location per query (in basic package)
     let parameters = ``; // the data parameters we want back. 10 parameters per query, each separated with commas.
 
-    const format = `json` // currently intending to only use JSON formatting, but left as a constant here in case that changes.
+    const format = `json`; // currently intending to only use JSON formatting, but left as a constant here in case that changes.
 
     // make axios API call
     axios({
         // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
-        url: generateMeteomaticsRequestURL("startTime", "endtime", "47", "9", ["wind speed", "temperature"], "json"),
+        url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
         method: 'GET',
         dataType: format,
         auth: {
+            // auth specified from .env file.
             username: process.env.METEO_USER,
             password: process.env.METEO_PASSWORD
         }
     })
         .then(results => {
             // Send some parameters
-            console.log(`Axios API call succeeded! Response: ${results}`);
+            let data = results.data.data;
+
+            console.log(`Axios API call succeeded! Response: ${JSON.stringify(data)}`);
             res.render('pages/visit.ejs', {
                 // Parameters to send to the user on the webpage go here
                 // message: `Axios API call succeeded! Events: ${results.data._embedded.events}`,
+                data: data // index at 0 because we will always have only one location.
             });
         })
         .catch(error => {
