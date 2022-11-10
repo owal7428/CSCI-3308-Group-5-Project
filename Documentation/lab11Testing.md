@@ -60,4 +60,36 @@ Calendar:
   - Pass non-overlapping times to expect no error
   - Pass overlapping times to throw "times cannot overlap for events" 
 
+Calendar Test Cases:
+- Valid: {Hiking, 11/01/2021, 3:00 PM - 4:00PM, Hiking the flatirons}
+- Invalid: { , 11/01/1989, 1:00 AM - 2:00 AM}, {Kayaking, 11/01/2021, 3:30PM - 5:30 PM (if valid case is already inputed), kayaking at the bay)
+
+Weather API Endpoint:
+- Test for valid return coordinates
+  - Pass valid coordinates to expect calling coordinate to city API
+  - Pass invalid coordinates to throw error, and show user "coordinates do not exist"
+- Test for valid inputs in search feature
+  - Pass valid inputs in search to expect results displayed on webpage
+  - Pass invalid inputs in search to throw error, and show user "input valid search criteria"
+
+Weather API Test Cases:
+- Finalize JSON output to determine valid and invalid inputs and respective returns
+
+Coordinate to City API Endpoint:
+- Test for valid City Return
+  - Pass valid coordinates to expect return to user of city or closes city
+  - Do not need to test invalid coordinates, as weather API return will already be tested for this
+
+Coordinate to City API Test Cases:
+- Valid {40.4406° N, 79.9959° W}
+  - Return {Pittsburgh, Pa, USA} (JSON output may be slightly different)
+- Valid {43.7696° N, 11.2558° E}
+  - Return {Florence, Italy} (JSON output may be slightly different)
+
+Flight API Endpoint:
+- Test for calling showing results when valid search criteria
+
+
+Flight API Test Cases:
+- Finalize JSON output, deciding between amadeus API and FlightLabs
 
