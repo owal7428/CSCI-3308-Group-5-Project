@@ -1,0 +1,60 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+    <main>
+        <div class="container pb-4">
+            <div class="row align-items-center">
+                <div class="col-8">
+                    <h1>Welcome To Airfare Affairs</h1>
+                </div>
+                <div class="col-2">
+                    <div class="d-flex justify-content-center">
+                        <form action="/register" method="GET">
+                            <button type="submit" class="btn btn-primary" id="submit_button">Sign Up For Free!</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-1" >
+                    <div class="d-flex justify-content-center">
+                        <form action="/login" method="GET">
+                            <button type="submit" class="btn btn-primary" id="submit_button">Login</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container py-1" style="width: 75%;">
+                <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item">
+                        <img src="images/luca-bravo-O453M2Liufs-unsplash.jpg" class="d-block w-100 rounded" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Plan the Trip of Your Dreams</h5>
+                        </div>
+                        </div>
+                        <div class="carousel-item active">
+                        <img src="images/david-marcu-78A265wPiO4-unsplash.jpg" class="d-block w-100 rounded" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Where Adventure Awaits</h5>
+                        </div>
+                        </div>
+                        <div class="carousel-item">
+                        <img src="images/andrew-palmer-_1REcmACJaQ-unsplash.jpg" class="d-block w-100 rounded" alt="...">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>You Deserve a Vacation</h5>
+                        </div>
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+                
+                
+        </div>
+    </main>
+<%- include ('../partials/footer') %>
