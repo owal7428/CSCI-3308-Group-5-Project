@@ -324,8 +324,7 @@ app.post('/search', (req, res) => {
             console.log(`Axios API call succeeded! Response: ${JSON.stringify(data)}`);
             res.render('pages/visit.ejs', {
                 // Parameters to send to the user on the webpage go here
-                // message: `Axios API call succeeded! Events: ${results.data._embedded.events}`,
-                data: data // index at 0 because we will always have only one location.
+                data: data // resulting data is an array of each response parameter's data objects.
             });
         })
         .catch(error => {
