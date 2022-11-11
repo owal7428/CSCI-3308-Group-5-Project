@@ -60,17 +60,24 @@ app.get("/register", (req, res) => {
 app.post("/register", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-
+    // encrypt password before storing it in database
     const hash = await bcrypt.hash(password, 10);
-
+    
+    // Inserts user into database, registering them.
     const query = "INSERT INTO users (username, password) VALUES ($1, $2)";
-
-    db.any(query, [username, hash])
+    
+    await db.any(query, [username, hash])
     .then(() => {
+        // TODO send the user a success message on the login page stating that the user successfully registered.
         res.redirect("/login");
     })
     .catch(() => {
-        res.redirect("/register");
+        const registration_failed_feedback = 'Registration failed! Try a different username.';
+        console.log(registration_failed_feedback)
+        res.render(`pages/register`, {
+            message: registration_failed_feedback,
+            error: true
+        });
     });
 });
 app.get("/landing", (req, res) => {
@@ -82,32 +89,59 @@ app.get("/login", (req, res) => {
 
 
 // Handles user login from a /login POST request.
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-
     const query = "SELECT * FROM users WHERE username = $1";
 
-    db.any(query, [username])
-    .then(async (user) => {
-        const match = await bcrypt.compare(password, user[0].password);
+    let user; // The user found (or not found) in the database
 
-        if (match)
-        {
-            req.session.user = "TEST";
-            req.session.save();
-            res.redirect("/main");
-        }
-        else
-        {
-            console.log("Incorrect username or password.");
-            res.redirect("/login");
-        }
+    // Queries database to find matching user for the inputted username.
+    await db.any(query, [username])
+    .then((foundUser) => {
+        user = foundUser[0];
     })
     .catch((err) => {
+        // Something went wrong, refresh the page for the user to try again.
         console.log(err.message);
         res.redirect("/login");
+        return;
     });
+
+    const incorrect_login_feedback = "Incorrect username or password."
+
+    if (user == null) {
+        // User not found in database, so username does not exist.
+        console.log(incorrect_login_feedback);
+        res.render("pages/login", {
+            message: incorrect_login_feedback,
+            error: true
+        });
+
+        // early return so a password (that doesn't exist) isn't checked, and user isn't authenticated.
+        return; 
+    }
+
+    // Check if (encrypted) passwords match
+    const password_match = await bcrypt.compare(password, user.password);
+
+    if (password_match !== true) {
+        // Password is incorrect.
+        console.log(incorrect_login_feedback);
+        res.render("pages/login", {
+            message: incorrect_login_feedback,
+            error: true
+        });
+        // early return, so user isn't authenticated.
+        return;
+    }
+
+    // Authenticate user
+    req.session.user = "TEST";
+    req.session.save();
+
+    // Send to the logged-in homepage.
+    res.redirect("/main");
 });
 
 app.get("/profile", (req, res) => {
