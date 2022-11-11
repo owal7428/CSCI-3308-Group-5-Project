@@ -100,8 +100,9 @@ app.post("/login", async (req, res) => {
     })
     .catch((err) => {
         // Something went wrong, refresh the page for the user to try again.
+        console.log(err.message);
         res.redirect("/login");
-        return console.log(err.message);
+        return;
     });
 
     const incorrect_login_feedback = "Incorrect username or password."
