@@ -49,7 +49,7 @@ app.use(express.static(__dirname + '/resources'));
 
 // Sets "/" location to redirect to /login page. We may want to change this to /home (or have /home located here at /)
 app.get("/", (req, res) => {
-    res.redirect("/login");
+    res.redirect("/landing");
 });
 
 app.get("/register", (req, res) => {
