@@ -73,10 +73,13 @@ app.post("/register", async (req, res) => {
         res.redirect("/register");
     });
 });
-
+app.get("/landing", (req, res) => {
+    res.render("pages/landing")
+});
 app.get("/login", (req, res) => {
     res.render("pages/login");
 });
+
 
 // Handles user login from a /login POST request.
 app.post("/login", (req, res) => {

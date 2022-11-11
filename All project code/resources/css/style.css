@@ -8,3 +8,13 @@ input
 {
     margin-bottom: 2.5%;
 }
+
+body {
+    background-color: #f5f5f5;
+}
+
+.button-box {
+    text-align:center;
+    margin-top:20px;
+ }
+ 
