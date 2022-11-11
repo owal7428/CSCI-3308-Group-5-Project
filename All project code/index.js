@@ -5,7 +5,9 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
-
+//using axios Check status for flights that scheduled
+//plug lat and long into 
+//https://airlabs.co/docs/flights
 // database configuration
 const dbConfig = {
     host: 'db',
