@@ -310,7 +310,7 @@ app.post('/search', (req, res) => {
         // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
         url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLattitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
         method: 'GET',
-        dataType: req.body.format,
+        dataType: req.body.dataFormat,
         auth: {
             // auth specified from .env file.
             username: process.env.METEO_USER,
@@ -319,12 +319,21 @@ app.post('/search', (req, res) => {
     })
         .then(results => {
             // Send some parameters
-            let data = results.data.data;
+            console.log(`dataFormat: "${req.body.dataFormat}"`);
+            let data;
+
+            // results has varying structure depending on datatype
+            if (req.body.dataFormat === "json") {
+                data = results.data.data;
+            } else if (req.body.dataFormat === "html") {
+                data = results.data;
+            }
 
             console.log(`Axios API call succeeded! Response: ${JSON.stringify(data)}`);
             res.render('pages/visit.ejs', {
                 // Parameters to send to the user on the webpage go here
-                data: data // resulting data is an array of each response parameter's data objects.
+                data: data, // resulting data is an array of each response parameter's data objects.
+                dataFormat: req.body.dataFormat
             });
         })
         .catch(error => {
