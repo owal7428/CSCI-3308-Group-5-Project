@@ -147,18 +147,29 @@ const auth = (req, res, next) => {
     }
     next();
 };
-  
-// Authentication Required
-app.use(auth);
 
-app.get("/main", (req, res) => {
-    res.render("pages/main");
+app.get('/visit', (req, res) => {
+    res.render("pages/visit");
 });
 
-app.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.render("pages/logout");
+const weatherFields = [
+    {name: "startTime", label: "Start Time"},
+    {name: "endTime", label: "End Time"},
+    {name: "locationLattitude", label: "Location Lattitude"},
+    {name: "locationLongitude", label: "Location Longitude"},
+    {name: "requestParameters", label: "Request Parameters"},
+    {name: "dataFormat", label: "Data Format"},
+    {name: "optionalParameters", label: "Optional Parameters"},
+];
+
+app.get("/search", (req, res) => {
+    res.render("pages/search", {
+        searchFields: weatherFields
+    });
 });
+
+
+
 
 /**
  * Generates a complete request URL to send to meteomatics with various parameters
@@ -276,7 +287,7 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
 }
 
 // Weather API access: using meteomatics.com
-app.get('/search', (req, res) => {
+app.post('/search', (req, res) => {
     console.log("Running /search GET request")
     // Request parameters passed in as queries
 
@@ -323,6 +334,20 @@ app.get('/search', (req, res) => {
         });
 
 });
+
+// Authentication Required
+app.use(auth);
+
+app.get("/main", (req, res) => {
+    res.render("pages/main");
+});
+
+app.get("/logout", (req, res) => {
+    req.session.destroy();
+    res.render("pages/logout");
+});
+
+
 
 app.listen(3000);
 console.log('Server is listening on port 3000');
