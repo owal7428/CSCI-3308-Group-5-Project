@@ -171,9 +171,6 @@ app.get("/search", (req, res) => {
     });
 });
 
-
-
-
 /**
  * Generates a complete request URL to send to meteomatics with various parameters
  * @param {string} startTime Start time for the time-range of data request.
@@ -255,7 +252,7 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
                 parameters += "sunset:sql";
                 break;
             default:
-                console.log(`Unsupported parameter requested!: ${readableParameter}`);
+                console.log(`Unsupported parameter requested!: "${readableParameter}"`);
                 generateParametersFailed = true;
                 break;
         }
@@ -274,8 +271,8 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
     }
 
     if (generateParametersFailed) {
-        console.warn(`Trying to send an invalid request to meteomatics. Please change request parameters.`);
-        // return;
+        console.error(`Trying to send an invalid request to meteomatics. Please change request parameters.`);
+        return;
     }
 
     let url = `https://api.meteomatics.com/${validdatetime}/${parameters}/${location}/${dataFormat}`;
@@ -289,27 +286,31 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
     return url;
 }
 
+// Converts a string separated by divisor into an array, with whitespace trimmed from elements
+function stringToArray(str, divisor=",") {
+    // Split the string by the divisor into an array
+    let array = str.split(divisor);
+
+    // Trim whitespace at beginning and end of each element
+    for (let i = 0; i < array.length; i++) {
+        array[i] = array[i].trim();
+    }
+
+    return array;
+}
+
 // Weather API access: using meteomatics.com
 app.post('/search', (req, res) => {
     console.log("Running /search GET request")
     // Request parameters passed in as queries
 
-    // TODO take these values from the user/context
-
-    let currDate = new Date().getUTCDate();
-    let validdatetime = ``; // the time we want the data for. Can be a single in time, or a range of time, with specified intervals.
-
-    let location = ``; // the location we want the data for. 1 location per query (in basic package)
-    let parameters = ``; // the data parameters we want back. 10 parameters per query, each separated with commas.
-
-    const format = `json`; // currently intending to only use JSON formatting, but left as a constant here in case that changes.
-
     // make axios API call
     axios({
         // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
-        url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
+        // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
+        url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLattitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
         method: 'GET',
-        dataType: format,
+        dataType: req.body.format,
         auth: {
             // auth specified from .env file.
             username: process.env.METEO_USER,
