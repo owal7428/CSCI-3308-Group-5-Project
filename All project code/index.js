@@ -152,16 +152,19 @@ app.get('/visit', (req, res) => {
     res.render("pages/visit");
 });
 
+// The fields to render on the search page to make the search request.
 const weatherFields = [
-    {name: "startTime", label: "Start Time"},
-    {name: "endTime", label: "End Time"},
-    {name: "locationLattitude", label: "Location Lattitude"},
-    {name: "locationLongitude", label: "Location Longitude"},
-    {name: "requestParameters", label: "Request Parameters"},
-    {name: "dataFormat", label: "Data Format"},
-    {name: "optionalParameters", label: "Optional Parameters"},
+    // name is the js parameter name to be used in POST requests. Label is what is shown to the user.
+    {name: "startTime", label: "Start Time", required: true},
+    {name: "endTime", label: "End Time", required: true},
+    {name: "locationLattitude", label: "Location Lattitude", required: true},
+    {name: "locationLongitude", label: "Location Longitude", required: true},
+    {name: "requestParameters", label: "Request Parameters", required: true},
+    {name: "dataFormat", label: "Data Format", required: true},
+    {name: "optionalParameters", label: "Optional Parameters", required: false},
 ];
 
+// Display search page
 app.get("/search", (req, res) => {
     res.render("pages/search", {
         searchFields: weatherFields
