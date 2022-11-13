@@ -15,18 +15,20 @@
         <table class="table">
         <thead>
             <tr>
-            <th>Departure</th>
-            <th>Arrival</th>
-            <th>Status</th>
+                <th>Flight Date</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Airline</th>
             </tr>
         </thead>
         <tbody>
-            <% flights.forEach(flights => 
+            <% flights.forEach(flight => 
             { %>
             <tr>
-                <td><%= flights.dep_icao %></td>
-                <td><%= flights.arr_icao %></td>
-                <td><%= flights.status %></td>
+                <td><%= flight.flight_date %></td>
+                <td><%= flight.departure.airport %></td>
+                <td><%= flight.arrival.airport %></td>
+                <td><%= flight.airline.name %></td>
             </tr>
             <% }); %>
         </tbody>
