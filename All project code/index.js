@@ -190,32 +190,40 @@ app.get("/profile", (req, res) => {
 // database configuration
 
 app.get("/flights", (req, res) => {
-    /*axios({
-        url: "",
+    axios({
+        url: "http://api.aviationstack.com/v1/flights",
         method: 'GET',
         dataType:'json',
         params: {
-            "api_key": req.session.user.flight_api_key,
-            "dep_iata": "KDEN",
+            "access_key": process.env.flight_api_key,
+            "limit": 40,
+            "flight_status": "scheduled",
+            "dep_icao": "KDEN",
         }
     })
     .then(results => {
-        console.log(results.data); // the results will be displayed on the terminal if the docker containers are running
+        console.log("Successful API call");
+        console.log(results.data);
         res.render("pages/flights", {
-            results: results,
+            results: results.data,
         });
     })
     .catch(error => {
         // Handle errors
+        console.log("Failed API call");
+        console.log(process.env.flight_api_key);
+        console.log(error.message);
         res.render("pages/flights", {
             results: [],
             error: true,
             message: error.message,
         });
-    });*/
+    });
 });
 
 app.get("/main", (req, res) => {
+    console.log("flight key:");
+    console.log(process.env.flight_api_key);
     res.render("pages/main");
 });
 
