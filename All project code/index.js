@@ -5,10 +5,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
-//using axios Check status for flights that scheduled
-//plug lat and long into 
-//https://airlabs.co/docs/flights
-// database configuration
+
 const dbConfig = {
     host: 'db',
     port: 5432,
@@ -185,6 +182,37 @@ app.get("/profile", (req, res) => {
         week: week,
         currDay: currDay
     }});
+});
+
+//using axios Check status for flights that scheduled
+//plug lat and long into 
+//https://airlabs.co/docs/flights
+// database configuration
+
+app.get("/flights", (req, res) => {
+    /*axios({
+        url: "",
+        method: 'GET',
+        dataType:'json',
+        params: {
+            "api_key": req.session.user.flight_api_key,
+            "dep_iata": "KDEN",
+        }
+    })
+    .then(results => {
+        console.log(results.data); // the results will be displayed on the terminal if the docker containers are running
+        res.render("pages/flights", {
+            results: results,
+        });
+    })
+    .catch(error => {
+        // Handle errors
+        res.render("pages/flights", {
+            results: [],
+            error: true,
+            message: error.message,
+        });
+    });*/
 });
 
 app.get("/main", (req, res) => {
