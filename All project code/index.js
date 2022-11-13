@@ -68,20 +68,24 @@ app.post("/register", async (req, res) => {
     
     await db.any(query, [username, hash])
     .then(() => {
-        // TODO send the user a success message on the login page stating that the user successfully registered.
-        res.redirect("/login");
+        res.redirect("/login?success=true");
     })
     .catch(() => {
-        const registration_failed_feedback = 'Registration failed! Try a different username.';
-        console.log(registration_failed_feedback)
         res.render("pages/register", {
-            message: registration_failed_feedback,
+            message: "Registration failed! Try a different username.",
             error: true
         });
     });
 });
 
 app.get("/login", (req, res) => {
+    if (req.query.success == "true")
+    {
+        res.render("pages/login", {
+            message: "You have successfully registered!",
+        });
+    }
+    
     res.render("pages/login");
 });
 
