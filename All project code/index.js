@@ -131,6 +131,10 @@ app.post("/login", (req, res) => {
     });
 });
 
+app.get("/landing", (req, res) => {
+    res.render("pages/landing")
+});
+
 // Authentication Middleware.
 const auth = (req, res, next) => {
     if (!req.session.user) {
@@ -144,10 +148,6 @@ const auth = (req, res, next) => {
 app.use(auth);
 
 /*Code for pages not including login and register go in after here*/
-
-app.get("/landing", (req, res) => {
-    res.render("pages/landing")
-});
 
 app.get("/profile", (req, res) => {
 
