@@ -4,6 +4,13 @@
 <main>
   <div class="container">
     <h1>Register</h1>
+
+    <!-- Alert message -->
+    <div class="container">
+        <%- include ('../partials/message.ejs') %>
+    </div>
+
+    <!-- Registration Form -->
     <form action="/register" method="POST">
       <label for="username" class="form-label">Username</label>
       <input type="text" class="form-control" id="username" name="username">
