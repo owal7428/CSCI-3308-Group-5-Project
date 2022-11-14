@@ -16,6 +16,7 @@ body {
     color: black;
 }
 
+/* non-interactive class to prevent elements from blocking actions, like clicks, that may be intended for content present behind the element. */
 .non-interactive {
     pointer-events: none;
 }
