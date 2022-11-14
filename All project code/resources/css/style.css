@@ -15,3 +15,7 @@ body {
 {
     color: black;
 }
+
+.non-interactive {
+    pointer-events: none;
+}
