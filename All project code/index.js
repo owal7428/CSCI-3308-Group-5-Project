@@ -49,7 +49,12 @@ app.use(express.static(__dirname + '/resources'));
 
 // Sets "/" location to redirect to /login page. We may want to change this to /home (or have /home located here at /)
 app.get("/", (req, res) => {
-    res.redirect("/landing");
+    if(req.session.user) {
+        res.redirect("/main");
+    }
+    else {
+        res.redirect("/landing");
+    }
 });
 
 app.get("/register", (req, res) => {
@@ -68,81 +73,96 @@ app.post("/register", async (req, res) => {
     
     await db.any(query, [username, hash])
     .then(() => {
-        // TODO send the user a success message on the login page stating that the user successfully registered.
-        res.redirect("/login");
+        req.session.user = username;
+        req.session.user.flight_api_key = process.env.flight_api_key;
+        req.session.save();
+        res.render("pages/main", {
+            message: "Your account was sucessfully created! Happy Hunting!",
+            error: false
+        });
     })
     .catch(() => {
-        const registration_failed_feedback = 'Registration failed! Try a different username.';
-        console.log(registration_failed_feedback)
-        res.render(`pages/register`, {
-            message: registration_failed_feedback,
+        res.render("pages/register", {
+            message: "Registration failed! Try a different username.",
             error: true
         });
     });
 });
-app.get("/landing", (req, res) => {
-    res.render("pages/landing")
-});
+
 app.get("/login", (req, res) => {
+    if (req.query.success == "true")
+    {
+        res.render("pages/login", {
+            message: "You have successfully registered!",
+        });
+    }
+    
     res.render("pages/login");
 });
 
-
 // Handles user login from a /login POST request.
-app.post("/login", async (req, res) => {
+app.post("/login", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+
     const query = "SELECT * FROM users WHERE username = $1";
 
-    let user; // The user found (or not found) in the database
+    db.any(query, [username])
+    .then(async (user) => {
 
-    // Queries database to find matching user for the inputted username.
-    await db.any(query, [username])
-    .then((foundUser) => {
-        user = foundUser[0];
+        //Checks if an account registered under the given username exists
+        if (user[0] == null)
+        {
+            res.render("pages/login", {
+                message: "No account exists with that username.",
+                error: true
+            });
+        }
+
+        const match = await bcrypt.compare(password, user[0].password);
+        
+        //Checks if password matches
+        if (match)
+        {
+            req.session.user = username;
+            req.session.user.flight_api_key = process.env.flight_api_key;
+            req.session.save();
+            res.redirect("/main");
+        }
+        else
+        {
+            res.render("pages/login", {
+                message: "Incorrect password for given username.",
+                error: true,
+            });
+        }
     })
     .catch((err) => {
-        // Something went wrong, refresh the page for the user to try again.
         console.log(err.message);
-        res.redirect("/login");
-        return;
+        res.render("pages/login", {
+            message: err.message,
+            error: true,
+        });
     });
-
-    const incorrect_login_feedback = "Incorrect username or password."
-
-    if (user == null) {
-        // User not found in database, so username does not exist.
-        console.log(incorrect_login_feedback);
-        res.render("pages/login", {
-            message: incorrect_login_feedback,
-            error: true
-        });
-
-        // early return so a password (that doesn't exist) isn't checked, and user isn't authenticated.
-        return; 
-    }
-
-    // Check if (encrypted) passwords match
-    const password_match = await bcrypt.compare(password, user.password);
-
-    if (password_match !== true) {
-        // Password is incorrect.
-        console.log(incorrect_login_feedback);
-        res.render("pages/login", {
-            message: incorrect_login_feedback,
-            error: true
-        });
-        // early return, so user isn't authenticated.
-        return;
-    }
-
-    // Authenticate user
-    req.session.user = "TEST";
-    req.session.save();
-
-    // Send to the logged-in homepage.
-    res.redirect("/main");
 });
+
+app.get("/landing", (req, res) => {
+    res.render("pages/landing")
+});
+
+// Authentication Middleware.
+const auth = (req, res, next) => {
+    if (!req.session.user) {
+      // Default to register page.
+      return res.redirect('/login');
+    }
+    next();
+};
+  
+// Authentication Required
+app.use(auth);
+
+/*Code for pages not including login and register go in after here*/
 
 app.get("/profile", (req, res) => {
 
@@ -176,14 +196,6 @@ app.get("/profile", (req, res) => {
     }});
 });
 
-// Authentication Middleware.
-const auth = (req, res, next) => {
-    if (!req.session.user) {
-      // Default to register page.
-      return res.redirect('/login');
-    }
-    next();
-};
 
 app.get('/visit', (req, res) => {
     res.render("pages/visit");
@@ -384,8 +396,6 @@ app.post('/search', (req, res) => {
 
 });
 
-// Authentication Required
-app.use(auth);
 
 app.get("/main", (req, res) => {
     res.render("pages/main");
@@ -393,7 +403,10 @@ app.get("/main", (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session.destroy();
-    res.render("pages/logout");
+    res.render("pages/landing", {
+        message: "You have been successfully logged out",
+        error: false
+    });
 });
 
 
