@@ -49,7 +49,12 @@ app.use(express.static(__dirname + '/resources'));
 
 // Sets "/" location to redirect to /login page. We may want to change this to /home (or have /home located here at /)
 app.get("/", (req, res) => {
-    res.redirect("/landing");
+    if(req.session.user) {
+        res.redirect("/main");
+    }
+    else {
+        res.redirect("/landing");
+    }
 });
 
 app.get("/register", (req, res) => {
@@ -68,7 +73,13 @@ app.post("/register", async (req, res) => {
     
     await db.any(query, [username, hash])
     .then(() => {
-        res.redirect("/login?success=true");
+        req.session.user = username;
+        req.session.user.flight_api_key = process.env.flight_api_key;
+        req.session.save();
+        res.render("pages/main", {
+            message: "Your account was sucessfully created! Happy Hunting!",
+            error: false
+        });
     })
     .catch(() => {
         res.render("pages/register", {
@@ -191,7 +202,10 @@ app.get("/main", (req, res) => {
 
 app.get("/logout", (req, res) => {
     req.session.destroy();
-    res.render("pages/logout");
+    res.render("pages/landing", {
+        message: "You have been successfully logged out",
+        error: false
+    });
 });
 
 app.listen(3000);
