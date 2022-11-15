@@ -393,7 +393,12 @@ app.post('/searchWeather', (req, res) => {
 
 
 app.get("/main", (req, res) => {
-    res.render("pages/main");
+    res.render("pages/main", {
+        myUsername: req.session.user,
+        message: "Welcome " + req.session.user + ". Happy Hunting!",
+        error:false,
+
+    });
 });
 
 app.get("/logout", (req, res) => {
