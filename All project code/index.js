@@ -196,11 +196,6 @@ app.get("/profile", (req, res) => {
     }});
 });
 
-
-app.get('/visit', (req, res) => {
-    res.render("pages/visit");
-});
-
 // The fields to render on the search page to make the search request.
 const weatherFields = [
     // name is the js parameter name to be used in POST requests. Label is what is shown to the user.
@@ -213,8 +208,8 @@ const weatherFields = [
     {name: "optionalParameters", label: "Optional Parameters", required: false},
 ];
 
-// Display search page
-app.get("/search", (req, res) => {
+// Display weather search page
+app.get("/searchWeather", (req, res) => {
     res.render("pages/search", {
         searchFields: weatherFields
     });
@@ -349,8 +344,8 @@ function stringToArray(str, divisor=",") {
 }
 
 // Weather API access: using meteomatics.com
-app.post('/search', (req, res) => {
-    console.log("Running /search GET request")
+app.post('/searchWeather', (req, res) => {
+    console.log("Running /searchWeather GET request");
     // Request parameters passed in as queries
 
     // make axios API call
@@ -379,7 +374,7 @@ app.post('/search', (req, res) => {
             }
 
             console.log(`Axios API call succeeded! Response: ${JSON.stringify(data)}`);
-            res.render('pages/visit.ejs', {
+            res.render('pages/weatherResults.ejs', {
                 // Parameters to send to the user on the webpage go here
                 data: data, // resulting data is an array of each response parameter's data objects.
                 dataFormat: req.body.dataFormat
@@ -388,7 +383,7 @@ app.post('/search', (req, res) => {
         .catch(error => {
             // Handle errors (API call may have failed!)
             console.log(error);
-            res.render('pages/visit.ejs', {
+            res.render('pages/weatherResults.ejs', {
                 message: `Axios API call failed! Error: ${error}`,
                 error: true
             });
