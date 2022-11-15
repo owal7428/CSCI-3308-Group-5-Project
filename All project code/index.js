@@ -107,14 +107,17 @@ app.post("/login", (req, res) => {
 
     const query = "SELECT * FROM users WHERE username = $1";
 
+    // Queries the database for existing users, and then checks if password matches before logging in.
     db.any(query, [username])
     .then(async (user) => {
 
+        // For security reasons, the user should receieve the same feedback on a login fail, regardless of why the login failed.
+        const failed_login_feedback = "Incorrect username or password."
         //Checks if an account registered under the given username exists
         if (user[0] == null)
         {
             res.render("pages/login", {
-                message: "No account exists with that username.",
+                message: failed_login_feedback,
                 error: true
             });
         }
@@ -122,7 +125,7 @@ app.post("/login", (req, res) => {
         const match = await bcrypt.compare(password, user[0].password);
         
         //Checks if password matches
-        if (match)
+        if (match === true)
         {
             req.session.user = username;
             req.session.user.flight_api_key = process.env.flight_api_key;
@@ -132,7 +135,7 @@ app.post("/login", (req, res) => {
         else
         {
             res.render("pages/login", {
-                message: "Incorrect password for given username.",
+                message: failed_login_feedback,
                 error: true,
             });
         }
