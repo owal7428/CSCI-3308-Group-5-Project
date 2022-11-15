@@ -210,7 +210,7 @@ const weatherFields = [
 
 // Display weather search page
 app.get("/searchWeather", (req, res) => {
-    res.render("pages/search", {
+    res.render("pages/searchWeather", {
         searchFields: weatherFields
     });
 });

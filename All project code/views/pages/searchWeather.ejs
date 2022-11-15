@@ -5,7 +5,7 @@
             <div class="container">
                 <!--  -->
                 <h1>Search by Weather</h1>
-                <form action="/search" method="POST">
+                <form action="/searchWeather" method="POST">
 
                     <% searchFields.forEach(searchField => { %>
                         <label for="<%= searchField.name %>" class="form-label"><%= searchField.label %></label>
