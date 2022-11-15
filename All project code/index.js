@@ -101,7 +101,7 @@ app.get("/login", (req, res) => {
 });
 
 // Handles showing the user feedback on a failed login attempt.
-function failedLogin() {
+function failedLogin(res) {
     // For security reasons, the user should receieve the same feedback on a login fail, regardless of why the login failed.
     res.render("pages/login", {
         message: "Incorrect username or password.",
@@ -123,7 +123,7 @@ app.post("/login", async (req, res) => {
         //Checks if an account registered under the given username exists
         if (user[0] == null)
         {
-            failedLogin();
+            failedLogin(res);
             // early return to prevent race-conditions due to asynchronous behavior
             return;
         }
@@ -143,13 +143,13 @@ app.post("/login", async (req, res) => {
             return;
         }
 
-        failedLogin();
+        failedLogin(res);
         // early return to prevent race-conditions due to asynchronous behavior
         return;
     })
     .catch((err) => {
         console.log(err.message);
-        failedLogin();
+        failedLogin(res);
         // early return to prevent race-conditions due to asynchronous behavior
         return;
     });
