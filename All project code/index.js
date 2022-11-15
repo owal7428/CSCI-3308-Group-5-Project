@@ -391,6 +391,29 @@ app.post('/searchWeather', (req, res) => {
 
 });
 
+app.post('/cityToCoor', (req, res) => {
+    console.log("Running /cityToCoor GET request");
+    axios({
+        url:'https://api.api-ninjas.com/v1/geocoding?city=' + req.body.city,
+        method: 'GET',
+        dataType: 'json',
+        auth: {
+            password: 'HfqSVakCENMtM5+oOpg4VQ==iL4iiSdkwIl6D76k',
+        }
+    })
+        .then(results => {
+            console.log(results.data);
+        })
+        .catch(error => {
+            // Handle errors (API call may have failed!)
+            console.log(error);
+            res.render('pages/weatherResults.ejs', {
+                message: `Axios API call failed for City to Coordinates API! Error: ${error}`,
+                error: true
+            });
+        })
+});
+
 
 app.get("/main", (req, res) => {
     res.render("pages/main");
