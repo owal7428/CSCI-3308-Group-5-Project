@@ -106,13 +106,13 @@ app.post("/login", (req, res) => {
     const password = req.body.password;
 
     const query = "SELECT * FROM users WHERE username = $1";
+    // For security reasons, the user should receieve the same feedback on a login fail, regardless of why the login failed.
+    const failed_login_feedback = "Incorrect username or password."
 
     // Queries the database for existing users, and then checks if password matches before logging in.
     db.any(query, [username])
     .then(async (user) => {
 
-        // For security reasons, the user should receieve the same feedback on a login fail, regardless of why the login failed.
-        const failed_login_feedback = "Incorrect username or password."
         //Checks if an account registered under the given username exists
         if (user[0] == null)
         {
@@ -143,7 +143,7 @@ app.post("/login", (req, res) => {
     .catch((err) => {
         console.log(err.message);
         res.render("pages/login", {
-            message: err.message,
+            message: failed_login_feedback,
             error: true,
         });
     });
