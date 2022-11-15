@@ -391,10 +391,16 @@ app.post('/searchWeather', (req, res) => {
 
 });
 
+app.get("/cityToCoor", (req, res) => {
+    res.redirect("/searchWeather", {
+        searchFields: weatherFields
+    });
+});
+
 app.post('/cityToCoor', (req, res) => {
     console.log("Running /cityToCoor GET request");
     axios({
-        url:'https://api.api-ninjas.com/v1/geocoding?city=' + req.body.city,
+        url:'https://api.api-ninjas.com/v1/geocoding?city=' + 'london',
         method: 'GET',
         dataType: 'json',
         auth: {
