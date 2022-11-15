@@ -391,11 +391,6 @@ app.post('/searchWeather', (req, res) => {
 
 });
 
-app.get("/cityToCoor", (req, res) => {
-    res.redirect("/searchWeather", {
-        searchFields: weatherFields
-    });
-});
 
 app.post('/cityToCoor', (req, res) => {
     console.log("Running /cityToCoor GET request");
@@ -409,6 +404,9 @@ app.post('/cityToCoor', (req, res) => {
     })
         .then(results => {
             console.log(results.data);
+            let Latitude = res.data.Latitude;
+            let Longitude = res.data.Latitude;
+            res.redirect('/searchWeather');
         })
         .catch(error => {
             // Handle errors (API call may have failed!)
