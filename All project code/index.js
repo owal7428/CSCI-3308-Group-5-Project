@@ -335,9 +335,10 @@ function searchQuery(location) {
 
     // Calculate start/end dates for weather API access, ranging from 1 day in the past to 10 days in the future.
     let weatherStartDate = new Date(); // current date
-    weatherStartDate = weatherStartDate.setDate(weatherStartDate.getDate() - 1); // 1 day in the past
+    weatherStartDate.setDate(weatherStartDate.getDate() - 1); // 1 day in the past
     let weatherEndDate = new Date(); // current date
-    weatherEndDate = weatherEndDate.setDate(weatherEndDate.getDate() + 10); // 10 days in the future
+    weatherEndDate.setDate(weatherEndDate.getDate() + 10); // 10 days in the future
+    
 
     // Input data to weather API
     const weatherQuery = {
