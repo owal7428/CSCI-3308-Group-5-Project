@@ -382,9 +382,39 @@ function searchQuery(location) {
 function searchWeather(weatherQuery) {
     const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.latitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
 
-    return {
-        data: "TODO response weather data"
-    };
+    let data;
+    // make axios API call
+    axios({
+        // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
+        // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
+        url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLatitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
+        method: 'GET',
+        dataType: req.body.dataFormat,
+        auth: {
+            // auth specified from .env file.
+            username: process.env.METEO_USER,
+            password: process.env.METEO_PASSWORD
+        }
+    })
+    .then(results => {
+        // API call success
+
+        // results has varying structure depending on datatype
+        if (weatherQuery.dataFormat === "json") {
+            data = results.data.data;
+        } else if (weatherQuery.dataFormat === "html") {
+            data = results.data;
+        }
+    })
+    .catch(error => {
+        // API call failed
+        // Handle errors (API call may have failed!)
+        console.log(`Weather API call failed! Error:\n${error}`);
+        return; // bad response. Make sure to check for this value in error handling.
+    });
+        
+    console.log(`Weather API call succeeded! Response:\n${JSON.stringify(data)}`);
+    return data;
 }
 
 // Perform API query to flight API
