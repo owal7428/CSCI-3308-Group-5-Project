@@ -334,11 +334,12 @@ function searchQuery(location) {
     // Prepare weather query
 
     // Calculate start/end dates for weather API access, ranging from 1 day in the past to 10 days in the future.
-    let weatherStartDate = new Date();
+    let weatherStartDate = new Date(); // current date
     weatherStartDate = weatherStartDate.setDate(weatherStartDate.getDate() - 1); // 1 day in the past
-    let weatherEndDate = new Date();
+    let weatherEndDate = new Date(); // current date
     weatherEndDate = weatherEndDate.setDate(weatherEndDate.getDate() + 10); // 10 days in the future
 
+    // Input data to weather API
     const weatherQuery = {
         time: {
             start: weatherStartDate.toISOString(),
@@ -365,15 +366,18 @@ function searchQuery(location) {
         // Flight query request information here.
     }
 
-    // Make weather Query
+    // Perform API queries
     const weatherData = searchWeather(weatherQuery);
-
     const flightData = searchFlights(flightQuery);
 
-    displaySearchResults({weather: weatherData, flight: flightData});
-
+    // Return results from API queries.
+    return {
+        weather: weatherData, 
+        flight: flightData
+    };
 }
 
+// Perform API query to weather API
 function searchWeather(weatherQuery) {
     const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.latitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
 
@@ -382,14 +386,11 @@ function searchWeather(weatherQuery) {
     };
 }
 
+// Perform API query to flight API
 function searchFlights(flightQuery) {
     return {
         data: "TODO response flight data"
     };
-}
-
-function displaySearchResults(data) {
-    // TODO display results based on data.weather and data.flight
 }
 
 // Converts a string separated by divisor into an array, with whitespace trimmed from elements
@@ -404,6 +405,30 @@ function stringToArray(str, divisor=",") {
 
     return array;
 }
+
+// Convert responseData from API responses to the format we use on displaying to the user.
+function dataToDisplayData(responseData) {
+    return responseData; // for now, just pass the same data. TODO make conversion based on frontend needs.
+}
+
+app.post("/search", async (req, res) => {
+    const locationInput = req.body.location;
+
+    console.log(`Recieved location input: ${locationInput}`);
+
+    // Data receieved back from any APIs.
+    const responseData = searchQuery(locationInput);
+
+    console.log(`Response API Data:\n${JSON.stringify(responseData)}`);
+
+    // Data we need in a usable form for frontend.
+    const displayData = dataToDisplayData(responseData);
+    console.log(`Displaying results with this data:\n${JSON.stringify(displayData)}`);
+
+    console.log(JSON.stringify(responseData));
+    // render the searchResults.ejs page with usable displayable data.
+    res.render("pages/searchResults", displayData);
+});
 
 // Weather API access: using meteomatics.com
 app.post('/searchWeather', (req, res) => {
