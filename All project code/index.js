@@ -330,6 +330,68 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
     return url;
 }
 
+function searchQuery(location) {
+    // Prepare weather query
+
+    // Calculate start/end dates for weather API access, ranging from 1 day in the past to 10 days in the future.
+    let weatherStartDate = new Date();
+    weatherStartDate = weatherStartDate.setDate(weatherStartDate.getDate() - 1); // 1 day in the past
+    let weatherEndDate = new Date();
+    weatherEndDate = weatherEndDate.setDate(weatherEndDate.getDate() + 10); // 10 days in the future
+
+    const weatherQuery = {
+        time: {
+            start: weatherStartDate.toISOString(),
+            end: weatherEndDate.toISOString()
+        },
+        location: {
+            // TODO take location data from user, and calculate latitude and longitude from that.
+            country: ``,
+            state: ``,
+            city: ``,
+            lattitude: 12,
+            longitude: 8
+        },
+        requestParameters: [
+            "temperature",
+            "precipitation 24 hours"
+        ],
+        dataFormat: "json",
+        optionalParameters: {}
+    };
+
+    // Prepare flight query
+    const flightQuery = {
+        // Flight query request information here.
+    }
+
+    // Make weather Query
+    const weatherData = searchWeather(weatherQuery);
+
+    const flightData = searchFlights(flightQuery);
+
+    displaySearchResults({weather: weatherData, flight: flightData});
+
+}
+
+function searchWeather(weatherQuery) {
+    const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.lattitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
+
+    return {
+        data: "TODO response weather data"
+    };
+}
+
+function searchFlights(flightQuery) {
+    return {
+        data: "TODO response flight data"
+    };
+}
+
+function displaySearchResults(data) {
+    // TODO display results based on data.weather and data.flight
+}
+
 // Converts a string separated by divisor into an array, with whitespace trimmed from elements
 function stringToArray(str, divisor=",") {
     // Split the string by the divisor into an array
