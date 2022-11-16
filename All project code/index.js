@@ -190,6 +190,12 @@ app.get("/profile", (req, res) => {
 // database configuration
 
 app.get("/flights", (req, res) => {
+    res.render("pages/flights", {
+        results: [],
+    });
+});
+
+app.post("/flights", (req, res) => {
     axios({
         url: "http://api.aviationstack.com/v1/flights",
         method: 'GET',
@@ -198,7 +204,7 @@ app.get("/flights", (req, res) => {
             "access_key": process.env.flight_api_key,
             "limit": 40,
             "flight_status": "scheduled",
-            "dep_icao": "KDEN",
+            "arr_icao": req.body.city,
         }
     })
     .then(results => {

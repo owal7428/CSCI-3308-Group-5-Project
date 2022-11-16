@@ -10,8 +10,19 @@
             <%- include ('../partials/message.ejs') %>
         </div>
 
+        <!--Search bar-->
+        <form action="/flights" method="POST">
+            <label for="city" class="form-label">Arrival Airport (ICAO)</label>
+            <input required type="text" class="form-control" id="city" name="city">
+            <button type="submit" class="btn btn-primary" id="submit_button">Search</button>
+        </form>
+        <br>
+        <hr>
+
         <!--Main functionality-->
         <% let flights = results.data; %>
+        <% if (flights != null)
+        { %>
         <table class="table">
         <thead>
             <tr>
@@ -33,6 +44,7 @@
             <% }); %>
         </tbody>
         </table>
+        <% } %>
     </div>
 </main>
 
