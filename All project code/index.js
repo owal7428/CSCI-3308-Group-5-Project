@@ -411,6 +411,10 @@ function dataToDisplayData(responseData) {
     return responseData; // for now, just pass the same data. TODO make conversion based on frontend needs.
 }
 
+app.get("/search", async (req, res) => {
+    res.render("pages/search");
+});
+
 app.post("/search", async (req, res) => {
     const locationInput = req.body.location;
 
