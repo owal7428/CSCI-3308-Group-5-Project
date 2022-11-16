@@ -330,7 +330,7 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLatitude, loc
     return url;
 }
 
-function searchQuery(location) {
+async function searchQuery(location) {
     // Prepare weather query
 
     // Calculate start/end dates for weather API access, ranging from 1 day in the past to 10 days in the future.
@@ -343,8 +343,10 @@ function searchQuery(location) {
     // Input data to weather API
     const weatherQuery = {
         time: {
-            start: weatherStartDate.toISOString(),
-            end: weatherEndDate.toISOString()
+            // start: weatherStartDate.toISOString(),
+            // end: weatherEndDate.toISOString()
+            start: "2022-11-16T15:30:00Z",
+            end: "2022-11-17T15:30:00Z"
         },
         location: {
             // TODO take location data from user, and calculate latitude and longitude from that.
@@ -359,7 +361,7 @@ function searchQuery(location) {
             "precipitation 24 hours"
         ],
         dataFormat: "json",
-        optionalParameters: {}
+        // optionalParameters: {}
     };
 
     // Prepare flight query
@@ -367,9 +369,9 @@ function searchQuery(location) {
         // Flight query request information here.
     }
 
-    // Perform API queries
-    const weatherData = searchWeather(weatherQuery);
-    const flightData = searchFlights(flightQuery);
+    // Perform API queries, waiting for their response.
+    const weatherData = await searchWeather(weatherQuery);
+    const flightData = await searchFlights(flightQuery);
 
     // Return results from API queries.
     return {
@@ -379,16 +381,16 @@ function searchQuery(location) {
 }
 
 // Perform API query to weather API
-function searchWeather(weatherQuery) {
+async function searchWeather(weatherQuery) {
     // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
-    // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
+    // example call: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
     const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.latitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
 
     // Response data from weather API call, assigned from axios result below.
     let responseData;
 
-    // make axios API call
-    axios({
+    // make axios API call, and return the result. -1 if failed
+    return await axios({
         url: url,
         method: 'GET',
         dataType: weatherQuery.dataFormat,
@@ -397,8 +399,7 @@ function searchWeather(weatherQuery) {
             username: process.env.METEO_USER,
             password: process.env.METEO_PASSWORD
         }
-    })
-    .then(results => {
+    }).then(results => {
         // API call success
 
         // results has varying structure depending on datatype
@@ -407,20 +408,21 @@ function searchWeather(weatherQuery) {
         } else if (weatherQuery.dataFormat === "html") {
             responseData = results.data;
         }
-    })
-    .catch(error => {
+
+        console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
+
+        return responseData;
+    }).catch(error => {
         // API call failed
         // Handle errors (API call may have failed!)
         console.log(`Weather API call failed! Error:\n${error}`);
-        return; // bad response. Make sure to check for this value in error handling.
+        // bad response. Make sure to check for this value in error handling.
+        return -1;
     });
-        
-    console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
-    return responseData;
 }
 
 // Perform API query to flight API
-function searchFlights(flightQuery) {
+async function searchFlights(flightQuery) {
     return {
         data: "TODO response flight data"
     };
@@ -454,7 +456,7 @@ app.post("/search", async (req, res) => {
     console.log(`Recieved location input: ${locationInput}`);
 
     // Data receieved back from any APIs.
-    const responseData = searchQuery(locationInput);
+    const responseData = await searchQuery(locationInput);
 
     console.log(`Response API Data:\n${JSON.stringify(responseData)}`);
 
