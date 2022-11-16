@@ -395,12 +395,16 @@ app.post('/searchWeather', (req, res) => {
 app.post('/cityToCoor', (req, res) => {
     console.log("Running /cityToCoor GET request");
     axios({
-        url:'https://api.api-ninjas.com/v1/geocoding?city=' + 'london',
+        url:'https://api.api-ninjas.com/v1/geocoding?city=',
         method: 'GET',
         dataType: 'json',
-        auth: {
-            password: 'HfqSVakCENMtM5+oOpg4VQ==iL4iiSdkwIl6D76k',
+        Headers: {
+            'X-Api-Key': 'HfqSVakCENMtM5+oOpg4VQ==iL4iiSdkwIl6D76k'
+        },
+        params: {
+            'city': 'london'
         }
+
     })
         .then(results => {
             console.log(results.data);
