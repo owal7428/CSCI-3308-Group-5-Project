@@ -384,7 +384,9 @@ function searchWeather(weatherQuery) {
     // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
     const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.latitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
 
-    let data;
+    // Response data from weather API call, assigned from axios result below.
+    let responseData;
+
     // make axios API call
     axios({
         url: url,
@@ -401,9 +403,9 @@ function searchWeather(weatherQuery) {
 
         // results has varying structure depending on datatype
         if (weatherQuery.dataFormat === "json") {
-            data = results.data.data;
+            responseData = results.data.data;
         } else if (weatherQuery.dataFormat === "html") {
-            data = results.data;
+            responseData = results.data;
         }
     })
     .catch(error => {
@@ -413,8 +415,8 @@ function searchWeather(weatherQuery) {
         return; // bad response. Make sure to check for this value in error handling.
     });
         
-    console.log(`Weather API call succeeded! Response:\n${JSON.stringify(data)}`);
-    return data;
+    console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
+    return responseData;
 }
 
 // Perform API query to flight API
