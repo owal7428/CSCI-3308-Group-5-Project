@@ -201,7 +201,7 @@ const weatherFields = [
     // name is the js parameter name to be used in POST requests. Label is what is shown to the user.
     {name: "startTime", label: "Start Time", required: true},
     {name: "endTime", label: "End Time", required: true},
-    {name: "locationLattitude", label: "Location Lattitude", required: true},
+    {name: "locationLatitude", label: "Location Latitude", required: true},
     {name: "locationLongitude", label: "Location Longitude", required: true},
     {name: "requestParameters", label: "Request Parameters", required: true},
     {name: "dataFormat", label: "Data Format", required: true},
@@ -223,7 +223,7 @@ app.get("/searchWeather", (req, res) => {
  * @param {string} endTime End time for the time-range of data request. 
  * - Format(ISO 8601), in UTC: YYYY-MM-DDThh:mm:ssZ
  * - Up to 10 days in the future.
- * @param {string} locationLattitude Latitude of request location.
+ * @param {string} locationLatitude Latitude of request location.
  * - Example: "47.419708"
  * @param {string} locationLongitude Longitude of request location.
  * - Example: "9.358478"
@@ -237,9 +237,9 @@ app.get("/searchWeather", (req, res) => {
  * @param {string} optionalParameters Optional parameters to add to the end of the request.
  * @returns {string} Complete Request URL to send to Meteomatics
  */
-function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, locationLongitude, requestParameters, dataFormat, optionalParameters) {
+function generateMeteomaticsRequestURL(startTime, endTime, locationLatitude, locationLongitude, requestParameters, dataFormat, optionalParameters) {
     let validdatetime = `${startTime}--${endTime}`;
-    let location = `${locationLattitude},${locationLongitude}`;
+    let location = `${locationLatitude},${locationLongitude}`;
 
     // Generate API parameter request from list of readable parameters.
     let parameters = ``;
@@ -349,7 +349,7 @@ function searchQuery(location) {
             country: ``,
             state: ``,
             city: ``,
-            lattitude: 12,
+            latitude: 12,
             longitude: 8
         },
         requestParameters: [
@@ -375,7 +375,7 @@ function searchQuery(location) {
 }
 
 function searchWeather(weatherQuery) {
-    const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.lattitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
+    const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.latitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
 
     return {
         data: "TODO response weather data"
@@ -414,7 +414,7 @@ app.post('/searchWeather', (req, res) => {
     axios({
         // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
         // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
-        url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLattitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
+        url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLatitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
         method: 'GET',
         dataType: req.body.dataFormat,
         auth: {
