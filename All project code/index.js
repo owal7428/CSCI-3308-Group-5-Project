@@ -380,16 +380,16 @@ function searchQuery(location) {
 
 // Perform API query to weather API
 function searchWeather(weatherQuery) {
+    // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
+    // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
     const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.latitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
 
     let data;
     // make axios API call
     axios({
-        // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
-        // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
-        url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLatitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
+        url: url,
         method: 'GET',
-        dataType: req.body.dataFormat,
+        dataType: weatherQuery.dataFormat,
         auth: {
             // auth specified from .env file.
             username: process.env.METEO_USER,
