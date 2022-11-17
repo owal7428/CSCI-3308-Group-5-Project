@@ -335,9 +335,9 @@ async function cityToCoordinates(locationInput) {
     // Perform city/country conversion to latitude/longitude coordinates here.
     const country = locationInput.country;
     const city = locationInput.city;
-    let latitude = "0";
-    let longitude = "0";
-    axios({
+    latitude = 0;
+    var longitude = 0;
+    await axios({
         url:'https://api.api-ninjas.com/v1/geocoding?city=',
         method: 'GET',
         dataType: 'json',
@@ -346,26 +346,22 @@ async function cityToCoordinates(locationInput) {
         },
         params: { 
             'city': city,
-            'country': country,
-            'limit': 1
+            'country': country
         }
 
     })
-    .then(results => {
+     .then( results => {
         console.log("Successful API call");
         console.log(results.data);
         latitude = results.data.latitude;
         longitude = results.data.longitude;
+        console.log("latitude: ", latitude);
+        console.log("longitude: ", longitude)
     })
     .catch(error => {
         // Handle errors (API call may have failed!)
         console.log(error);
-        // render('pages/search', {
-        //     message: `Axios API call failed for City to Coordinates API! Error: ${error}`,
-        //     error: true
-        // });
     })
-    console.log("latitude: ", latitude)
     return {
         country: country,
         city: city,
