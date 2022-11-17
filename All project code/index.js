@@ -355,8 +355,8 @@ async function cityToCoordinates(locationInput) {
         console.log("Successful API call");
         console.log(JSON.stringify(results.data));
         //sets lat and long for weather and flight API
-        latitude = results.data[0].latitude;
-        longitude = results.data[0].longitude;
+        latitude = JSON.stringify(results.data[0].latitude);
+        longitude = JSON.stringify(results.data[0].longitude);
         // verifying that lat and long are as I expect 
         console.log("latitude: ", latitude);
         console.log("longitude: ", longitude)
