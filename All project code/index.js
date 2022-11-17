@@ -367,7 +367,10 @@ async function searchQuery(location) {
 
     // Return results from API queries.
     return {
-        weather: weatherData, 
+        weather: {
+            data: weatherData,
+            format: weatherQuery.dataFormat
+        },
         flight: flightData
     };
 }

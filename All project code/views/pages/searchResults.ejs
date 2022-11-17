@@ -5,7 +5,19 @@
             <div class="container">
                 <!--  -->
                 <h1>Search Results</h1>
-                
+
+                <div class="container">
+                    <%- include ('../partials/message.ejs') %>
+                </div>
+
+                <div class="container">
+                    <% if (weather.format==="json") { %>
+                    <p><%= JSON.stringify(weather.data) %></p>
+                    <% } %>
+                    <% if (weather.format==="html") { %>
+                        <%- weather.data %>
+                    <% } %>
+                </div>
             </div>
         </main>
 
