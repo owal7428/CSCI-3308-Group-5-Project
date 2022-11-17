@@ -2,42 +2,42 @@
 
 const CALENDAR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-let maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+let maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //Can be changed if the current year is a leap year
 
-let globalDate;
-let globalMonth;
-let globalYear;
-let week;
-let currentDate;
+let globalDate; //Stores what date the user is currently looking at (always a sunday for normalization)
+let globalMonth; //Stores what month the user is currently looking at
+let globalYear; //Stores what year the user is currently looking at
+let week; //Stores the offset of weeks that the user is currently on (0 means the week of the current date)
+let currentDate; //Stores the current date in reality. Used to highlight the current date on the calendar
 
-function initialize_calendar() {
+function initialize_calendar() { //Called at page load or when the user wants to return to the current date
 
-    if(!document.getElementById('calendar')) {
+    if(!document.getElementById('calendar')) { //Checks if this is indeed the profile page (this function is called on every body load)
         return;
     }
 
     let today = new Date();
     currentDate = today.getDate();
-    today.setDate(today.getDate() - today.getDay());
+    today.setDate(today.getDate() - today.getDay()); //Normalizes the date so that the globalDate is always stored as a sunday
     globalDate = today.getDate();
-    globalMonth = today.getMonth() + 1;
+    globalMonth = today.getMonth() + 1; //Months are stored as 0-11 so 1 has to be added to get the correct date format
     globalYear = today.getFullYear();
     checkLeapYear();
-    week = 0;
+    week = 0; //Because this is calling the current date, the week offset is 0
 
-    change_calendar();
+    change_calendar(); //Will cause the default case in the switch statement so no variables are manipulated before building the calendar
 }
 
 
 function change_calendar(operation) {
     const calendar_element = document.getElementById('calendar');
-    calendar_element.innerHTML = '';
+    calendar_element.innerHTML = ''; //Clears the current calendar on the page so it can be rebuilt in the new week
 
 
 
     switch(operation) {
         case 'previousMonth':
-            if(globalMonth === 1) {
+            if(globalMonth === 1) { //Checks for wraparound months
                 globalMonth = 12;
                 globalYear--;
                 checkLeapYear();
@@ -45,7 +45,7 @@ function change_calendar(operation) {
             else {
                 globalMonth--;
             }
-            if(globalDate >= 28) {
+            if(globalDate >= 28) { //In some cases subtracting 4 weeks will still land a user in the same month so an extra week needs to be subtracted
                 globalDate = globalDate - 35 + maxDays[globalMonth - 1];
                 week -= 5;
             }
@@ -53,7 +53,7 @@ function change_calendar(operation) {
                 globalDate = globalDate - 28 + maxDays[globalMonth - 1];
                 week -= 4;
             }
-            while(globalDate > 7) {
+            while(globalDate > 7) { //Normalizes the date so that the first full week of the month is being shown
                 globalDate -= 7;
                 week--;
             }
@@ -61,7 +61,7 @@ function change_calendar(operation) {
         case 'previousWeek':
             globalDate -= 7;
             week --;
-            if(globalDate < 1) {
+            if(globalDate < 1) { //Checks if going back a week results in going back a month
                 if(globalMonth === 1) {
                     globalMonth = 12;
                     globalYear--;
@@ -74,7 +74,7 @@ function change_calendar(operation) {
             }
             break;
         case 'currentDay' :
-            initialize_calendar();
+            initialize_calendar(); //Will reset the date and clear the calendar
             return;
         case 'nextWeek':
             globalDate += 7;
@@ -92,7 +92,7 @@ function change_calendar(operation) {
             }
             break;
         case 'nextMonth':
-            if(globalDate < 4) {
+            if(globalDate < 4) { //In some cases adding 4 weeks will still land the user in the same month so an extra week needs to be added
                 globalDate = globalDate + 35 - maxDays[globalMonth - 1];
                 week += 5;
             }
@@ -108,7 +108,7 @@ function change_calendar(operation) {
             else {
                 globalMonth++;
             }
-            while(globalDate > 7) {
+            while(globalDate > 7) { //Normalizes the date so that the first full week of the new month will be shown
                 globalDate -= 7;
                 week--;
             }
@@ -120,7 +120,7 @@ function change_calendar(operation) {
 
 
 
-    tempDate = globalDate;
+    tempDate = globalDate; //Temp variables used for building individual days in the calendar
     tempMonth = globalMonth;
     tempYear = globalYear;
 
@@ -142,7 +142,7 @@ function change_calendar(operation) {
         calendar_element.appendChild(card);
 
         const title = document.createElement('div');
-        if(week === 0 && currentDate === tempDate) {
+        if(week === 0 && currentDate === tempDate) { //Checks if the current day is being displayed and highlights it blue (from css stylesheet)
             title.setAttribute('id', 'currentDay');
         }
 
@@ -170,7 +170,7 @@ function change_calendar(operation) {
 
         tempDate++;
 
-        if(tempDate > maxDays[tempMonth - 1]) {
+        if(tempDate > maxDays[tempMonth - 1]) { //Adjustments to month and year based on if the date increase went out of range of the current month
             tempDate = 1;
             if(tempMonth === 12) {
                 tempMonth = 1;
@@ -185,7 +185,7 @@ function change_calendar(operation) {
 
 }
 
-function checkLeapYear() {
+function checkLeapYear() { //Does calculations based on the rules of leap years to change the number of days in Februrary
     if (globalYear % 4 === 0) {
         if (globalYear % 100 === 0) {
             if(globalYear % 400 === 0) {

@@ -165,7 +165,7 @@ app.use(auth);
 /*Code for pages not including login and register go in after here*/
 
 app.get("/profile", (req, res) => {
-    res.render("pages/profile", {user: req.session.user, loadCalendar: true});
+    res.render("pages/profile", {user: req.session.user}); //Sends the username so it can be displayed at the top of the profile page
 });
 
 // The fields to render on the search page to make the search request.
