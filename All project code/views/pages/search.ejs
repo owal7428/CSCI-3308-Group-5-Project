@@ -1,0 +1,20 @@
+<%- include ('../partials/header') %>
+    <%- include ('../partials/menu') %>
+
+        <main>
+            <div class="container">
+                <!--  -->
+                <h1>Search for a Location</h1>
+                <form action="/search" method="POST">
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="country" name="country">
+                    
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city">
+                    
+                    <button type="submit" class="btn btn-primary" id="submit_button">Search</button>
+                </form>
+            </div>
+        </main>
+
+        <%- include ('../partials/footer') %>
