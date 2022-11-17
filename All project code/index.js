@@ -400,7 +400,7 @@ app.post('/cityToCoor', (req, res) => {
         headers: {
             'X-Api-Key': process.env.CITYCOOR_KEY
         },
-        params: {
+        params: { 
             'city': req.body.city,
             'country': req.body.country,
         }
