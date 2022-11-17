@@ -38,4 +38,11 @@ Notes from Group meeting:
 * Weather API gives us single data point, not map, so keep in mind for SQL database
 * Use request format function from Kyle for API requests
 
+Third TA Meeting (15 minutes): November 17th, 2022
+
+* We presented our progress for the week, including the landing page, the search feature, better login capability, further calender progress, more database capability, and error handling.
+* We asked questions on how to share our private api keys between each other:
+We can either each make individual accounts, or share keys privately between ourselves, and both solutions work.
+* We presented our documentation, including meeting notes, future plans, and release notes, and verified that we are doing it in the correct format.
+* For the following week, we plan on polishing the frontend to improve the user experience, completing the search results page, calender, and allow the user to save their trips to their account.
 
