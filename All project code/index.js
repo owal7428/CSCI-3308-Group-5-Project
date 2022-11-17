@@ -337,10 +337,12 @@ async function cityToCoordinates(locationInput) {
     const city = locationInput.city;
     var latitude = 0;
     var longitude = 0;
+    let alertMessage;
+    let error = false;
     // axios call to API-Ninja geocoding api to return latitude and longitude from city and country input 
     await axios({
         // url for API-Ninja
-        url:'https://api.api-ninjas.com/v1/geocoding?city=',
+        url:'https://api.api-ninjas.com/v1/geocoding',
         method: 'GET',
         dataType: 'json',
         headers: {
@@ -353,24 +355,31 @@ async function cityToCoordinates(locationInput) {
 
     }).then(results => {
         // shows devs if correct call
-        console.log("Successful API call");
+        console.log("Successful API call to API-Ninja for city to coordinates");
         console.log(JSON.stringify(results.data));
         //sets lat and long for weather and flight API
         latitude = JSON.stringify(results.data[0].latitude);
         longitude = JSON.stringify(results.data[0].longitude);
         // verifying that lat and long are as I expect 
         console.log("latitude: ", latitude);
-        console.log("longitude: ", longitude)
+        console.log("longitude: ", longitude);
     }).catch(error => {
         // Handle errors (API call may have failed!)
-        console.log(error);
+        console.log(`City to Coordinates API call failed! Error:\n${error}`);
+        return -1;
     })
     // return vals for weather and flight API
-    return {
-        country: country,
-        city: city,
-        latitude: latitude,
-        longitude: longitude
+    if((latitude == 0 && longitude == 0) |(latitude == undefined && longitude == undefined)){
+        console.log('Invalid coordinates:');
+        return -1;
+    }
+    else{
+        return {
+            country: country,
+            city: city,
+            latitude: latitude,
+            longitude: longitude
+        }
     }
 }
 
