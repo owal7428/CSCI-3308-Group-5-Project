@@ -398,7 +398,7 @@ app.post('/cityToCoor', (req, res) => {
         method: 'GET',
         dataType: 'json',
         headers: {
-            'X-Api-Key': 'HfqSVakCENMtM5+oOpg4VQ==iL4iiSdkwIl6D76k'
+            'X-Api-Key': process.env.CITYCOOR_KEY
         },
         params: {
             'city': req.body.city,
