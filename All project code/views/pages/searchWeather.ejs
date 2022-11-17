@@ -5,6 +5,13 @@
             <div class="container">
                 <!--  -->
                 <h1>Search by Weather</h1>
+                <form action= "/cityToCoor" method="POST">
+                    <label for="city" class="form-label">City</label>
+                    <input required type="text" class="form-control" id="city" name="city">
+                    <label for="country" class="form-label">Country</label>
+                    <input required type="text" class="form-control" id="country" name="country">
+                    <button type="submit" class="btn btn-primary" id="submit_button">Search</button>
+                </form>
                 <form action="/searchWeather" method="POST">
 
                     <% searchFields.forEach(searchField => { %>
