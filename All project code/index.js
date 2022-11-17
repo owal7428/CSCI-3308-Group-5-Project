@@ -397,7 +397,7 @@ async function searchQuery(locationInput) {
             "temperature",
             "precipitation 24 hours"
         ],
-        dataFormat: "json",
+        dataFormat: "html",
         // optionalParameters: {}
     };
 
