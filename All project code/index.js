@@ -335,15 +335,51 @@ async function cityToCoordinates(locationInput) {
     // Perform city/country conversion to latitude/longitude coordinates here.
     const country = locationInput.country;
     const city = locationInput.city;
+    var latitude = 0;
+    var longitude = 0;
+    let alertMessage;
+    let error = false;
+    // axios call to API-Ninja geocoding api to return latitude and longitude from city and country input 
+    await axios({
+        // url for API-Ninja
+        url:'https://api.api-ninjas.com/v1/geocoding',
+        method: 'GET',
+        dataType: 'json',
+        headers: {
+            'X-Api-Key': process.env.CITYCOOR_KEY
+        },
+        params: { 
+            'city': city,
+            'country': country
+        }
 
-    let latitude = 0;
-    let longitude = 0;
-
-    return {
-        country: country,
-        city: city,
-        latitude: latitude,
-        longitude: longitude
+    }).then(results => {
+        // shows devs if correct call
+        console.log("Successful API call to API-Ninja for city to coordinates");
+        console.log(JSON.stringify(results.data));
+        //sets lat and long for weather and flight API
+        latitude = JSON.stringify(results.data[0].latitude);
+        longitude = JSON.stringify(results.data[0].longitude);
+        // verifying that lat and long are as I expect 
+        console.log("latitude: ", latitude);
+        console.log("longitude: ", longitude);
+    }).catch(error => {
+        // Handle errors (API call may have failed!)
+        console.log(`City to Coordinates API call failed! Error:\n${error}`);
+        return -1;
+    })
+    // return vals for weather and flight API
+    if((latitude == 0 && longitude == 0) |(latitude == undefined && longitude == undefined)){
+        console.log('Invalid coordinates:');
+        return -1;
+    }
+    else{
+        return {
+            country: country,
+            city: city,
+            latitude: latitude,
+            longitude: longitude
+        }
     }
 }
 
@@ -371,7 +407,7 @@ async function searchQuery(locationInput) {
             "temperature",
             "precipitation 24 hours"
         ],
-        dataFormat: "json",
+        dataFormat: "html",
         // optionalParameters: {}
     };
 
@@ -549,6 +585,29 @@ app.post('/searchWeather', (req, res) => {
             });
         });
 
+});
+
+app.post('/cityToCoor', (req, res) => {
+    console.log("Running /cityToCoor GET request");
+    axios({
+        url:'https://api.api-ninjas.com/v1/geocoding?city=' + req.body.city,
+        method: 'GET',
+        dataType: 'json',
+        auth: {
+            password: 'HfqSVakCENMtM5+oOpg4VQ==iL4iiSdkwIl6D76k',
+        }
+    })
+        .then(results => {
+            console.log(results.data);
+        })
+        .catch(error => {
+            // Handle errors (API call may have failed!)
+            console.log(error);
+            res.render('pages/weatherResults.ejs', {
+                message: `Axios API call failed for City to Coordinates API! Error: ${error}`,
+                error: true
+            });
+        })
 });
 
 
