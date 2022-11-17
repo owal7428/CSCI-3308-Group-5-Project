@@ -1,0 +1,22 @@
+<%- include ('../partials/header') %>
+    <%- include ('../partials/menu') %>
+
+        <main>
+            <div class="container">
+                <!--  -->
+                <h1>Search by Weather</h1>
+                <form action="/searchWeather" method="POST">
+
+                    <% searchFields.forEach(searchField => { %>
+                        <label for="<%= searchField.name %>" class="form-label"><%= searchField.label %></label>
+                        <input type="text" class="form-control" id="<%= searchField.name %>" name="<%= searchField.name %>" 
+                        <% if (searchField.required===true) { %> required="true" <% } %>
+                        >
+                    <% }); %>
+
+                    <button type="submit" class="btn btn-primary" id="submit_button">Search</button>
+                </form>
+            </div>
+        </main>
+
+        <%- include ('../partials/footer') %>

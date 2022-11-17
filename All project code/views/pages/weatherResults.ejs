@@ -1,0 +1,19 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+        <h1>Weather Results</h1>
+        <h3>Specific Location Information to Display Here</h3>
+        <div class="container">
+            <% if (dataFormat==="json") { %>
+            <p><%= JSON.stringify(data) %></p>
+            <% } %>
+            <% if (dataFormat==="html") { %>
+                <%- data %>
+            <% } %>
+        </div>
+    </div>
+</main>
+
+<%- include ('../partials/footer') %>
