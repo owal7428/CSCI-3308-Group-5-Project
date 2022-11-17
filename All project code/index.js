@@ -339,6 +339,7 @@ async function cityToCoordinates(locationInput) {
     var longitude = 0;
     // axios call to API-Ninja geocoding api to return latitude and longitude from city and country input 
     await axios({
+        // url for API-Ninja
         url:'https://api.api-ninjas.com/v1/geocoding?city=',
         method: 'GET',
         dataType: 'json',
