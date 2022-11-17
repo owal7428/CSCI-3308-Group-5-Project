@@ -438,6 +438,7 @@ function stringToArray(str, divisor=",") {
 
 // Convert responseData from API responses to the format we use on displaying to the user.
 function dataToDisplayData(responseData) {
+
     return responseData; // for now, just pass the same data. TODO make conversion based on frontend needs.
 }
 
@@ -449,6 +450,8 @@ app.post("/search", async (req, res) => {
     const locationInput = req.body.location;
 
     console.log(`Recieved location input: ${locationInput}`);
+
+    // TODO perform searchQuery(location) for every location query we want to do on a search.
 
     // Data receieved back from any APIs.
     const responseData = await searchQuery(locationInput);
