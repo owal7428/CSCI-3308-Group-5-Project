@@ -45,4 +45,5 @@ Third TA Meeting (15 minutes): November 17th, 2022
 We can either each make individual accounts, or share keys privately between ourselves, and both solutions work.
 * We presented our documentation, including meeting notes, future plans, and release notes, and verified that we are doing it in the correct format.
 * For the following week, we plan on polishing the frontend to improve the user experience, completing the search results page, calender, and allow the user to save their trips to their account.
+* See release notes and future plans documentation for more details.
 
