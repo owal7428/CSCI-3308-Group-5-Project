@@ -201,7 +201,7 @@ const weatherFields = [
     // name is the js parameter name to be used in POST requests. Label is what is shown to the user.
     {name: "startTime", label: "Start Time", required: true},
     {name: "endTime", label: "End Time", required: true},
-    {name: "locationLattitude", label: "Location Lattitude", required: true},
+    {name: "locationLatitude", label: "Location Latitude", required: true},
     {name: "locationLongitude", label: "Location Longitude", required: true},
     {name: "requestParameters", label: "Request Parameters", required: true},
     {name: "dataFormat", label: "Data Format", required: true},
@@ -223,7 +223,7 @@ app.get("/searchWeather", (req, res) => {
  * @param {string} endTime End time for the time-range of data request. 
  * - Format(ISO 8601), in UTC: YYYY-MM-DDThh:mm:ssZ
  * - Up to 10 days in the future.
- * @param {string} locationLattitude Latitude of request location.
+ * @param {string} locationLatitude Latitude of request location.
  * - Example: "47.419708"
  * @param {string} locationLongitude Longitude of request location.
  * - Example: "9.358478"
@@ -237,9 +237,9 @@ app.get("/searchWeather", (req, res) => {
  * @param {string} optionalParameters Optional parameters to add to the end of the request.
  * @returns {string} Complete Request URL to send to Meteomatics
  */
-function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, locationLongitude, requestParameters, dataFormat, optionalParameters) {
+function generateMeteomaticsRequestURL(startTime, endTime, locationLatitude, locationLongitude, requestParameters, dataFormat, optionalParameters) {
     let validdatetime = `${startTime}--${endTime}`;
-    let location = `${locationLattitude},${locationLongitude}`;
+    let location = `${locationLatitude},${locationLongitude}`;
 
     // Generate API parameter request from list of readable parameters.
     let parameters = ``;
@@ -330,6 +330,118 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLattitude, lo
     return url;
 }
 
+// Adds latitude/longitude coordinates using country and city
+async function cityToCoordinates(locationInput) {
+    // Perform city/country conversion to latitude/longitude coordinates here.
+    const country = locationInput.country;
+    const city = locationInput.city;
+
+    let latitude = 0;
+    let longitude = 0;
+
+    return {
+        country: country,
+        city: city,
+        latitude: latitude,
+        longitude: longitude
+    }
+}
+
+async function searchQuery(locationInput) {
+    // add coordinates to location data.
+    locationInput = await cityToCoordinates(locationInput);
+
+    // Prepare weather query
+
+    // Input data to weather API
+    const weatherQuery = {
+        time: {
+            // Note: we have access to up to 1 day in the past to 10 days in the future, but time inaccuracies right at that range may put the request out of bounds.
+            start: "now-16H", // 16 hours in the past. 'now' and 'H' modifier shortcut specified in API
+            end: "now+168H" // 7 days in the future (168 hours).
+        },
+        location: {
+            // TODO take location data from user, and calculate latitude and longitude from that.
+            country: locationInput.country,
+            city: locationInput.city,
+            latitude: locationInput.latitude,
+            longitude: locationInput.longitude
+        },
+        requestParameters: [
+            "temperature",
+            "precipitation 24 hours"
+        ],
+        dataFormat: "json",
+        // optionalParameters: {}
+    };
+
+    // Prepare flight query
+    const flightQuery = {
+        // Flight query request information here.
+    }
+
+    // Perform API queries, waiting for their response.
+    const weatherData = await searchWeather(weatherQuery);
+    const flightData = await searchFlights(flightQuery);
+
+    // Return results from API queries.
+    return {
+        weather: {
+            data: weatherData,
+            format: weatherQuery.dataFormat
+        },
+        flight: flightData
+    };
+}
+
+// Perform API query to weather API
+async function searchWeather(weatherQuery) {
+    // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
+    // example call: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
+    const url = generateMeteomaticsRequestURL(weatherQuery.time.start, weatherQuery.time.end, weatherQuery.location.latitude, weatherQuery.location.longitude, weatherQuery.requestParameters, weatherQuery.dataFormat, weatherQuery.optionalParameters);
+
+    // Response data from weather API call, assigned from axios result below.
+    let responseData;
+
+    // make axios API call, and return the result. -1 if failed
+    return await axios({
+        url: url,
+        method: 'GET',
+        dataType: weatherQuery.dataFormat,
+        auth: {
+            // auth specified from .env file.
+            username: process.env.METEO_USER,
+            password: process.env.METEO_PASSWORD
+        }
+    }).then(results => {
+        // API call success
+
+        // results has varying structure depending on datatype
+        if (weatherQuery.dataFormat === "json") {
+            responseData = results.data.data;
+        } else if (weatherQuery.dataFormat === "html") {
+            responseData = results.data;
+        }
+
+        console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
+
+        return responseData;
+    }).catch(error => {
+        // API call failed
+        // Handle errors (API call may have failed!)
+        console.log(`Weather API call failed! Error:\n${error}`);
+        // bad response. Make sure to check for this value in error handling.
+        return -1;
+    });
+}
+
+// Perform API query to flight API
+async function searchFlights(flightQuery) {
+    return {
+        data: "TODO response flight data"
+    };
+}
+
 // Converts a string separated by divisor into an array, with whitespace trimmed from elements
 function stringToArray(str, divisor=",") {
     // Split the string by the divisor into an array
@@ -343,6 +455,54 @@ function stringToArray(str, divisor=",") {
     return array;
 }
 
+// Convert responseData from API responses to the format we use on displaying to the user.
+function dataToDisplayData(responseData) {
+    // for now, just pass the same data (with added error message).
+    // TODO make conversion based on frontend needs.
+
+    // add an error message to frontend if the weather api request failed.
+    let alertMessage;
+    let error = false;
+    if (responseData.weather.data === -1) {
+        alertMessage = "Weather API request failed! Error code -1"
+        error = true;
+    }
+
+    return {
+        data: responseData,
+        message: alertMessage,
+        error: error
+    }; 
+}
+
+app.get("/search", async (req, res) => {
+    res.render("pages/search");
+});
+
+app.post("/search", async (req, res) => {
+    const locationInput = {
+        country: req.body.country,
+        city: req.body.city
+    }
+
+    console.log(`Recieved location input: ${JSON.stringify(locationInput)}`);
+
+    // TODO perform searchQuery(location) for every location query we want to do on a search.
+
+    // Data receieved back from any APIs.
+    const responseData = await searchQuery(locationInput);
+
+    console.log(`Response API Data:\n${JSON.stringify(responseData)}`);
+
+    // Data we need in a usable form for frontend.
+    const displayData = dataToDisplayData(responseData);
+    console.log(`Displaying results with this data:\n${JSON.stringify(displayData)}`);
+
+    console.log(JSON.stringify(responseData));
+    // render the searchResults.ejs page with usable displayable data.
+    res.render("pages/searchResults", displayData);
+});
+
 // Weather API access: using meteomatics.com
 app.post('/searchWeather', (req, res) => {
     console.log("Running /searchWeather GET request");
@@ -352,7 +512,7 @@ app.post('/searchWeather', (req, res) => {
     axios({
         // URL Format: api.meteomatics.com/validdatetime/parameters/locations/format?optionals
         // url: generateMeteomaticsRequestURL("2022-11-9T15:30:00Z", "2022-11-10T15:30:00Z", "47", "9", ["wind speed", "temperature"], format),
-        url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLattitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
+        url: generateMeteomaticsRequestURL(req.body.startTime, req.body.endTime, req.body.locationLatitude, req.body.locationLongitude, stringToArray(req.body.requestParameters), req.body.dataFormat, req.body.optionalParameters),
         method: 'GET',
         dataType: req.body.dataFormat,
         auth: {
