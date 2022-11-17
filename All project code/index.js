@@ -335,8 +335,9 @@ async function cityToCoordinates(locationInput) {
     // Perform city/country conversion to latitude/longitude coordinates here.
     const country = locationInput.country;
     const city = locationInput.city;
-    latitude = 0;
+    var latitude = 0;
     var longitude = 0;
+    // axios call to API-Ninja geocoding api to return latitude and longitude from city and country input 
     await axios({
         url:'https://api.api-ninjas.com/v1/geocoding?city=',
         method: 'GET',
@@ -349,19 +350,21 @@ async function cityToCoordinates(locationInput) {
             'country': country
         }
 
-    })
-     .then( results => {
+    }).then( results => {
+        // shows devs if correct call
         console.log("Successful API call");
-        console.log(results.data);
-        latitude = results.data.latitude;
-        longitude = results.data.longitude;
+        console.log(JSON.stringify(results.data));
+        //sets lat and long for weather and flight API
+        latitude = results.data[0].latitude;
+        longitude = results.data[0].longitude;
+        // verifying that lat and long are as I expect 
         console.log("latitude: ", latitude);
         console.log("longitude: ", longitude)
-    })
-    .catch(error => {
+    }).catch(error => {
         // Handle errors (API call may have failed!)
         console.log(error);
     })
+    // return vals for weather and flight API
     return {
         country: country,
         city: city,
