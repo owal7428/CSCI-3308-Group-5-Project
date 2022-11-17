@@ -330,7 +330,27 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLatitude, loc
     return url;
 }
 
-async function searchQuery(location) {
+// Adds latitude/longitude coordinates using country and city
+async function cityToCoordinates(locationInput) {
+    // Perform city/country conversion to latitude/longitude coordinates here.
+    const country = locationInput.country;
+    const city = locationInput.city;
+
+    let latitude = 0;
+    let longitude = 0;
+
+    return {
+        country: country,
+        city: city,
+        latitude: latitude,
+        longitude: longitude
+    }
+}
+
+async function searchQuery(locationInput) {
+    // add coordinates to location data.
+    locationInput = await cityToCoordinates(locationInput);
+
     // Prepare weather query
 
     // Input data to weather API
@@ -342,11 +362,10 @@ async function searchQuery(location) {
         },
         location: {
             // TODO take location data from user, and calculate latitude and longitude from that.
-            country: ``,
-            state: ``,
-            city: ``,
-            latitude: 12,
-            longitude: 8
+            country: locationInput.country,
+            city: locationInput.city,
+            latitude: locationInput.latitude,
+            longitude: locationInput.longitude
         },
         requestParameters: [
             "temperature",
@@ -461,9 +480,12 @@ app.get("/search", async (req, res) => {
 });
 
 app.post("/search", async (req, res) => {
-    const locationInput = req.body.location;
+    const locationInput = {
+        country: req.body.country,
+        city: req.body.city
+    }
 
-    console.log(`Recieved location input: ${locationInput}`);
+    console.log(`Recieved location input: ${JSON.stringify(locationInput)}`);
 
     // TODO perform searchQuery(location) for every location query we want to do on a search.
 

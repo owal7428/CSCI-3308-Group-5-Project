@@ -4,11 +4,14 @@
         <main>
             <div class="container">
                 <!--  -->
-                <h1>Search</h1>
+                <h1>Search for a Location</h1>
                 <form action="/search" method="POST">
-                    <label for="location" class="form-label">Search for a Location</label>
-                    <input type="text" class="form-control" id="location" name="location">
-
+                    <label for="country" class="form-label">Country</label>
+                    <input type="text" class="form-control" id="country" name="country">
+                    
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" name="city">
+                    
                     <button type="submit" class="btn btn-primary" id="submit_button">Search</button>
                 </form>
             </div>
