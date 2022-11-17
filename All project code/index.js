@@ -333,20 +333,12 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLatitude, loc
 async function searchQuery(location) {
     // Prepare weather query
 
-    // Calculate start/end dates for weather API access, ranging from 1 day in the past to 10 days in the future.
-    let weatherStartDate = new Date(); // current date
-    weatherStartDate.setDate(weatherStartDate.getDate() - 1); // 1 day in the past
-    let weatherEndDate = new Date(); // current date
-    weatherEndDate.setDate(weatherEndDate.getDate() + 10); // 10 days in the future
-    
-
     // Input data to weather API
     const weatherQuery = {
         time: {
-            // start: weatherStartDate.toISOString(),
-            // end: weatherEndDate.toISOString()
-            start: "2022-11-16T15:30:00Z",
-            end: "2022-11-17T15:30:00Z"
+            // Note: we have access to up to 1 day in the past to 10 days in the future, but time inaccuracies right at that range may put the request out of bounds.
+            start: "now-16H", // 16 hours in the past. 'now' and 'H' modifier shortcut specified in API
+            end: "now+168H" // 7 days in the future (168 hours).
         },
         location: {
             // TODO take location data from user, and calculate latitude and longitude from that.
