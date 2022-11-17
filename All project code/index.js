@@ -350,7 +350,7 @@ async function cityToCoordinates(locationInput) {
             'country': country
         }
 
-    }).then( results => {
+    }).then(results => {
         // shows devs if correct call
         console.log("Successful API call");
         console.log(JSON.stringify(results.data));
