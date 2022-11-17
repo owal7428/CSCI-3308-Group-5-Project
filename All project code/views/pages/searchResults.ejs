@@ -11,11 +11,13 @@
                 </div>
 
                 <div class="container">
-                    <% if (weather.format==="json") { %>
-                    <p><%= JSON.stringify(weather.data) %></p>
-                    <% } %>
-                    <% if (weather.format==="html") { %>
-                        <%- weather.data %>
+                    <% if (data.weather.data !== -1) { %>
+                        <% if (data.weather.format==="json" ) { %>
+                            <p> <%= JSON.stringify(data.weather.data) %> </p>
+                        <% } %>
+                        <% if (data.weather.format==="html" ) { %>
+                            <%- data.weather.data %>
+                        <% } %>
                     <% } %>
                 </div>
             </div>

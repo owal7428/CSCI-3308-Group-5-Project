@@ -438,8 +438,22 @@ function stringToArray(str, divisor=",") {
 
 // Convert responseData from API responses to the format we use on displaying to the user.
 function dataToDisplayData(responseData) {
+    // for now, just pass the same data (with added error message).
+    // TODO make conversion based on frontend needs.
 
-    return responseData; // for now, just pass the same data. TODO make conversion based on frontend needs.
+    // add an error message to frontend if the weather api request failed.
+    let alertMessage;
+    let error = false;
+    if (responseData.weather.data === -1) {
+        alertMessage = "Weather API request failed! Error code -1"
+        error = true;
+    }
+
+    return {
+        data: responseData,
+        message: alertMessage,
+        error: error
+    }; 
 }
 
 app.get("/search", async (req, res) => {
