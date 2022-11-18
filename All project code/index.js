@@ -654,8 +654,6 @@ app.post('/cityToCoor', (req, res) => {
 
 
 app.get("/main", (req, res) => {
-    console.log("flight key:");
-    console.log(process.env.flight_api_key);
     res.render("pages/main");
 });
 
