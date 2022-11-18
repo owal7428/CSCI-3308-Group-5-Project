@@ -149,6 +149,13 @@ app.get("/landing", (req, res) => {
     res.render("pages/landing")
 });
 
+app.get("/aboutUs", (req, res) => {
+    res.render("pages/aboutUs")
+});
+
+app.get("/contactUs", (req, res) => {
+    res.render("pages/contactUs")
+});
 // Authentication Middleware.
 const auth = (req, res, next) => {
     if (!req.session.user) {
