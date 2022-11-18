@@ -6,7 +6,6 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
 
-// database configuration
 const dbConfig = {
     host: 'db',
     port: 5432,
@@ -201,6 +200,49 @@ app.get("/profile", (req, res) => {
         week: week,
         currDay: currDay
     }});
+});
+
+//using axios Check status for flights that scheduled
+//plug lat and long into 
+//https://airlabs.co/docs/flights
+// database configuration
+
+app.get("/flights", (req, res) => {
+    res.render("pages/flights", {
+        results: [],
+    });
+});
+
+app.post("/flights", (req, res) => {
+    axios({
+        url: "http://api.aviationstack.com/v1/flights",
+        method: 'GET',
+        dataType:'json',
+        params: {
+            "access_key": process.env.flight_api_key,
+            "limit": 40,
+            "flight_status": "scheduled",
+            "arr_icao": req.body.city,
+        }
+    })
+    .then(results => {
+        console.log("Successful API call");
+        console.log(results.data);
+        res.render("pages/flights", {
+            results: results.data,
+        });
+    })
+    .catch(error => {
+        // Handle errors
+        console.log("Failed API call");
+        console.log(process.env.flight_api_key);
+        console.log(error.message);
+        res.render("pages/flights", {
+            results: [],
+            error: true,
+            message: error.message,
+        });
+    });
 });
 
 // The fields to render on the search page to make the search request.
@@ -629,8 +671,6 @@ app.get("/logout", (req, res) => {
         error: false
     });
 });
-
-
 
 app.listen(3000);
 console.log('Server is listening on port 3000');
