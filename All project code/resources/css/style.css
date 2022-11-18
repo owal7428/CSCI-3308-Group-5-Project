@@ -49,6 +49,13 @@ html {
 body {
     padding-bottom: 220px; /* Margin bottom by footer height */
     /* background-color: #f8f8f8; */
-    
 }
 
+.contactUs a{
+    text-decoration: none;
+    color: black;
+}
+
+.contactUs a:hover{
+    text-decoration: underline;
+}
