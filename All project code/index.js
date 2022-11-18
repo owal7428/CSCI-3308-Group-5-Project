@@ -1,3 +1,16 @@
+// JSON file that contains countries to ISO 2 character code
+import countryCodeJSON from './resources/countries.json' assert {type: 'json'};
+
+// Allows the use of import and create in one file 
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+
+// allows dirname to be specified
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 const express = require('express');
 const app = express();
 const pgp = require('pg-promise')();
@@ -5,6 +18,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+
 
 // database configuration
 const dbConfig = {
@@ -389,11 +403,20 @@ async function cityToCoordinates(locationInput) {
         }
     }
 }
+async function cityToICAO(locationInput){
+    const city = locationInput.city;
+    for(var i = 0; i < countryCodeJSON.length; i++){
+        if(locationInput.country == countryCodeJSON[i].name){
+            const countryCode = countryCodeJSON[i].code;
+            console.log(countryCode);
+        }
+    }
+}
 
 async function searchQuery(locationInput) {
     // add coordinates to location data.
     locationInput = await cityToCoordinates(locationInput);
-
+    const flightInputs = await cityToICAO(locationInput);
     // Prepare weather query
 
     // Input data to weather API
@@ -421,6 +444,7 @@ async function searchQuery(locationInput) {
     // Prepare flight query
     const flightQuery = {
         // Flight query request information here.
+
     }
 
     // Perform API queries, waiting for their response.
