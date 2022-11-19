@@ -1,15 +1,6 @@
 // JSON file that contains countries to ISO 2 character code
-import countryCodeJSON from './resources/countries.json' assert {type: 'json'};
+// import countryCodeJSON from './resources/countries.json' assert {type: 'json'};
 
-// Allows the use of import and create in one file 
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
-
-// allows dirname to be specified
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
 
 const express = require('express');
 const app = express();
@@ -444,14 +435,46 @@ async function cityToCoordinates(locationInput) {
         }
     }
 }
+
+var countryJson = require('./resources/countries.json')
 async function cityToICAO(locationInput){
     const city = locationInput.city;
-    for(var i = 0; i < countryCodeJSON.length; i++){
-        if(locationInput.country == countryCodeJSON[i].name){
-            const countryCode = countryCodeJSON[i].code;
-            console.log(countryCode);
+    var countryCode
+    console.log("city:", city);
+    var icaoRes = 0;
+    for(var i = 0; i < countryJson.length; i++){
+        if(countryJson[i].name == locationInput.country){
+            countryCode = countryJson[i].code;
         }
     }
+    // ensures the country code name is also capitalized
+    console.log("Code: ", countryCode);
+    await axios({
+        // url for API-Ninja
+        url:'https://api.api-ninjas.com/v1/airports',
+        method: 'GET',
+        dataType: 'json',
+        headers: {
+            'X-Api-Key': process.env.CITYCOOR_KEY
+        },
+        params: { 
+            'country': countryCode,
+            'city': city
+        }
+
+    }).then(results => {
+        // shows devs if correct call
+        console.log("Successful API call to API-Ninja for city to Airport API");
+        console.log(JSON.stringify(results.data));
+        //sets lat and long for weather and flight API
+        icaoRes = JSON.stringify(results.data[0].icao);
+        // verifying that lat and long are as I expect 
+        console.log("ICAO: ", icaoRes);
+    }).catch(error => {
+        // Handle errors (API call may have failed!)
+        console.log(`Airport to City API call failed! Error:\n${error}`);
+        return -1;
+    }) 
 }
 
 async function searchQuery(locationInput) {
