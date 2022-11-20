@@ -436,19 +436,52 @@ async function cityToCoordinates(locationInput) {
     }
 }
 
+// imports the countries JSON file that containes the names of all countries as well as their 2 character ISO code
 var countryJson = require('./resources/countries.json')
+
+/*
+    Tested with:
+    1) Input: London, GB: City, CC - Return: London, GB: City, CC
+    2) Input: London, gb: City, cc - Return: London, GB: City, CC
+    3) Input: london, gb: city, cc - Return: London, GB: City, CC
+    4) Input: london, United Kingdom: city, Country - Return: London, GB: City, CC
+    5) Input: london, united kingdom: city, country - Return: London, GB, City, CC
+
+*/
 async function cityToICAO(locationInput){
-    const city = locationInput.city;
-    var countryCode
+    var tempCity = locationInput.city;
+    var tempCountry = locationInput.country;
+    // ensures that the first letter of the city is capitalized, as thats what API requires
+    var city = tempCity[0].toUpperCase() + tempCity.slice(1);
+    // ensures city is what Dev expects
     console.log("city:", city);
+    //declares country code
+    var countryCode;
+    // checks if the code is typed in as JSON or as the code itself
+    var flag = 0;
+    // declares the result of the API as the icao code
     var icaoRes = 0;
+    // capitalizes the first letter in each word in the country name
+    var country = tempCountry.split(' ');
+    for (let i = 0; i < country.length; i++) {
+        country[i] = country[i][0].toUpperCase() + country[i].substr(1);
+    }
+    country = country.join(' ');
+    /* this for loop searchs the JSON file that converts every country name to the country code. 
+    Because of this, the user must input the two country code, or the exact name of the country, or it will not 
+    be found, and the API will not work.
+`   */
     for(var i = 0; i < countryJson.length; i++){
-        if(countryJson[i].name == locationInput.country){
+        if(countryJson[i].name == country){
             countryCode = countryJson[i].code;
+            flag = 1;
         }
     }
-    // ensures the country code name is also capitalized
-    console.log("Code: ", countryCode);
+    // if the code was originally typed in then it will just equal the code
+    if(flag == 0){
+        countryCode = country.toUpperCase();
+    }
+    console.log("Code:", countryCode);
     await axios({
         // url for API-Ninja
         url:'https://api.api-ninjas.com/v1/airports',
@@ -475,6 +508,11 @@ async function cityToICAO(locationInput){
         console.log(`Airport to City API call failed! Error:\n${error}`);
         return -1;
     }) 
+    return{
+        city: city,
+        country: country,
+        icaoRes: icaoRes
+    }
 }
 
 async function searchQuery(locationInput) {
