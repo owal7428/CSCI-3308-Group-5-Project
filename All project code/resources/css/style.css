@@ -21,6 +21,22 @@ body {
     pointer-events: none;
 }
 
+#currentDay {
+    color: blue;
+}
+
+.calendarButtons {
+    padding-top: 20px;
+}
+
+#calendar .day {
+    height: 600px;
+}
+
+.calendarButtons button {
+    margin-left: 25px;
+    margin-right: 25px
+}
 .footer {
     position: absolute;
     bottom: 0;
