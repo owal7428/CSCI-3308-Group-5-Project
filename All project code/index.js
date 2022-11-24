@@ -1,3 +1,7 @@
+// JSON file that contains countries to ISO 2 character code
+// import countryCodeJSON from './resources/countries.json' assert {type: 'json'};
+
+
 const express = require('express');
 const app = express();
 const pgp = require('pg-promise')();
@@ -6,7 +10,6 @@ const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
 
-// database configuration
 const dbConfig = {
     host: 'db',
     port: 5432,
@@ -150,6 +153,13 @@ app.get("/landing", (req, res) => {
     res.render("pages/landing")
 });
 
+app.get("/aboutUs", (req, res) => {
+    res.render("pages/aboutUs")
+});
+
+app.get("/contactUs", (req, res) => {
+    res.render("pages/contactUs")
+});
 // Authentication Middleware.
 const auth = (req, res, next) => {
     if (!req.session.user) {
@@ -166,6 +176,49 @@ app.use(auth);
 
 app.get("/profile", (req, res) => {
     res.render("pages/profile", {user: req.session.user}); //Sends the username so it can be displayed at the top of the profile page
+});
+
+//using axios Check status for flights that scheduled
+//plug lat and long into 
+//https://airlabs.co/docs/flights
+// database configuration
+
+app.get("/flights", (req, res) => {
+    res.render("pages/flights", {
+        results: [],
+    });
+});
+
+app.post("/flights", (req, res) => {
+    axios({
+        url: "http://api.aviationstack.com/v1/flights",
+        method: 'GET',
+        dataType:'json',
+        params: {
+            "access_key": process.env.flight_api_key,
+            "limit": 40,
+            "flight_status": "scheduled",
+            "arr_icao": req.body.city,
+        }
+    })
+    .then(results => {
+        console.log("Successful API call");
+        console.log(results.data);
+        res.render("pages/flights", {
+            results: results.data,
+        });
+    })
+    .catch(error => {
+        // Handle errors
+        console.log("Failed API call");
+        console.log(process.env.flight_api_key);
+        console.log(error.message);
+        res.render("pages/flights", {
+            results: [],
+            error: true,
+            message: error.message,
+        });
+    });
 });
 
 // The fields to render on the search page to make the search request.
@@ -355,10 +408,89 @@ async function cityToCoordinates(locationInput) {
     }
 }
 
+// imports the countries JSON file that containes the names of all countries as well as their 2 character ISO code
+var countryJson = require('./resources/countries.json')
+
+/*
+    Tested with:
+    1) Input: London, GB: City, CC - Return: London, GB: City, CC
+    2) Input: London, gb: City, cc - Return: London, GB: City, CC
+    3) Input: london, gb: city, cc - Return: London, GB: City, CC
+    4) Input: london, United Kingdom: city, Country - Return: London, GB: City, CC
+    5) Input: london, united kingdom: city, country - Return: London, GB, City, CC
+
+*/
+async function cityToICAO(locationInput){
+    var tempCity = locationInput.city;
+    var tempCountry = locationInput.country;
+    // ensures that the first letter of the city is capitalized, as thats what API requires
+    var city = tempCity[0].toUpperCase() + tempCity.slice(1);
+    // ensures city is what Dev expects
+    console.log("city:", city);
+    //declares country code
+    var countryCode;
+    // checks if the code is typed in as JSON or as the code itself
+    var flag = 0;
+    // declares the result of the API as the icao code
+    var icaoRes = 0;
+    // capitalizes the first letter in each word in the country name
+    var country = tempCountry.split(' ');
+    for (let i = 0; i < country.length; i++) {
+        country[i] = country[i][0].toUpperCase() + country[i].substr(1);
+    }
+    country = country.join(' ');
+    /* this for loop searchs the JSON file that converts every country name to the country code. 
+    Because of this, the user must input the two country code, or the exact name of the country, or it will not 
+    be found, and the API will not work.
+`   */
+    for(var i = 0; i < countryJson.length; i++){
+        if(countryJson[i].name == country){
+            countryCode = countryJson[i].code;
+            flag = 1;
+        }
+    }
+    // if the code was originally typed in then it will just equal the code
+    if(flag == 0){
+        countryCode = country.toUpperCase();
+    }
+    console.log("Code:", countryCode);
+    await axios({
+        // url for API-Ninja
+        url:'https://api.api-ninjas.com/v1/airports',
+        method: 'GET',
+        dataType: 'json',
+        headers: {
+            'X-Api-Key': process.env.CITYCOOR_KEY
+        },
+        params: { 
+            'country': countryCode,
+            'city': city
+        }
+
+    }).then(results => {
+        // shows devs if correct call
+        console.log("Successful API call to API-Ninja for city to Airport API");
+        console.log(JSON.stringify(results.data));
+        //sets lat and long for weather and flight API
+        icaoRes = JSON.stringify(results.data[0].icao);
+        // verifying that lat and long are as I expect 
+        console.log("ICAO: ", icaoRes);
+    }).catch(error => {
+        // Handle errors (API call may have failed!)
+        console.log(`Airport to City API call failed! Error:\n${error}`);
+        return -1;
+    }) 
+    return{
+        city: city,
+        country: country,
+        icaoRes: icaoRes
+    }
+}
+
 async function searchQuery(locationInput) {
     // add coordinates to location data.
     locationInput = await cityToCoordinates(locationInput);
-
+    const flightInputs = await cityToICAO(locationInput);
     // Prepare weather query
 
     // Input data to weather API
@@ -386,6 +518,7 @@ async function searchQuery(locationInput) {
     // Prepare flight query
     const flightQuery = {
         // Flight query request information here.
+
     }
 
     // Perform API queries, waiting for their response.
@@ -594,8 +727,6 @@ app.get("/logout", (req, res) => {
         error: false
     });
 });
-
-
 
 app.listen(3000);
 console.log('Server is listening on port 3000');

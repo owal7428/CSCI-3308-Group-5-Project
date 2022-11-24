@@ -38,4 +38,27 @@ Notes from Group meeting:
 * Weather API gives us single data point, not map, so keep in mind for SQL database
 * Use request format function from Kyle for API requests
 
+Third TA Meeting (15 minutes): November 17th, 2022
 
+* We presented our progress for the week, including the landing page, the search feature, better login capability, further calender progress, more database capability, and error handling.
+* We asked questions on how to share our private api keys between each other:
+We can either each make individual accounts, or share keys privately between ourselves, and both solutions work.
+* We presented our documentation, including meeting notes, future plans, and release notes, and verified that we are doing it in the correct format.
+* For the following week, we plan on polishing the frontend to improve the user experience, completing the search results page, calender, and allow the user to save their trips to their account.
+* See release notes and future plans documentation for more details.
+
+
+Group Meeting (100 minutes): November 18th, 2022
+
+Discussed final touches needed to make the project user friendly. Finished working on flight api, and found an issue with ICAO codes to city/country. Decided to use a 4th API to convert these using the same techniques from the coordinates to city API. 
+
+* Zane: Finish calender.
+* Vincent: Convert from country to ISO codes
+* Neil: Work on CSS and making website user friendly and better looking, work on slideshow. 
+* Ethan: Databases.
+* Kyle: Help with finishing search results.
+
+Notes:
+* Finish reformatting data results to make it so that the user only sees what they want/need.
+* Have slideshow and website ready by Monday
+* TA meeting is Monday 3:30 - present website and slidedeck, get feedback from Nikita.

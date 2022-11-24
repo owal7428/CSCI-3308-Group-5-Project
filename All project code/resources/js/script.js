@@ -203,3 +203,4 @@ function checkLeapYear() { //Does calculations based on the rules of leap years 
         maxDays[1] = 28;
     }
 }
+
