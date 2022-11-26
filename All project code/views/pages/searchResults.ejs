@@ -19,6 +19,32 @@
                         <%- data.weather.data %>
                     <% } %>
                 <% } %>
+                <!--Flight results-->
+                <% let flights = data.flight_data.data; %>
+                <% if (flights != null)
+                { %>
+                <table class="table">
+                <thead>
+                    <tr>
+                        <th>Flight Date</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Airline</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% flights.forEach(flight => 
+                    { %>
+                    <tr>
+                        <td><%= flight.flight_date %></td>
+                        <td><%= flight.departure.airport %></td>
+                        <td><%= flight.arrival.airport %></td>
+                        <td><%= flight.airline.name %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+                </table>
+                <% } %>
             </div>
         </div>
     </main>

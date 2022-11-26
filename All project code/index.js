@@ -432,7 +432,7 @@ async function cityToICAO(locationInput){
     // checks if the code is typed in as JSON or as the code itself
     var flag = 0;
     // declares the result of the API as the icao code
-    var icaoRes = 0;
+    var icaoRes = "";
     // capitalizes the first letter in each word in the country name
     var country = tempCountry.split(' ');
     for (let i = 0; i < country.length; i++) {
@@ -464,7 +464,8 @@ async function cityToICAO(locationInput){
         },
         params: { 
             'country': countryCode,
-            'city': city
+            'city': city,
+            'name': "International",
         }
 
     }).then(results => {
@@ -472,7 +473,7 @@ async function cityToICAO(locationInput){
         console.log("Successful API call to API-Ninja for city to Airport API");
         console.log(JSON.stringify(results.data));
         //sets lat and long for weather and flight API
-        icaoRes = JSON.stringify(results.data[0].icao);
+        icaoRes = results.data[0].icao;
         // verifying that lat and long are as I expect 
         console.log("ICAO: ", icaoRes);
     }).catch(error => {
@@ -480,59 +481,7 @@ async function cityToICAO(locationInput){
         console.log(`Airport to City API call failed! Error:\n${error}`);
         return -1;
     }) 
-    return{
-        city: city,
-        country: country,
-        icaoRes: icaoRes
-    }
-}
-
-async function searchQuery(locationInput) {
-    // add coordinates to location data.
-    locationInput = await cityToCoordinates(locationInput);
-    const flightInputs = await cityToICAO(locationInput);
-    // Prepare weather query
-
-    // Input data to weather API
-    const weatherQuery = {
-        time: {
-            // Note: we have access to up to 1 day in the past to 10 days in the future, but time inaccuracies right at that range may put the request out of bounds.
-            start: "now-16H", // 16 hours in the past. 'now' and 'H' modifier shortcut specified in API
-            end: "now+168H" // 7 days in the future (168 hours).
-        },
-        location: {
-            // TODO take location data from user, and calculate latitude and longitude from that.
-            country: locationInput.country,
-            city: locationInput.city,
-            latitude: locationInput.latitude,
-            longitude: locationInput.longitude
-        },
-        requestParameters: [
-            "temperature",
-            "precipitation 24 hours"
-        ],
-        dataFormat: "html",
-        // optionalParameters: {}
-    };
-
-    // Prepare flight query
-    const flightQuery = {
-        // Flight query request information here.
-
-    }
-
-    // Perform API queries, waiting for their response.
-    const weatherData = await searchWeather(weatherQuery);
-    const flightData = await searchFlights(flightQuery);
-
-    // Return results from API queries.
-    return {
-        weather: {
-            data: weatherData,
-            format: weatherQuery.dataFormat
-        },
-        flight: flightData
-    };
+    return icaoRes;
 }
 
 // Perform API query to weather API
@@ -564,7 +513,7 @@ async function searchWeather(weatherQuery) {
             responseData = results.data;
         }
 
-        console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
+        //console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
 
         return responseData;
     }).catch(error => {
@@ -578,10 +527,120 @@ async function searchWeather(weatherQuery) {
 
 // Perform API query to flight API
 async function searchFlights(flightQuery) {
+    const arrIcao = flightQuery.arr_icao;
+    const depIcao = flightQuery.dep_icao;
+
+    console.log(arrIcao);
+    console.log(depIcao);
+    
+    return axios({
+        url: "http://api.aviationstack.com/v1/flights",
+        method: 'GET',
+        dataType:'json',
+        params: {
+            "access_key": process.env.flight_api_key,
+            "limit": 20,
+            "flight_status": "scheduled",
+            "arr_icao": arrIcao,
+            "dep_icao": depIcao,
+        }
+    })
+    .then(results => {
+        console.log("Successful flight API call");
+        console.log(results.data);
+        return results.data;
+    })
+    .catch(error => {
+        // Handle errors
+        console.log("Failed flight API call");
+        console.log(process.env.flight_api_key);
+        console.log(error.message);
+        return -1;
+    });
+}
+
+async function searchQuery(locationInput) {
+    //Get country and city for arrival and departure
+    const departureInput = {
+        country: locationInput.departure_country,
+        city: locationInput.departure_city,
+    }
+
+    const arrivalInput = {
+        country: locationInput.arrival_country,
+        city: locationInput.arrival_city,
+    }
+
+    locationInput = await cityToCoordinates(arrivalInput);
+
+    const dep_icao = await cityToICAO(departureInput);
+    const arr_icao = await cityToICAO(arrivalInput);
+
+    // Input data to weather API
+    const weatherQuery = {
+        time: {
+            // Note: we have access to up to 1 day in the past to 10 days in the future, but time inaccuracies right at that range may put the request out of bounds.
+            start: "now-16H", // 16 hours in the past. 'now' and 'H' modifier shortcut specified in API
+            end: "now+168H" // 7 days in the future (168 hours).
+        },
+        location: {
+            // TODO take location data from user, and calculate latitude and longitude from that.
+            country: locationInput.country,
+            city: locationInput.city,
+            latitude: locationInput.latitude,
+            longitude: locationInput.longitude
+        },
+        requestParameters: [
+            "temperature",
+            "precipitation 24 hours"
+        ],
+        dataFormat: "html",
+        // optionalParameters: {}
+    };
+
+    // Prepare flight query
+    const flightQuery = {
+        dep_icao: "KDEN",
+        arr_icao: arr_icao,
+    }
+
+    // Perform API queries, waiting for their response.
+    const weatherData = await searchWeather(weatherQuery);
+    const flightData = await searchFlights(flightQuery);
+
+    // Return results from API queries.
     return {
-        data: "TODO response flight data"
+        weather: {
+            data: weatherData,
+            format: weatherQuery.dataFormat
+        },
+        flight_data: flightData
     };
 }
+
+app.get("/search", async (req, res) => {
+    res.render("pages/search");
+});
+
+app.post("/search", async (req, res) => {
+    const locationInput = {
+        departure_country: req.body.departure_country,
+        departure_city: req.body.departure_city,
+        arrival_country: req.body.arrival_country,
+        arrival_city: req.body.arrival_city,
+    }
+
+    // TODO perform searchQuery(location) for every location query we want to do on a search.
+
+    // Data receieved back from any APIs.
+    const responseData = await searchQuery(locationInput);
+
+    // Data we need in a usable form for frontend.
+    const displayData = dataToDisplayData(responseData);
+
+    // render the searchResults.ejs page with usable displayable data.
+    res.render("pages/searchResults", displayData);
+});
 
 // Converts a string separated by divisor into an array, with whitespace trimmed from elements
 function stringToArray(str, divisor=",") {
@@ -615,34 +674,6 @@ function dataToDisplayData(responseData) {
         error: error
     }; 
 }
-
-app.get("/search", async (req, res) => {
-    res.render("pages/search");
-});
-
-app.post("/search", async (req, res) => {
-    const locationInput = {
-        country: req.body.country,
-        city: req.body.city
-    }
-
-    console.log(`Recieved location input: ${JSON.stringify(locationInput)}`);
-
-    // TODO perform searchQuery(location) for every location query we want to do on a search.
-
-    // Data receieved back from any APIs.
-    const responseData = await searchQuery(locationInput);
-
-    console.log(`Response API Data:\n${JSON.stringify(responseData)}`);
-
-    // Data we need in a usable form for frontend.
-    const displayData = dataToDisplayData(responseData);
-    console.log(`Displaying results with this data:\n${JSON.stringify(displayData)}`);
-
-    console.log(JSON.stringify(responseData));
-    // render the searchResults.ejs page with usable displayable data.
-    res.render("pages/searchResults", displayData);
-});
 
 // Weather API access: using meteomatics.com
 app.post('/searchWeather', (req, res) => {
