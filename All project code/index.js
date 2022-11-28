@@ -600,7 +600,7 @@ async function searchQuery(locationInput) {
 
     // Prepare flight query
     const flightQuery = {
-        dep_icao: "KDEN",
+        dep_icao: dep_icao,
         arr_icao: arr_icao,
     }
 
