@@ -716,6 +716,30 @@ app.post('/cityToCoor', (req, res) => {
 });
 
 
+void insertIntoDB(usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP)
+{
+    var query = `INSERT INTO users_trips(username, departure, arrival, windSpeedAvg, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
+
+    db.any(query, [usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP])
+    .then(() => {
+        req.session.save();
+        res.render("pages/main", {
+            message: "Trip Succesfully Saved!",
+            error: false
+        });
+    })
+    .catch(() => {
+        res.render("pages/main", {
+            message: "Trip Saving Failed!",
+            error: true
+        });
+    });
+}
+
+
+
+
+
 app.get("/main", (req, res) => {
     res.render("pages/main");
 });
