@@ -75,3 +75,11 @@ body {
 .contactUs a:hover{
     text-decoration: underline;
 }
+
+.tripCard {
+    background-color: rgb(21, 208, 102);
+    text-align: center;
+    height: 30px;
+    border-radius: 5px;
+    margin-top: 10px;
+}

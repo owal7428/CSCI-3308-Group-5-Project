@@ -1,5 +1,31 @@
 //Script code goes here
 
+
+const exampleTrip1 = {
+    departure: new Date('11-30-2022'),
+    arrival: new Date('1-6-2023'),
+    tempAvg: 65.5,
+    windAvg: 15.4,
+    airline: 'American Airlines',
+    airport: 'Denver International Airport',
+    country: 'Spain',
+    city: 'Madrid'
+}
+
+const exampleTrip2 = {
+    departure: new Date('11-21-2022'),
+    arrival: new Date('12-20-2022'),
+    tempAvg: 65.5,
+    windAvg: 15.4,
+    airline: 'Spirit Airlines',
+    airport: 'Denver International Airport',
+    country: 'United Kingdom',
+    city: 'London'
+}
+
+const userTrips = [exampleTrip1, exampleTrip2];
+
+
 const CALENDAR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 let maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //Can be changed if the current year is a leap year
@@ -9,6 +35,8 @@ let globalMonth; //Stores what month the user is currently looking at
 let globalYear; //Stores what year the user is currently looking at
 let week; //Stores the offset of weeks that the user is currently on (0 means the week of the current date)
 let currentDate; //Stores the current date in reality. Used to highlight the current date on the calendar
+
+let TRIP_MODAL;
 
 function initialize_calendar() { //Called at page load or when the user wants to return to the current date
 
@@ -24,6 +52,8 @@ function initialize_calendar() { //Called at page load or when the user wants to
     globalYear = today.getFullYear();
     checkLeapYear();
     week = 0; //Because this is calling the current date, the week offset is 0
+
+    TRIP_MODAL = new bootstrap.Modal(document.getElementById('trip-modal'));
 
     change_calendar(); //Will cause the default case in the switch statement so no variables are manipulated before building the calendar
 }
@@ -132,6 +162,12 @@ function change_calendar(operation) {
     calendar_element.appendChild(monthTitle);
 
 
+    const tempFullDate = new Date(`${tempMonth}-${tempDate}-${tempYear}`);
+    let tempFullDateEnd = new Date(`${tempFullDate.getMonth() + 1}-${tempFullDate.getDate()}-${tempFullDate.getFullYear()}`);
+    tempFullDateEnd.setDate(tempFullDateEnd.getDate() + 6);
+
+    let tripsThisWeek = findTripsThisWeek(tempFullDate, tempFullDateEnd);
+
 
     CALENDAR_DAYS.forEach(day => {
         var card = document.createElement('div');
@@ -164,6 +200,29 @@ function change_calendar(operation) {
         const body = document.createElement('div');
 
         body.classList.add('event-container');
+
+        if(tripsThisWeek.length > 0) {
+            tripsThisWeek.forEach(tripObj => {
+                const tripStart = tripObj.trip.departure.getDate();
+                const tripEnd = tripObj.trip.arrival;
+                if(!tripObj.started) {
+                    if(tripStart === tempDate) {
+                        tripObj.started = true;
+                    }
+                }
+                if(tripObj.started) {
+                    const tripCard = document.createElement('div');
+                    tripCard.classList.add('tripCard');
+                    tripCard.setAttribute('onclick', `open_trip_modal(${tripObj.index})`);
+                    tripCard.innerHTML = `${tripObj.trip.city}`;
+                    body.appendChild(tripCard);
+                }
+                if(tripEnd.getFullYear() === tempYear && (tripEnd.getMonth() + 1) === tempMonth && tripEnd.getDate() === tempDate) {
+                    const tripIndex = tripsThisWeek.indexOf(tripObj);
+                    tripsThisWeek.splice(tripIndex, 1);
+                }
+            })
+        }
 
         card.appendChild(body);
 
@@ -204,3 +263,42 @@ function checkLeapYear() { //Does calculations based on the rules of leap years 
     }
 }
 
+
+function findTripsThisWeek(startDate, endDate) {
+    let returnedTrips = [];
+    userTrips.forEach(trip => {
+        let tripStart = trip.departure;
+        let tripEnd = trip.arrival;
+        if(startDate <= tripStart && tripStart <= endDate) {
+            returnedTrips.push({
+                trip: trip,
+                started: false,
+                index: userTrips.indexOf(trip)
+            });
+        }
+        else if(tripStart < startDate && tripEnd >= startDate) {
+            returnedTrips.push({
+                trip: trip,
+                started: true,
+                index: userTrips.indexOf(trip)
+            });
+        }
+    })
+    return returnedTrips;
+}
+
+
+function open_trip_modal(index) {
+
+    const trip = userTrips[index];
+
+    document.querySelector('#tripDestination').innerHTML = trip.city;
+    document.querySelector('#departureDay').innerHTML = `Leaving: ${trip.departure.toDateString()}`;
+    document.querySelector('#returnDay').innerHTML = `Returning: ${trip.arrival.toDateString()}`;
+    document.querySelector('#airline').innerHTML = `Airline: ${trip.airline}`;
+    document.querySelector('#temperature').innerHTML = `Average Temperature: ${trip.tempAvg}`;
+    document.querySelector('#windSpeed').innerHTML = `Average Wind Speed: ${trip.windAvg}`;
+
+
+    TRIP_MODAL.show();
+}

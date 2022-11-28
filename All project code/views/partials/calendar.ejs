@@ -13,3 +13,23 @@
         <button class="btn btn-secondary col" onClick="change_calendar('nextMonth')">Next Month</button>
     </div>
 </div>
+
+<div class="modal fade" id="trip-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Trip Details:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2 id="tripDestination"></h2>
+                <p id="departureDay"></p>
+                <p id="returnDay"></p>
+                <p id="airline"></p>
+                <h6>Weather Data:</h6>
+                <p id="temperature"></p>
+                <p id="windSpeed"></p>
+            </div>
+        </div>
+    </div>
+</div>
