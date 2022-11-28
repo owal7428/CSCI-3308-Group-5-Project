@@ -716,7 +716,7 @@ app.post('/cityToCoor', (req, res) => {
 });
 
 
-void insertIntoDB(usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP)
+function insertIntoDB(usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP)
 {
     var query = `INSERT INTO users_trips(username, departure, arrival, windSpeedAvg, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
