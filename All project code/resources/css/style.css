@@ -20,3 +20,58 @@ body {
 .non-interactive {
     pointer-events: none;
 }
+
+#currentDay {
+    color: blue;
+}
+
+.calendarButtons {
+    padding-top: 20px;
+}
+
+#calendar .day {
+    height: 600px;
+}
+
+.calendarButtons button {
+    margin-left: 25px;
+    margin-right: 25px
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+
+}
+.footer a{
+    text-decoration: none;
+    color: black;
+}
+
+.footer a:hover{
+    text-decoration: underline;
+}
+
+.main{
+    overflow:visible;  
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    padding-bottom: 220px; /* Margin bottom by footer height */
+    /* background-color: #f8f8f8; */
+}
+
+.contactUs a{
+    text-decoration: none;
+    color: black;
+}
+
+.contactUs a:hover{
+    text-decoration: underline;
+}

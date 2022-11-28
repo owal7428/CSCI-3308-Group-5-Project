@@ -1,0 +1,51 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+<main>
+    <div class="container">
+        <h1>Search</h1>
+
+        <!-- Alert message -->
+        <div class="container">
+            <%- include ('../partials/message.ejs') %>
+        </div>
+
+        <!--Search bar-->
+        <form action="/flights" method="POST">
+            <label for="city" class="form-label">Arrival Airport (ICAO)</label>
+            <input required type="text" class="form-control" id="city" name="city">
+            <button type="submit" class="btn btn-primary" id="submit_button">Search</button>
+        </form>
+        <br>
+        <hr>
+
+        <!--Main functionality-->
+        <% let flights = results.data; %>
+        <% if (flights != null)
+        { %>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Flight Date</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Airline</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% flights.forEach(flight => 
+            { %>
+            <tr>
+                <td><%= flight.flight_date %></td>
+                <td><%= flight.departure.airport %></td>
+                <td><%= flight.arrival.airport %></td>
+                <td><%= flight.airline.name %></td>
+            </tr>
+            <% }); %>
+        </tbody>
+        </table>
+        <% } %>
+    </div>
+</main>
+
+<%- include ('../partials/footer') %>
