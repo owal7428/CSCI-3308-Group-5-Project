@@ -2,27 +2,26 @@
 <%- include ('../partials/menu') %>
 
     <main>
+        <!--Alert message-->
         <div class="container">
-            <!--  -->
-            <h1>Search Results</h1>
+            <%- include ('../partials/message.ejs') %>
+        </div>
 
-            <div class="container">
-                <%- include ('../partials/message.ejs') %>
-            </div>
-
+        <!--Main functionality-->
+        <div class="container">
+            <h1>Search Results for <%= data.destination.city %>, <%= data.destination.country %></h1>
             <div class="container">
                 <% if (data.weather.data !== -1) { %>
-                    <% if (data.weather.format==="json" ) { %>
-                        <p> <%= JSON.stringify(data.weather.data) %> </p>
-                    <% } %>
-                    <% if (data.weather.format==="html" ) { %>
-                        <%- data.weather.data %>
-                    <% } %>
+                    <% let weatherData = data.weather.data; %>
+                    <h2>Temperature (Celcius): <%= weatherData[0].coordinates[0].dates[0].value %></h2>
+                    <h2>Precipitation (Milimeters): <%= weatherData[0].coordinates[0].dates[0].value %></h2>
+                    <br>
                 <% } %>
                 <!--Flight results-->
                 <% let flights = data.flight_data.data; %>
                 <% if (flights != null)
                 { %>
+                <h2>Recommended flights</h2>
                 <table class="table">
                 <thead>
                     <tr>
