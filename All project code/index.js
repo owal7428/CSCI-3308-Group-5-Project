@@ -198,7 +198,7 @@ app.post("/flights", (req, res) => {
             "access_key": process.env.flight_api_key,
             "limit": 40,
             "flight_status": "scheduled",
-            "arr_icao": req.body.city,
+            "arr_iata": req.body.city,
         }
     })
     .then(results => {
@@ -383,8 +383,8 @@ async function cityToCoordinates(locationInput) {
         console.log("Successful API call to API-Ninja for city to coordinates");
         console.log(JSON.stringify(results.data));
         //sets lat and long for weather and flight API
-        latitude = JSON.stringify(results.data[0].latitude);
-        longitude = JSON.stringify(results.data[0].longitude);
+        latitude = results.data[0].latitude;
+        longitude = results.data[0].longitude;
         // verifying that lat and long are as I expect 
         console.log("latitude: ", latitude);
         console.log("longitude: ", longitude);
@@ -420,7 +420,7 @@ var countryJson = require('./resources/countries.json')
     5) Input: london, united kingdom: city, country - Return: London, GB, City, CC
 
 */
-async function cityToICAO(locationInput){
+async function cityToIATA(locationInput){
     var tempCity = locationInput.city;
     var tempCountry = locationInput.country;
     // ensures that the first letter of the city is capitalized, as thats what API requires
@@ -431,8 +431,8 @@ async function cityToICAO(locationInput){
     var countryCode;
     // checks if the code is typed in as JSON or as the code itself
     var flag = 0;
-    // declares the result of the API as the icao code
-    var icaoRes = "";
+    // declares the result of the API as the iata code
+    var iataRes = "";
     // capitalizes the first letter in each word in the country name
     var country = tempCountry.split(' ');
     for (let i = 0; i < country.length; i++) {
@@ -465,7 +465,6 @@ async function cityToICAO(locationInput){
         params: { 
             'country': countryCode,
             'city': city,
-            'name': "International",
         }
 
     }).then(results => {
@@ -473,15 +472,22 @@ async function cityToICAO(locationInput){
         console.log("Successful API call to API-Ninja for city to Airport API");
         console.log(JSON.stringify(results.data));
         //sets lat and long for weather and flight API
-        icaoRes = results.data[0].icao;
+        var i = 0;
+        results.data.forEach(result => {
+            if (result.iata != "")
+            {
+                iataRes = results.data[i].iata;
+            }
+            i++;
+        });
         // verifying that lat and long are as I expect 
-        console.log("ICAO: ", icaoRes);
+        console.log("IATA: ", iataRes);
     }).catch(error => {
         // Handle errors (API call may have failed!)
         console.log(`Airport to City API call failed! Error:\n${error}`);
         return -1;
-    }) 
-    return icaoRes;
+    })
+    return iataRes;
 }
 
 // Perform API query to weather API
@@ -527,11 +533,11 @@ async function searchWeather(weatherQuery) {
 
 // Perform API query to flight API
 async function searchFlights(flightQuery) {
-    const arrIcao = flightQuery.arr_icao;
-    const depIcao = flightQuery.dep_icao;
+    const arrIata = flightQuery.arr_iata;
+    const depIata = flightQuery.dep_iata;
 
-    console.log(arrIcao);
-    console.log(depIcao);
+    console.log(arrIata);
+    console.log(depIata);
     
     return axios({
         url: "http://api.aviationstack.com/v1/flights",
@@ -539,21 +545,20 @@ async function searchFlights(flightQuery) {
         dataType:'json',
         params: {
             "access_key": process.env.flight_api_key,
-            "limit": 20,
+            "limit": 40,
             "flight_status": "scheduled",
-            "arr_icao": arrIcao,
-            "dep_icao": depIcao,
+            "arr_iata": arrIata,
+            "dep_iata": depIata,
         }
     })
     .then(results => {
         console.log("Successful flight API call");
-        console.log(results.data);
+        //console.log(results.data);
         return results.data;
     })
     .catch(error => {
         // Handle errors
         console.log("Failed flight API call");
-        console.log(process.env.flight_api_key);
         console.log(error.message);
         return -1;
     });
@@ -573,8 +578,8 @@ async function searchQuery(locationInput) {
 
     locationInput = await cityToCoordinates(arrivalInput);
 
-    const dep_icao = await cityToICAO(departureInput);
-    const arr_icao = await cityToICAO(arrivalInput);
+    const dep_iata = await cityToIATA(departureInput);
+    const arr_iata = await cityToIATA(arrivalInput);
 
     // Input data to weather API
     const weatherQuery = {
@@ -594,14 +599,14 @@ async function searchQuery(locationInput) {
             "temperature",
             "precipitation 24 hours"
         ],
-        dataFormat: "html",
+        dataFormat: "json",
         // optionalParameters: {}
     };
 
     // Prepare flight query
     const flightQuery = {
-        dep_icao: dep_icao,
-        arr_icao: arr_icao,
+        dep_iata: dep_iata,
+        arr_iata: arr_iata,
     }
 
     // Perform API queries, waiting for their response.
@@ -614,7 +619,8 @@ async function searchQuery(locationInput) {
             data: weatherData,
             format: weatherQuery.dataFormat
         },
-        flight_data: flightData
+        flight_data: flightData,
+        destination: arrivalInput,
     };
 }
 
