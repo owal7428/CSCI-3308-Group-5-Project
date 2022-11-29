@@ -8,12 +8,12 @@ CREATE TABLE IF NOT EXISTS users(
 CREATE TABLE IF NOT EXISTS user_trips(
     trip_id SERIAL PRIMARY Key,
     username VARCHAR(32),
-    departure DATETIME,
-    arrival DATETIME,
+    departure TIMESTAMP,
+    arrival TIMESTAMP,
     temperatureAvg FLOAT,
     windSpeedAvg FLOAT,
     airline VARCHAR(60),
-    airport VARCHAR(60)
+    airport VARCHAR(60),
     country VARCHAR(60),
     city VARCHAR(60)
 );
