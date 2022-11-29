@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS user_trips(
     temperatureAvg FLOAT,
     windSpeedAvg FLOAT,
     airline VARCHAR(60),
-    airport VARCHAR(60)
+    airport VARCHAR(60),
     country VARCHAR(60),
     city VARCHAR(60)
 );
