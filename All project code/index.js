@@ -647,6 +647,9 @@ async function searchQuery(locationInput) {
         },
         flight: {
             data: flightData,
+        },
+        location: {
+            departure: departureInput,
             destination: arrivalInput
         }
     };
@@ -670,7 +673,7 @@ app.post("/search", async (req, res) => {
     const responseData = await searchQuery(locationInput);
     // Data we need in a usable form for frontend.
     const displayData = dataToDisplayData(responseData);
-    
+
     console.log(`Final Search Response JSON:\n${JSON.stringify(displayData)}`);
 
     if(displayData.error === true){

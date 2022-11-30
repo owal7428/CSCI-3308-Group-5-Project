@@ -867,7 +867,13 @@
                     "arr_estimated_ts": 1669872540,
                     "dep_estimated_ts": 1669860300
                 }
-            ],
+            ]
+        },
+        "location": {
+            "departure": {
+                "country": "United States",
+                "city": "Denver"
+            },
             "destination": {
                 "country": "United States",
                 "city": "New York"
