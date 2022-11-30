@@ -561,22 +561,21 @@ async function searchFlights(flightQuery) {
     console.log("Arrival IATA:", arrIata);
     console.log("Departure IATA:", depIata);
     
-    return axios({
-        url: "http://api.aviationstack.com/v1/flights",
+    return await axios({
+        url: "https://airlabs.co/api/v9/schedules",
         method: 'GET',
         dataType:'json',
         params: {
-            "access_key": process.env.flight_api_key,
-            "limit": 40,
-            "flight_status": "scheduled",
+            "api_key": process.env.flight_api_key,
             "arr_iata": arrIata,
             "dep_iata": depIata,
         }
     })
     .then(results => {
         console.log("Successful flight API call");
-        //console.log(results.data);
-        return results.data;
+        // console.log(JSON.stringify(results.data));
+        // console.log(results.data);
+        return results.data.response;
     })
     .catch(error => {
         // Handle errors
@@ -638,6 +637,7 @@ async function searchQuery(locationInput) {
     const weatherData = await searchWeather(weatherQuery);
     const flightData = await searchFlights(flightQuery);
 
+
     // Return results from API queries.
     return {
         weather: {
@@ -673,6 +673,7 @@ app.post("/search", async (req, res) => {
         res.render("pages/search", displayData);
     }
     else{
+        console.log(displayData.data.flight_data);
         res.render("pages/searchResults", displayData);
     }
     // render the searchResults.ejs page with usable displayable data.
@@ -703,7 +704,6 @@ function dataToDisplayData(responseData) {
         alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
         error = true;
     }
-
     return {
         data: responseData,
         message: alertMessage,
@@ -760,11 +760,11 @@ app.post('/searchWeather', (req, res) => {
 });
 
 
-function insertIntoDB(usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP)
+function insertIntoDB(req, res, usernameP, departureP, arrivalP, temperatureAvgP, airlineP, airportP, countryP, cityP)
 {
-    var query = `INSERT INTO users_trips(username, departure, arrival, windSpeedAvg, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
+    var query = `INSERT INTO users_trips(username, departure, arrival, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
-    db.any(query, [usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP])
+    db.any(query, [usernameP, departureP, arrivalP, temperatureAvgP, airlineP, airportP, countryP, cityP])
     .then(() => {
         req.session.save();
         res.render("pages/main", {
@@ -779,6 +779,11 @@ function insertIntoDB(usernameP, departureP, arrivalP, windSpeedAvgP, temperatur
         });
     });
 }
+
+app.post("/addToCalendar", (req, res) =>{
+    // TODO fix weather temp input and arrival time?
+    insertIntoDB(req, res, req.session.user, req.body.depTime, "2022-09-28 03:00:00", req.body.weatherData[0].coordinates[0].dates[0].value, req.body.airline, req.body.arrAirport, req.body.country, req.body.city);
+});
 
 
 
