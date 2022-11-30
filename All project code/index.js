@@ -672,9 +672,10 @@ app.post("/search", async (req, res) => {
     // Data we need in a usable form for frontend.
     const displayData = dataToDisplayData(responseData);
     if(displayData.error === true){
+        // If there is an error, keep user on the search page and display an error
         res.render("pages/search", displayData);
     }
-    else{
+    else {
         console.log(displayData.data.flight_data);
         res.render("pages/searchResults", displayData);
     }
