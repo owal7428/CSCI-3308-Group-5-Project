@@ -30,6 +30,7 @@
                 <th>Departure</th>
                 <th>Arrival</th>
                 <th>Airline</th>
+                <th>Flight Number</th>
             </tr>
         </thead>
         <tbody>
@@ -40,6 +41,7 @@
                 <td><%= flight.departure.airport %></td>
                 <td><%= flight.arrival.airport %></td>
                 <td><%= flight.airline.name %></td>
+                <td><%= flight.flight.number %></td>
             </tr>
             <% }); %>
         </tbody>
