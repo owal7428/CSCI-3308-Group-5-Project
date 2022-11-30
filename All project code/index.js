@@ -601,10 +601,11 @@ async function searchQuery(locationInput) {
 
     const dep_iata = await cityToIATA(departureInput);
     const arr_iata = await cityToIATA(arrivalInput);
-    
-    if(locationInput == -1){
 
+    if(locationInput === -1 || locationInput == undefined){
+        console.log("Invalid Location Input in Search Query!");
     }
+
     // Input data to weather API
     const weatherQuery = {
         time: {
@@ -644,9 +645,10 @@ async function searchQuery(locationInput) {
             data: weatherData,
             format: weatherQuery.dataFormat
         },
-        flight_data: flightData,
-        destination: arrivalInput,
-        flightQuery: flightQuery
+        flight: {
+            data: flightData,
+            destination: arrivalInput
+        }
     };
 }
 
@@ -697,13 +699,14 @@ function dataToDisplayData(responseData) {
     // for now, just pass the same data (with added error message).
     // TODO make conversion based on frontend needs.
 
-    // add an error message to frontend if the weather api request failed.
+    // add an error message to frontend if an api request failed.
     let alertMessage;
     let error = false;
-    if (responseData.weather.data === -1 || responseData.flightQuery.arr_iata === -1 || responseData.flightQuery.dep_iata === -1 || responseData.flight_data === -1) {
+    if (responseData.weather.data === -1 || responseData.flight.data === -1) {
         alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
         error = true;
     }
+
     return {
         data: responseData,
         message: alertMessage,
