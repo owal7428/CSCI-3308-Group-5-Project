@@ -9,7 +9,7 @@
 
         <!--Main functionality-->
         <div class="container">
-            <h1>Search Results for <%= data.destination.city %>, <%= data.destination.country %></h1>
+            <h1>Weather in <%= data.destination.city %>, <%= data.destination.country %></h1>
             <div class="container">
                 <% if (data.weather.data !== -1) { %>
                     <% let weatherData = data.weather.data; %>
@@ -21,7 +21,7 @@
                 <% let flights = data.flight_data.data; %>
                 <% if (flights != null)
                 { %>
-                <h2>Recommended flights</h2>
+                <h2> Available Flights</h2>
                 <table class="table">
                 <thead>
                     <tr>
@@ -43,6 +43,9 @@
                         <td><%= flight.airline.name %></td>
                         <td><%= flight.flight.iata %></td>
                         <td><%= flight.departure.scheduled %></td>
+                        <!-- <td>
+                            <button class="btn btn-primary" id="submit_button" onclick="insertIntoDB()">Search</button>
+                        </td> -->
                     </tr>
                     <% }); %>
                 </tbody>
