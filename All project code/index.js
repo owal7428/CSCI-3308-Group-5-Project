@@ -103,49 +103,58 @@ app.get("/login", (req, res) => {
     res.render("pages/login");
 });
 
+// Handles showing the user feedback on a failed login attempt.
+function failedLogin(res) {
+    // For security reasons, the user should receieve the same feedback on a login fail, regardless of why the login failed.
+    res.render("pages/login", {
+        message: "Incorrect username or password.",
+        error: true
+    });
+}
+
 // Handles user login from a /login POST request.
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
     const query = "SELECT * FROM users WHERE username = $1";
 
-    db.any(query, [username])
+    // Queries the database for existing users, and then checks if password matches before logging in.
+    await db.any(query, [username])
     .then(async (user) => {
 
         //Checks if an account registered under the given username exists
         if (user[0] == null)
         {
-            res.render("pages/login", {
-                message: "No account exists with that username.",
-                error: true
-            });
+            failedLogin(res);
+            // early return to prevent race-conditions due to asynchronous behavior
+            return;
         }
 
         const match = await bcrypt.compare(password, user[0].password);
         
         //Checks if password matches
-        if (match)
+        // Note: == is not the same as === in javascript. The former does a typecast before checking equality, the latter actually checks equality.
+        if (match === true)
         {
             req.session.user = username;
             req.session.user.flight_api_key = process.env.flight_api_key;
             req.session.save();
             res.redirect("/main");
+
+            // early return to prevent race-conditions due to asynchronous behavior
+            return;
         }
-        else
-        {
-            res.render("pages/login", {
-                message: "Incorrect password for given username.",
-                error: true,
-            });
-        }
+
+        failedLogin(res);
+        // early return to prevent race-conditions due to asynchronous behavior
+        return;
     })
     .catch((err) => {
         console.log(err.message);
-        res.render("pages/login", {
-            message: err.message,
-            error: true,
-        });
+        failedLogin(res);
+        // early return to prevent race-conditions due to asynchronous behavior
+        return;
     });
 });
 
