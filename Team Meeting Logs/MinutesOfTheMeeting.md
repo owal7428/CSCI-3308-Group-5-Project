@@ -62,3 +62,23 @@ Notes:
 * Finish reformatting data results to make it so that the user only sees what they want/need.
 * Have slideshow and website ready by Monday
 * TA meeting is Monday 3:30 - present website and slidedeck, get feedback from Nikita.
+
+Fourth TA Meeting (15 minutes): November 28th, 2022:
+
+We presented our progress on our presentation and asked for feedback.
+
+Feedback:
+* Cut down on extra information. We only have 10 minutes for both the presentation and the demo.
+* First part: Presentation, ~5 minutes
+* Second part: Demo, ~5 minutes
+
+Presentation:
+* Have specific challenges for each page.
+* Don't have too much detail.
+* Include more high level information only.
+
+Demo:
+* Make a specific flow of steps to do in the demo.
+* For example, start with registration, then move on to landing page, etc.
+* Create a demo video in case something goes wrong.
+
