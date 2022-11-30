@@ -668,9 +668,11 @@ app.post("/search", async (req, res) => {
 
     // Data receieved back from any APIs.
     const responseData = await searchQuery(locationInput);
-
     // Data we need in a usable form for frontend.
     const displayData = dataToDisplayData(responseData);
+    
+    console.log(`Final Search Response JSON:\n${JSON.stringify(displayData)}`);
+
     if(displayData.error === true){
         // If there is an error, keep user on the search page and display an error
         res.render("pages/search", displayData);
