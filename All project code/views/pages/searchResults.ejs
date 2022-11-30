@@ -29,6 +29,8 @@
                         <th>Departure</th>
                         <th>Arrival</th>
                         <th>Airline</th>
+                        <th>Flight Number</th>
+                        <th>Departure Time</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -39,6 +41,8 @@
                         <td><%= flight.departure.airport %></td>
                         <td><%= flight.arrival.airport %></td>
                         <td><%= flight.airline.name %></td>
+                        <td><%= flight.flight.iata %></td>
+                        <td><%= flight.departure.scheduled %></td>
                     </tr>
                     <% }); %>
                 </tbody>
