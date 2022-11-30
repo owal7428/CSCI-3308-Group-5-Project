@@ -18,38 +18,40 @@
                     <br>
                 <% } %>
                 <!--Flight results-->
-                <% let flights = data.flight_data.data; %>
-                <% if (flights != null)
-                { %>
-                <h2> Available Flights</h2>
-                <table class="table">
-                <thead>
-                    <tr>
-                        <th>Flight Date</th>
-                        <th>Departure</th>
-                        <th>Arrival</th>
-                        <th>Airline</th>
-                        <th>Flight Number</th>
-                        <th>Departure Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% flights.forEach(flight => 
+                <% if(error === false){ %>
+                    <% let flights = data.flight_data.data; %>
+                    <% if (flights != null)
                     { %>
-                    <tr>
-                        <td><%= flight.flight_date %></td>
-                        <td><%= flight.departure.airport %></td>
-                        <td><%= flight.arrival.airport %></td>
-                        <td><%= flight.airline.name %></td>
-                        <td><%= flight.flight.iata %></td>
-                        <td><%= flight.departure.scheduled %></td>
-                        <!-- <td>
-                            <button class="btn btn-primary" id="submit_button" onclick="insertIntoDB()">Search</button>
-                        </td> -->
-                    </tr>
-                    <% }); %>
-                </tbody>
-                </table>
+                    <h2> Available Flights</h2>
+                    <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Flight Date</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Airline</th>
+                            <th>Flight Number</th>
+                            <th>Departure Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% flights.forEach(flight => 
+                        { %>
+                        <tr>
+                            <td><%= flight.flight_date %></td>
+                            <td><%= flight.departure.airport %></td>
+                            <td><%= flight.arrival.airport %></td>
+                            <td><%= flight.airline.name %></td>
+                            <td><%= flight.flight.iata %></td>
+                            <td><%= flight.departure.scheduled %></td>
+                            <!-- <td>
+                                <button class="btn btn-primary" id="submit_button" onclick="insertIntoDB()">Search</button>
+                            </td> -->
+                        </tr>
+                        <% }); %>
+                    </tbody>
+                    </table>
+                    <% } %>
                 <% } %>
             </div>
         </div>

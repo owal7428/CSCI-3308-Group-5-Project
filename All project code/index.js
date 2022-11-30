@@ -541,7 +541,7 @@ async function searchWeather(weatherQuery) {
             responseData = results.data;
         }
 
-        console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
+        // console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
 
         return responseData;
     }).catch(error => {
@@ -602,7 +602,10 @@ async function searchQuery(locationInput) {
 
     const dep_iata = await cityToIATA(departureInput);
     const arr_iata = await cityToIATA(arrivalInput);
+    
+    if(locationInput == -1){
 
+    }
     // Input data to weather API
     const weatherQuery = {
         time: {
@@ -643,6 +646,7 @@ async function searchQuery(locationInput) {
         },
         flight_data: flightData,
         destination: arrivalInput,
+        flightQuery: flightQuery
     };
 }
 
@@ -665,9 +669,13 @@ app.post("/search", async (req, res) => {
 
     // Data we need in a usable form for frontend.
     const displayData = dataToDisplayData(responseData);
-
+    if(displayData.error === true){
+        res.render("pages/search", displayData);
+    }
+    else{
+        res.render("pages/searchResults", displayData);
+    }
     // render the searchResults.ejs page with usable displayable data.
-    res.render("pages/searchResults", displayData);
 });
 
 // Converts a string separated by divisor into an array, with whitespace trimmed from elements
@@ -691,8 +699,8 @@ function dataToDisplayData(responseData) {
     // add an error message to frontend if the weather api request failed.
     let alertMessage;
     let error = false;
-    if (responseData.weather.data === -1) {
-        alertMessage = "Weather API request failed! Error code -1"
+    if (responseData.weather.data === -1 || responseData.flightQuery.arr_iata === -1 || responseData.flightQuery.dep_iata === -1 || responseData.flight_data === -1) {
+        alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
         error = true;
     }
 
