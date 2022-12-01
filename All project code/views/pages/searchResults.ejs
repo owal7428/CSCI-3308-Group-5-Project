@@ -1,0 +1,55 @@
+<%- include ('../partials/header') %>
+<%- include ('../partials/menu') %>
+
+    <main>
+        <!--Alert message-->
+        <div class="container">
+            <%- include ('../partials/message.ejs') %>
+        </div>
+
+        <!--Main functionality-->
+        <div class="container">
+            <h1>Search Results for <%= data.destination.city %>, <%= data.destination.country %></h1>
+            <div class="container">
+                <% if (data.weather.data !== -1) { %>
+                    <% let weatherData = data.weather.data; %>
+                    <h2>Temperature (Celcius): <%= weatherData[0].coordinates[0].dates[0].value %></h2>
+                    <h2>Precipitation (Milimeters): <%= weatherData[0].coordinates[0].dates[0].value %></h2>
+                    <br>
+                <% } %>
+                <!--Flight results-->
+                <% let flights = data.flight_data.data; %>
+                <% if (flights != null)
+                { %>
+                <h2>Recommended flights</h2>
+                <table class="table">
+                <thead>
+                    <tr>
+                        <th>Flight Date</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Airline</th>
+                        <th>Flight Number</th>
+                        <th>Departure Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% flights.forEach(flight => 
+                    { %>
+                    <tr>
+                        <td><%= flight.flight_date %></td>
+                        <td><%= flight.departure.airport %></td>
+                        <td><%= flight.arrival.airport %></td>
+                        <td><%= flight.airline.name %></td>
+                        <td><%= flight.flight.iata %></td>
+                        <td><%= flight.departure.scheduled %></td>
+                    </tr>
+                    <% }); %>
+                </tbody>
+                </table>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+<%- include ('../partials/footer') %>

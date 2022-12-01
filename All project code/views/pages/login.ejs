@@ -4,11 +4,19 @@
 <main>
   <div class="container">
     <h1>Login</h1>
+
+    <!-- Alert message -->
+    <div class="container">
+        <%- include ('../partials/message.ejs') %>
+    </div>
+
+
+    <!-- Login Form -->
     <form action="/login" method="POST">
       <label for="username" class="form-label">Username</label>
       <input type="text" class="form-control" id="username" name="username">
       <label for="password" class="form-label">Password</label>
-      <input type="text" class="form-control" id="password" name="password">
+      <input type="password" class="form-control" id="password" name="password">
       <button type="submit" class="btn btn-primary" id="submit_button">Login</button>
     </form>
     <p style="margin-bottom: 2.5%; margin-top: 2.5%">Don't have an account? <a href="register">Register.</a></p>
