@@ -763,6 +763,8 @@ function dataToDisplayData(responseData) {
     const avgPrecip = averagePrecipitation(weather);
     
     error = false;
+
+    // TODO return this object once complete.
     let displayData = {
         data: {
             weather: {
