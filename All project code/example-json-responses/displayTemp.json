@@ -1,0 +1,94 @@
+{
+    "data": {
+        "weather": {
+            "avgTemp": {
+                "C": 5.593548387096776,
+                "F": 42.068387096774195
+            },
+            "avgPrecip": {
+                "mm": 3.1824193548387085,
+                "in": 0.12529210058420112
+            }
+        },
+        "flights": [
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 20:55",
+                "airline_icao": "UAL",
+                "airline": "United Airlines"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 20:50",
+                "airline_icao": "SWA",
+                "airline": "Southwest Airlines"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 21:23",
+                "airline_icao": "AAL",
+                "airline": "American Airlines"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 21:23",
+                "airline_icao": "JBU",
+                "airline": "JetBlue Airways"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 22:20",
+                "airline_icao": "UAL",
+                "airline": "United Airlines"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 23:10",
+                "airline_icao": "UAL",
+                "airline": "United Airlines"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 23:20",
+                "airline_icao": "SWA",
+                "airline": "Southwest Airlines"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-01 23:20",
+                "airline_icao": "DAL",
+                "airline": "Delta Air Lines"
+            },
+            {
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depTime": "2022-12-02 00:35",
+                "airline_icao": "UAL",
+                "airline": "United Airlines"
+            }
+        ]
+    },
+    "location": {
+        "departure": {
+            "country": "US",
+            "city": "Denver"
+        },
+        "destination": {
+            "country": "US",
+            "city": "New York"
+        }
+    },
+    "alerts": [
+        {
+            "error": false
+        }
+    ]
+}

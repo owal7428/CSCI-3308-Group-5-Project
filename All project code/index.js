@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+var airlineJSON = require('./resources/airlineIata.json');
 
 const dbConfig = {
     host: 'db',
@@ -739,6 +740,31 @@ function averagePrecipitation(weather) {
     };
 }
 
+
+
+function getFlightList(flightsData) {
+    let flights = []; // our list of flights
+
+    // Loop through flight data and take what we need
+    flightsData.forEach(flight => {
+        const airlineObj = airlineJSON.find(i => i.icao === flight.airline_icao);
+
+        const flightIns = {
+            depAirport: flight.dep_iata,
+            arrAirport: flight.arr_iata,
+            depTime: flight.dep_time_utc,
+            airline_icao: flight.airline_icao,
+            airline: airlineObj.name
+        };
+
+        flights.push(flightIns);
+        console.log("DEP AIRPORT: ", flightIns.depAirport);
+    });
+
+    // return resulting list
+    return flights;
+}
+
 // Convert responseData from API responses to the format we use on displaying to the user.
 function dataToDisplayData(responseData) {
     // for now, just pass the same data (with added error message).
@@ -757,29 +783,21 @@ function dataToDisplayData(responseData) {
             error: error
         };
     }
-
-
-    const avgTemp = averageTemperature(responseData.weather);
-    const avgPrecip = averagePrecipitation(responseData.weather);
     
     error = false;
 
-    const depAirport = responseData.flight.data.dep_iata;
-    const arrAirport = responseData.flight.data.arr_iata;
-    const depTime = responseData.flight.data.dep_time_utc;
     // TODO return this object once complete.
+
+
+    // console.log("AIRPORT:", displayData.data.flights[0].depAirport);
+
     let displayData = {
         data: {
             weather: {
-                avgTemp: avgTemp,
-                avgPrecip: avgPrecip
+                avgTemp: averageTemperature(responseData.weather),
+                avgPrecip: averagePrecipitation(responseData.weather)
             },
-            flights: {
-                // build flight list here with only relevant data for the user. 
-                depAirport: depAirport,
-                arrAirport: arrAirport,
-                depTime: depTime
-            }
+            flights: getFlightList(responseData.flight.data)
         },
         location: responseData.location,
         alerts: [
@@ -790,27 +808,14 @@ function dataToDisplayData(responseData) {
             }
         ]
     };
-    console.log("AIRPORT: ", displayData.data.flights.depAirport);
-    // for(var i = 0; i < responseData.flight.length; i++){
-    //     var depAirport = responseData.flight[i].data.dep_iata;
-    //     var arrAirport = responseData.flight[i].data.arr_iata;
-    //     var depTime = responseData.flight[i].data.dep_time_utc;
-    //     let flightIns = {
-    //         depAirport: depAirport,
-    //         arrAirport: arrAirport,
-    //         depTime:depTime
-    //     }
-    //     console.log("DEP AIRPORT: ", flightIns.depAirport);
-    //     displayData.data.flights.push(flightIns);
-    // }
-    // console.log("AIRPORT:", displayData.data.flights[0].depAirport);
+
+    console.log(`Display Data thing:\n${JSON.stringify(displayData)}`);
+
     return {
         data: responseData,
         message: alertMessage,
         error: error
     };
-
-    // TODO filter data for user display here
 }
 
 // Weather API access: using meteomatics.com
