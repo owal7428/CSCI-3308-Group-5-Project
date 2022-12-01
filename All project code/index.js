@@ -727,7 +727,7 @@ function averagePrecipitation(weather) {
     // Get the average precipitation in mm
     let sumMM = 0;
     dates.forEach(date => {
-        sumC += date.value;
+        sumMM += date.value;
     });
     const avgPrecipMM = sumMM / dates.length;
 
