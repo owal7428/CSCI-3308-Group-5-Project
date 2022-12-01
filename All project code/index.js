@@ -779,7 +779,7 @@ function dataToDisplayData(responseData) {
         alerts: [
             // (maybe) build alerts here
             {
-                message: message,
+                message: alertMessage,
                 error: error
             }
         ]
