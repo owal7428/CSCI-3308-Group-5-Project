@@ -737,7 +737,7 @@ function averagePrecipitation(weather) {
     return {
         mm: avgPrecipMM,
         in: avgPrecipIn
-    }
+    };
 }
 
 // Convert responseData from API responses to the format we use on displaying to the user.
