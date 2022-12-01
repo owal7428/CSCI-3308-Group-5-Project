@@ -759,8 +759,8 @@ function dataToDisplayData(responseData) {
         };
     }
 
-    const avgTemp = averageTemperature(weather);
-    const avgPrecip = averagePrecipitation(weather);
+    const avgTemp = averageTemperature(responseData.weather);
+    const avgPrecip = averagePrecipitation(responseData.weather);
     
     error = false;
 
