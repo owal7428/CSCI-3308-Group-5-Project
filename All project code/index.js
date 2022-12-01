@@ -365,7 +365,8 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLatitude, loc
 }
 
 // imports the countries JSON file that containes the names of all countries as well as their 2 character ISO code
-var countryJson = require('./resources/countries.json')
+var countryJson = require('./resources/countries.json');
+const { response } = require('express');
 
 // Adds latitude/longitude coordinates using country and city
 async function cityToCoordinates(locationInput, res) {
@@ -458,7 +459,6 @@ async function cityToIATA(locationInput){
     //declares country code
     var countryCode;
     // checks if the code is typed in as JSON or as the code itself
-    var flag = 0;
     // declares the result of the API as the iata code
     var iataRes = "";
     // capitalizes the first letter in each word in the country name
@@ -467,13 +467,12 @@ async function cityToIATA(locationInput){
         for(var i = 0; i < countryJson.length; i++){
             if(countryJson[i].name == country){
                 countryCode = countryJson[i].code;
-                flag = 1;
+                break;
             }
         }
     }
     else{
         country = country.toUpperCase();
-        flag = 1;
     }
     console.log("Code:", countryCode);
     await axios({
@@ -552,6 +551,7 @@ async function searchWeather(weatherQuery) {
         return -1;
     });
 }
+
 
 // Perform API query to flight API
 async function searchFlights(flightQuery) {
@@ -637,8 +637,7 @@ async function searchQuery(locationInput) {
     // Perform API queries, waiting for their response.
     const weatherData = await searchWeather(weatherQuery);
     const flightData = await searchFlights(flightQuery);
-
-
+    console.log("FLIGHTDATA: ", flightData);
     // Return results from API queries.
     return {
         weather: {
@@ -659,6 +658,7 @@ app.get("/search", async (req, res) => {
     res.render("pages/search");
 });
 
+
 app.post("/search", async (req, res) => {
     const locationInput = {
         departure_country: req.body.departure_country,
@@ -673,15 +673,14 @@ app.post("/search", async (req, res) => {
     const responseData = await searchQuery(locationInput);
     // Data we need in a usable form for frontend.
     const displayData = dataToDisplayData(responseData);
-
-    console.log(`Final Search Response JSON:\n${JSON.stringify(displayData)}`);
+    
+    // console.log(`Final Search Response JSON:\n${JSON.stringify(displayData)}`);
 
     if(displayData.error === true){
         // If there is an error, keep user on the search page and display an error
         res.render("pages/search", displayData);
     }
     else {
-        console.log(displayData.data.flight_data);
         res.render("pages/searchResults", displayData);
     }
     // render the searchResults.ejs page with usable displayable data.
@@ -759,11 +758,15 @@ function dataToDisplayData(responseData) {
         };
     }
 
+
     const avgTemp = averageTemperature(responseData.weather);
     const avgPrecip = averagePrecipitation(responseData.weather);
     
     error = false;
 
+    const depAirport = responseData.flight.data.dep_iata;
+    const arrAirport = responseData.flight.data.arr_iata;
+    const depTime = responseData.flight.data.dep_time_utc;
     // TODO return this object once complete.
     let displayData = {
         data: {
@@ -771,9 +774,12 @@ function dataToDisplayData(responseData) {
                 avgTemp: avgTemp,
                 avgPrecip: avgPrecip
             },
-            flights: [
+            flights: {
                 // build flight list here with only relevant data for the user. 
-            ]
+                depAirport: depAirport,
+                arrAirport: arrAirport,
+                depTime: depTime
+            }
         },
         location: responseData.location,
         alerts: [
@@ -784,7 +790,20 @@ function dataToDisplayData(responseData) {
             }
         ]
     };
-
+    console.log("AIRPORT: ", displayData.data.flights.depAirport);
+    // for(var i = 0; i < responseData.flight.length; i++){
+    //     var depAirport = responseData.flight[i].data.dep_iata;
+    //     var arrAirport = responseData.flight[i].data.arr_iata;
+    //     var depTime = responseData.flight[i].data.dep_time_utc;
+    //     let flightIns = {
+    //         depAirport: depAirport,
+    //         arrAirport: arrAirport,
+    //         depTime:depTime
+    //     }
+    //     console.log("DEP AIRPORT: ", flightIns.depAirport);
+    //     displayData.data.flights.push(flightIns);
+    // }
+    // console.log("AIRPORT:", displayData.data.flights[0].depAirport);
     return {
         data: responseData,
         message: alertMessage,
@@ -843,7 +862,7 @@ app.post('/searchWeather', (req, res) => {
 });
 
 
-function insertIntoDB(req, res, usernameP, departureP, arrivalP, temperatureAvgP, airlineP, airportP, countryP, cityP)
+function insertIntoDB(usernameP, departureP, arrivalP, temperatureAvgP, airlineP, airportP, countryP, cityP, req, res)
 {
     var query = `INSERT INTO users_trips(username, departure, arrival, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
 
@@ -865,7 +884,7 @@ function insertIntoDB(req, res, usernameP, departureP, arrivalP, temperatureAvgP
 
 app.post("/addToCalendar", (req, res) =>{
     // TODO fix weather temp input and arrival time?
-    insertIntoDB(req, res, req.session.user, req.body.depTime, "2022-09-28 03:00:00", req.body.weatherData[0].coordinates[0].dates[0].value, req.body.airline, req.body.arrAirport, req.body.country, req.body.city);
+    insertIntoDB(req.session.user, req.body.depTime, "2022-09-28 03:00:00", 55, req.body.airline, req.body.arrAirport, req.body.country, req.body.city, req, res);
 });
 
 
