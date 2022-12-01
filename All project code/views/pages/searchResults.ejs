@@ -9,7 +9,7 @@
 
         <!--Main functionality-->
         <div class="container">
-            <h1>Weather in <%= data.destination.city %>, <%= data.destination.country %></h1>
+            <h1>Weather in <%= data.location.destination.city %>, <%= data.location.destination.country %></h1>
             <div class="container">
                 <% if (data.weather.data !== -1) { %>
                     <% let weatherData = data.weather.data; %>
@@ -18,51 +18,48 @@
                     <br>
                 <% } %>
                 <!--Flight results-->
-                <!-- <% if(error === false){ %> -->
-                    <% let flights = data.flight_data; %>
-                    <% if (flights != null)
-                    { %>
+                <% if(error === false){ %>
                     <h2> Available Flights</h2>
                     <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Flight Date</th>
-                            <th>Departure</th>
-                            <th>Arrival</th>
-                            <th>Airline</th>
-                            <th>Flight Number</th>
-                            <th>Departure Time</th>
-                        </tr>
-                    </thead>
+                        <thead>
+                            <tr>
+                                <th>Flight Date/Time</th>
+                                <th>Departure</th>
+                                <th>Arrival</th>
+                                <th>Airline</th>
+                                <th>Flight Number</th>
+                            </tr>
+                        </thead>
                     <tbody>
-                        <% flights.forEach(flight => 
-                        { %>
-                        <tr>
-                            <td><%= flight.dep_estimated_utc %></td>
-                            <td><%= flight.departure.airpot %></td>
-                            <td><%= flight.arrival.airport %></td>
-                            <td><%= flight.airline_iata %></td>
-                            <td><%= flight.flight_iata %></td>
-                            <!-- <td><%= flight.departure.scheduled %></td> -->
-                            <td>
-                                <form action="/addToCalendar" method="POST">
-                                    <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% flight.flight_date %>">
-                                    <input type="hidden" class="form-control" id="depAirport" name="depAirport" value="<% flight.departure.airport %>">
-                                    <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% flight.arrival.airport %>">
-                                    <input type="hidden" class="form-control" id="airline" name="airline" value="<% flight.airline.name %>">
-                                    <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% flight.flight.iata %>">
-                                    <input type="hidden" class="form-control" id="depTime" name="depTime" value="<% flight.departure.schedules %>">
-                                    <input type="hidden" class="form-control" id="country" name="country" value="<% data.destination.country %>">
-                                    <input type="hidden" class="form-control" id="city" name="city" value="<% data.destination.city %>">
-                                    <button type = "submit" class="btn btn-primary" id="submit_button" >Add to Calendar</button>
-                                </form>
-                            </td>
-                        </tr>
-                        <% }); %>
-                    </tbody>
-                    </table>
-                    <% } %>
-                <!-- <% } %> -->
+                    <% let flights = data.flight.data; %>
+                    <% flights.forEach(flight => { %>
+                    <tr>
+                        <td><%= flight.dep_estimated_utc %></td>
+                        <td><%= flight.dep_estimated_utc %></td>
+                        <td><%= flight.dep_iata %></td>
+                        <td><%= flight.arr_iata %></td>
+                        <td><%= flight.airline_iata %></td>
+                        <td><%= flight.flight_iata %></td>
+                        <!--
+                        <td>
+                            <form action="/addToCalendar" method="POST">
+                                <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% // flight.flight_date %>">
+                                <input type="hidden" class="form-control" id="depAirport" name="depAirport" value="<% // flight.departure.airport %>">
+                                <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% // flight.arrival.airport %>">
+                                <input type="hidden" class="form-control" id="airline" name="airline" value="<% // flight.airline.name %>">
+                                <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% // flight.flight.iata %>">
+                                <input type="hidden" class="form-control" id="depTime" name="depTime" value="<% // flight.departure.schedules %>">
+                                <input type="hidden" class="form-control" id="country" name="country" value="<% // data.destination.country %>">
+                                <input type="hidden" class="form-control" id="city" name="city" value="<% // data.destination.city %>">
+                                <button type = "submit" class="btn btn-primary" id="submit_button" >Add to Calendar</button>
+                            </form>
+                        </td>
+                        -->
+                    </tr>
+                    <% }); %>
+                </tbody>
+                </table>
+                <% } %>
             </div>
         </div>
     </main>

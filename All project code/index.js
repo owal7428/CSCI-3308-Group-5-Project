@@ -711,6 +711,8 @@ function dataToDisplayData(responseData) {
     if (responseData.weather.data === -1 || responseData.flight.data === -1) {
         alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
         error = true;
+    } else {
+        error = false;
     }
 
     return {
