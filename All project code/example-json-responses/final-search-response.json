@@ -2,35 +2,44 @@
     "data": {
         "weather": {
             "avgTemp": {
-                "C": 0,
-                "F": 32
+                "C": 5.567741935483869,
+                "F": 42.02193548387096
             },
             "avgPrecip": {
-                "mm": 2,
-                "in": 0
+                "mm": 3.144193548387096,
+                "in": 0.12378714757429514
             }
         },
         "flights": [
-            // TODO
             {
-
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depUTC": "2022-12-01 23:20",
+                "depDate": "2022-12-01",
+                "depTime": "23:20",
+                "airline_icao": "SWA",
+                "airline": "Southwest Airlines"
             },
             {
-
+                "depAirport": "DEN",
+                "arrAirport": "LGA",
+                "depUTC": "2022-12-02 00:35",
+                "depDate": "2022-12-02",
+                "depTime": "00:35",
+                "airline_icao": "UAL",
+                "airline": "United Airlines"
             }
         ]
     },
     "location": {
         "departure": {
-            "country": "United States",
+            "country": "US",
             "city": "Denver"
         },
         "destination": {
-            "country": "United States",
+            "country": "US",
             "city": "New York"
         }
     },
-    "alerts": [
-        // TODO
-    ]
+    "error": false
 }

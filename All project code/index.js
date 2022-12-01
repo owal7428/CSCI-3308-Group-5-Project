@@ -740,25 +740,38 @@ function averagePrecipitation(weather) {
     };
 }
 
-
+function parseUTCTime(utcTime) {
+    const dateTime = utcTime.split(" ");
+    return {
+        date: dateTime[0],
+        time: dateTime[1]
+    };
+}
 
 function getFlightList(flightsData) {
     let flights = []; // our list of flights
 
     // Loop through flight data and take what we need
     flightsData.forEach(flight => {
-        const airlineObj = airlineJSON.find(i => i.icao === flight.airline_icao);
-
-        const flightIns = {
-            depAirport: flight.dep_iata,
-            arrAirport: flight.arr_iata,
-            depTime: flight.dep_time_utc,
-            airline_icao: flight.airline_icao,
-            airline: airlineObj.name
-        };
-
-        flights.push(flightIns);
-        console.log("DEP AIRPORT: ", flightIns.depAirport);
+        if (flight.status === "scheduled") {
+            const airlineObj = airlineJSON.find(i => i.icao === flight.airline_icao); // convert airline icao to airline name.
+    
+            const depDateTime = parseUTCTime(flight.dep_time_utc); // parse day/time from UTC time
+    
+            // Create flight object that we do want
+            const flightIns = {
+                depAirport: flight.dep_iata,
+                arrAirport: flight.arr_iata,
+                depUTC: flight.dep_time_utc,
+                depDate: depDateTime.date,
+                depTime: depDateTime.time,
+                airline_icao: flight.airline_icao,
+                airline: airlineObj.name
+            };
+    
+            // add flight data to flight array
+            flights.push(flightIns);
+        }
     });
 
     // return resulting list
@@ -771,25 +784,13 @@ function dataToDisplayData(responseData) {
     // TODO make conversion based on frontend needs.
 
     // add an error message to frontend if an api request failed.
-    let alertMessage;
-    let error;
     if (responseData.weather == undefined || responseData.flight == undefined || responseData.weather.data === -1 || responseData.flight.data === -1) {
-        alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
-        error = true;
         // early return: don't filter data if API request(s) failed.
         return {
-            data: responseData,
-            message: alertMessage,
-            error: error
+            message: "Please enter Valid City and Country into Arrival and Departure Fields",
+            error: true
         };
     }
-    
-    error = false;
-
-    // TODO return this object once complete.
-
-
-    // console.log("AIRPORT:", displayData.data.flights[0].depAirport);
 
     let displayData = {
         data: {
@@ -800,22 +801,12 @@ function dataToDisplayData(responseData) {
             flights: getFlightList(responseData.flight.data)
         },
         location: responseData.location,
-        alerts: [
-            // (maybe) build alerts here
-            {
-                message: alertMessage,
-                error: error
-            }
-        ]
+        error: false
     };
 
     console.log(`Display Data thing:\n${JSON.stringify(displayData)}`);
 
-    return {
-        data: responseData,
-        message: alertMessage,
-        error: error
-    };
+    return displayData;
 }
 
 // Weather API access: using meteomatics.com
