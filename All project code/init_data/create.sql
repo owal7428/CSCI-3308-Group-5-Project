@@ -9,8 +9,6 @@ CREATE TABLE IF NOT EXISTS user_trips(
     trip_id SERIAL PRIMARY KEY,
     departure TIMESTAMP,
     arrival TIMESTAMP,
-    temperatureAvg DECIMAL,
-    windSpeedAvg DECIMAL,
     airline VARCHAR(60),
     airport VARCHAR(60),
     country VARCHAR(60),
