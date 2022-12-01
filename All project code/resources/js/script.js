@@ -202,15 +202,15 @@ function change_calendar(operation) {
 
 
     const monthTitle = document.createElement('div');
-    monthTitle.className = 'h3 text-center position-relative py-2';
-    monthTitle.innerHTML = `${MONTH_NAMES[globalMonth - 1]} ${globalYear}`;
+    monthTitle.className = 'h2 text-center position-relative py-2';
+    monthTitle.innerHTML = `${MONTH_NAMES[globalMonth - 1]} ${globalYear}`; //Title for the calendar month (month is 0 indexed)
 
     calendar_element.appendChild(monthTitle);
 
-
-    const tempFullDate = new Date(`${tempMonth}-${tempDate}-${tempYear}`);
+    //The date objects below are used to store a range for the current week so that trips scheduled that week can be found
+    const tempFullDate = new Date(`${tempMonth}-${tempDate}-${tempYear}`); //Creates a date object of the Sunday of the current week
     let tempFullDateEnd = new Date(`${tempFullDate.getMonth() + 1}-${tempFullDate.getDate()}-${tempFullDate.getFullYear()}`);
-    tempFullDateEnd.setDate(tempFullDateEnd.getDate() + 6);
+    tempFullDateEnd.setDate(tempFullDateEnd.getDate() + 6); //Sets a range for the week (stores the saturday of the current week)
 
     let tripsThisWeek = findTripsThisWeek(tempFullDate, tempFullDateEnd);
 
@@ -247,26 +247,25 @@ function change_calendar(operation) {
 
         body.classList.add('event-container');
 
-        if(tripsThisWeek.length > 0) {
+        if(tripsThisWeek.length > 0) { //Function to populate a day with trip cards. Only runs if there are trips scheduled for that week
             tripsThisWeek.forEach(tripObj => {
-                const tripStart = tripObj.trip.departure.getDate();
-                const tripEnd = tripObj.trip.arrival;
-                if(!tripObj.started) {
+                const tripStart = tripObj.trip.departure.getDate(); //Stores the start date of tha trip 
+                const tripEnd = tripObj.trip.arrival; //Stores the full date that the current trip ends
+                if(!tripObj.started) { //If the current trip has not already started, this checks if the current date is the start date for that trip
                     if(tripStart === tempDate) {
                         tripObj.started = true;
                     }
                 }
-                if(tripObj.started) {
+                if(tripObj.started && !tripObj.ended) {
                     const tripCard = document.createElement('div');
                     tripCard.classList.add('tripCard');
                     tripCard.setAttribute('onclick', `open_trip_modal(${tripObj.index})`);
-                    tripCard.setAttribute('style', `background-color: ${colors[tripObj.index % 5]};`);
+                    tripCard.setAttribute('style', `background-color: ${colors[tripObj.index % 5]};`); //Modulo to access the color array. Keeps the same color for each trip regardless of what week is currently being viewed
                     tripCard.innerHTML = `${tripObj.trip.city}`;
                     body.appendChild(tripCard);
                 }
                 if(tripEnd.getFullYear() === tempYear && (tripEnd.getMonth() + 1) === tempMonth && tripEnd.getDate() === tempDate) {
-                    const tripIndex = tripsThisWeek.indexOf(tripObj);
-                    tripsThisWeek.splice(tripIndex, 1);
+                    tripObj.ended = true;
                 }
             })
         }
@@ -320,6 +319,7 @@ function findTripsThisWeek(startDate, endDate) {
             returnedTrips.push({
                 trip: trip,
                 started: false,
+                ended: false,
                 index: userTrips.indexOf(trip)
             });
         }
@@ -327,6 +327,7 @@ function findTripsThisWeek(startDate, endDate) {
             returnedTrips.push({
                 trip: trip,
                 started: true,
+                ended: false,
                 index: userTrips.indexOf(trip)
             });
         }
