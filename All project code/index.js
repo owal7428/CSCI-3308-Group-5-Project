@@ -700,6 +700,26 @@ function stringToArray(str, divisor=",") {
     return array;
 }
 
+function averageTemperature(weather) {
+    const temperatureObject = weather.data.find(i => i.parameter === "t_2m:C"); // searches weather data for object containing temperature data
+    const dates = temperatureObject.coordinates[0].dates; // only first coordinate because we only have one weather point to work with
+
+    // Get the average temperature in Celcius
+    let sumC = 0;
+    dates.forEach(date => {
+        sumC += date.value;
+    });
+    const avgTempC = sumC / dates.length;
+
+    const avgTempF = (avgTempC * 1.8) + 32; // get average fahrenheit 
+
+    // Return both results
+    return {
+        avgTempC: avgTempC,
+        avgTempF: avgTempF
+    };
+}
+
 // Convert responseData from API responses to the format we use on displaying to the user.
 function dataToDisplayData(responseData) {
     // for now, just pass the same data (with added error message).
@@ -707,7 +727,7 @@ function dataToDisplayData(responseData) {
 
     // add an error message to frontend if an api request failed.
     let alertMessage;
-    let error = false;
+    let error;
     if (responseData.weather.data === -1 || responseData.flight.data === -1) {
         alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
         error = true;
@@ -718,9 +738,10 @@ function dataToDisplayData(responseData) {
             error: error
         };
     }
+
+    const avgTemp = averageTemperature(weather);
     
     error = false;
-
     return {
         data: responseData,
         message: alertMessage,

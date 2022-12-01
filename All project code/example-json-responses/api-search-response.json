@@ -1,0 +1,883 @@
+{
+    "data": {
+        "weather": {
+            "data": [
+                {
+                    "parameter": "t_2m:C",
+                    "coordinates": [
+                        {
+                            "lat": 40.712728,
+                            "lon": -74.006015,
+                            "dates": [
+                                {
+                                    "date": "2022-11-30T07:47:24Z",
+                                    "value": 5.5
+                                },
+                                {
+                                    "date": "2022-11-30T10:47:24Z",
+                                    "value": 6.7
+                                },
+                                {
+                                    "date": "2022-11-30T13:47:24Z",
+                                    "value": 10.5
+                                },
+                                {
+                                    "date": "2022-11-30T16:47:24Z",
+                                    "value": 12.4
+                                },
+                                {
+                                    "date": "2022-11-30T19:47:24Z",
+                                    "value": 13.7
+                                },
+                                {
+                                    "date": "2022-11-30T22:47:24Z",
+                                    "value": 13
+                                },
+                                {
+                                    "date": "2022-12-01T01:47:24Z",
+                                    "value": 7.1
+                                },
+                                {
+                                    "date": "2022-12-01T04:47:24Z",
+                                    "value": 3
+                                },
+                                {
+                                    "date": "2022-12-01T07:47:24Z",
+                                    "value": 0.9
+                                },
+                                {
+                                    "date": "2022-12-01T10:47:24Z",
+                                    "value": -0.2
+                                },
+                                {
+                                    "date": "2022-12-01T13:47:24Z",
+                                    "value": 2.4
+                                },
+                                {
+                                    "date": "2022-12-01T16:47:24Z",
+                                    "value": 5.7
+                                },
+                                {
+                                    "date": "2022-12-01T19:47:24Z",
+                                    "value": 6.8
+                                },
+                                {
+                                    "date": "2022-12-01T22:47:24Z",
+                                    "value": 2.6
+                                },
+                                {
+                                    "date": "2022-12-02T01:47:24Z",
+                                    "value": 0.6
+                                },
+                                {
+                                    "date": "2022-12-02T04:47:24Z",
+                                    "value": -0.5
+                                },
+                                {
+                                    "date": "2022-12-02T07:47:24Z",
+                                    "value": -1.6
+                                },
+                                {
+                                    "date": "2022-12-02T10:47:24Z",
+                                    "value": -2.7
+                                },
+                                {
+                                    "date": "2022-12-02T13:47:24Z",
+                                    "value": 0.7
+                                },
+                                {
+                                    "date": "2022-12-02T16:47:24Z",
+                                    "value": 4.9
+                                },
+                                {
+                                    "date": "2022-12-02T19:47:24Z",
+                                    "value": 5.8
+                                },
+                                {
+                                    "date": "2022-12-02T22:47:24Z",
+                                    "value": 4.2
+                                },
+                                {
+                                    "date": "2022-12-03T01:47:24Z",
+                                    "value": 4.2
+                                },
+                                {
+                                    "date": "2022-12-03T04:47:24Z",
+                                    "value": 4.8
+                                },
+                                {
+                                    "date": "2022-12-03T07:47:24Z",
+                                    "value": 6.8
+                                },
+                                {
+                                    "date": "2022-12-03T10:47:24Z",
+                                    "value": 9.4
+                                },
+                                {
+                                    "date": "2022-12-03T13:47:24Z",
+                                    "value": 11.6
+                                },
+                                {
+                                    "date": "2022-12-03T16:47:24Z",
+                                    "value": 12.5
+                                },
+                                {
+                                    "date": "2022-12-03T19:47:24Z",
+                                    "value": 13.4
+                                },
+                                {
+                                    "date": "2022-12-03T22:47:24Z",
+                                    "value": 10.7
+                                },
+                                {
+                                    "date": "2022-12-04T01:47:24Z",
+                                    "value": 7.2
+                                },
+                                {
+                                    "date": "2022-12-04T04:47:24Z",
+                                    "value": 3.5
+                                },
+                                {
+                                    "date": "2022-12-04T07:47:24Z",
+                                    "value": 0.9
+                                },
+                                {
+                                    "date": "2022-12-04T10:47:24Z",
+                                    "value": -0.7
+                                },
+                                {
+                                    "date": "2022-12-04T13:47:24Z",
+                                    "value": 1.5
+                                },
+                                {
+                                    "date": "2022-12-04T16:47:24Z",
+                                    "value": 4.1
+                                },
+                                {
+                                    "date": "2022-12-04T19:47:24Z",
+                                    "value": 4.2
+                                },
+                                {
+                                    "date": "2022-12-04T22:47:24Z",
+                                    "value": 3
+                                },
+                                {
+                                    "date": "2022-12-05T01:47:24Z",
+                                    "value": 2.6
+                                },
+                                {
+                                    "date": "2022-12-05T04:47:24Z",
+                                    "value": 1
+                                },
+                                {
+                                    "date": "2022-12-05T07:47:24Z",
+                                    "value": -0.7
+                                },
+                                {
+                                    "date": "2022-12-05T10:47:24Z",
+                                    "value": -2
+                                },
+                                {
+                                    "date": "2022-12-05T13:47:24Z",
+                                    "value": 1.8
+                                },
+                                {
+                                    "date": "2022-12-05T16:47:24Z",
+                                    "value": 5.9
+                                },
+                                {
+                                    "date": "2022-12-05T19:47:24Z",
+                                    "value": 5.5
+                                },
+                                {
+                                    "date": "2022-12-05T22:47:24Z",
+                                    "value": 2.1
+                                },
+                                {
+                                    "date": "2022-12-06T01:47:24Z",
+                                    "value": 1.5
+                                },
+                                {
+                                    "date": "2022-12-06T04:47:24Z",
+                                    "value": 3.6
+                                },
+                                {
+                                    "date": "2022-12-06T07:47:24Z",
+                                    "value": 8.2
+                                },
+                                {
+                                    "date": "2022-12-06T10:47:24Z",
+                                    "value": 11.5
+                                },
+                                {
+                                    "date": "2022-12-06T13:47:24Z",
+                                    "value": 12.4
+                                },
+                                {
+                                    "date": "2022-12-06T16:47:24Z",
+                                    "value": 12.6
+                                },
+                                {
+                                    "date": "2022-12-06T19:47:24Z",
+                                    "value": 12.5
+                                },
+                                {
+                                    "date": "2022-12-06T22:47:24Z",
+                                    "value": 11.8
+                                },
+                                {
+                                    "date": "2022-12-07T01:47:24Z",
+                                    "value": 11.1
+                                },
+                                {
+                                    "date": "2022-12-07T04:47:24Z",
+                                    "value": 10.3
+                                },
+                                {
+                                    "date": "2022-12-07T07:47:24Z",
+                                    "value": 8.8
+                                },
+                                {
+                                    "date": "2022-12-07T10:47:24Z",
+                                    "value": 7
+                                },
+                                {
+                                    "date": "2022-12-07T13:47:24Z",
+                                    "value": 7.6
+                                },
+                                {
+                                    "date": "2022-12-07T16:47:24Z",
+                                    "value": 9.2
+                                },
+                                {
+                                    "date": "2022-12-07T19:47:24Z",
+                                    "value": 7.9
+                                },
+                                {
+                                    "date": "2022-12-07T22:47:24Z",
+                                    "value": 4.2
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "parameter": "precip_24h:mm",
+                    "coordinates": [
+                        {
+                            "lat": 40.712728,
+                            "lon": -74.006015,
+                            "dates": [
+                                {
+                                    "date": "2022-11-30T07:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-11-30T10:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-11-30T13:47:24Z",
+                                    "value": 0.04
+                                },
+                                {
+                                    "date": "2022-11-30T16:47:24Z",
+                                    "value": 2.36
+                                },
+                                {
+                                    "date": "2022-11-30T19:47:24Z",
+                                    "value": 5.76
+                                },
+                                {
+                                    "date": "2022-11-30T22:47:24Z",
+                                    "value": 9.19
+                                },
+                                {
+                                    "date": "2022-12-01T01:47:24Z",
+                                    "value": 9.24
+                                },
+                                {
+                                    "date": "2022-12-01T04:47:24Z",
+                                    "value": 9.24
+                                },
+                                {
+                                    "date": "2022-12-01T07:47:24Z",
+                                    "value": 9.24
+                                },
+                                {
+                                    "date": "2022-12-01T10:47:24Z",
+                                    "value": 9.24
+                                },
+                                {
+                                    "date": "2022-12-01T13:47:24Z",
+                                    "value": 9.2
+                                },
+                                {
+                                    "date": "2022-12-01T16:47:24Z",
+                                    "value": 6.87
+                                },
+                                {
+                                    "date": "2022-12-01T19:47:24Z",
+                                    "value": 3.48
+                                },
+                                {
+                                    "date": "2022-12-01T22:47:24Z",
+                                    "value": 0.05
+                                },
+                                {
+                                    "date": "2022-12-02T01:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-02T04:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-02T07:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-02T10:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-02T13:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-02T16:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-02T19:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-02T22:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-03T01:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-03T04:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-03T07:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-03T10:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-03T13:47:24Z",
+                                    "value": 1.06
+                                },
+                                {
+                                    "date": "2022-12-03T16:47:24Z",
+                                    "value": 3.87
+                                },
+                                {
+                                    "date": "2022-12-03T19:47:24Z",
+                                    "value": 5.01
+                                },
+                                {
+                                    "date": "2022-12-03T22:47:24Z",
+                                    "value": 5.01
+                                },
+                                {
+                                    "date": "2022-12-04T01:47:24Z",
+                                    "value": 5.01
+                                },
+                                {
+                                    "date": "2022-12-04T04:47:24Z",
+                                    "value": 5.01
+                                },
+                                {
+                                    "date": "2022-12-04T07:47:24Z",
+                                    "value": 5.01
+                                },
+                                {
+                                    "date": "2022-12-04T10:47:24Z",
+                                    "value": 5.01
+                                },
+                                {
+                                    "date": "2022-12-04T13:47:24Z",
+                                    "value": 3.95
+                                },
+                                {
+                                    "date": "2022-12-04T16:47:24Z",
+                                    "value": 1.14
+                                },
+                                {
+                                    "date": "2022-12-04T19:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-04T22:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T01:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T04:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T07:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T10:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T13:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T16:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T19:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-05T22:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-06T01:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-06T04:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-06T07:47:24Z",
+                                    "value": 0
+                                },
+                                {
+                                    "date": "2022-12-06T10:47:24Z",
+                                    "value": 0.51
+                                },
+                                {
+                                    "date": "2022-12-06T13:47:24Z",
+                                    "value": 4.38
+                                },
+                                {
+                                    "date": "2022-12-06T16:47:24Z",
+                                    "value": 9.79
+                                },
+                                {
+                                    "date": "2022-12-06T19:47:24Z",
+                                    "value": 11.89
+                                },
+                                {
+                                    "date": "2022-12-06T22:47:24Z",
+                                    "value": 12.33
+                                },
+                                {
+                                    "date": "2022-12-07T01:47:24Z",
+                                    "value": 14.3
+                                },
+                                {
+                                    "date": "2022-12-07T04:47:24Z",
+                                    "value": 17.04
+                                },
+                                {
+                                    "date": "2022-12-07T07:47:24Z",
+                                    "value": 18.11
+                                },
+                                {
+                                    "date": "2022-12-07T10:47:24Z",
+                                    "value": 17.84
+                                },
+                                {
+                                    "date": "2022-12-07T13:47:24Z",
+                                    "value": 14.05
+                                },
+                                {
+                                    "date": "2022-12-07T16:47:24Z",
+                                    "value": 8.64
+                                },
+                                {
+                                    "date": "2022-12-07T19:47:24Z",
+                                    "value": 6.54
+                                },
+                                {
+                                    "date": "2022-12-07T22:47:24Z",
+                                    "value": 6.1
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "format": "json"
+        },
+        "flight": {
+            "data": [
+                {
+                    "airline_iata": "AA",
+                    "airline_icao": "AAL",
+                    "flight_iata": "AA9161",
+                    "flight_icao": "AAL9161",
+                    "flight_number": "9161",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "A33",
+                    "dep_time": "2022-11-30 14:23",
+                    "dep_time_utc": "2022-11-30 21:23",
+                    "dep_estimated": "2022-11-30 15:15",
+                    "dep_estimated_utc": "2022-11-30 22:15",
+                    "dep_actual": "2022-11-30 15:26",
+                    "dep_actual_utc": "2022-11-30 22:26",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": "59",
+                    "arr_baggage": null,
+                    "arr_time": "2022-11-30 20:00",
+                    "arr_time_utc": "2022-12-01 01:00",
+                    "arr_estimated": "2022-11-30 20:42",
+                    "arr_estimated_utc": "2022-12-01 01:42",
+                    "cs_airline_iata": "B6",
+                    "cs_flight_number": "153",
+                    "cs_flight_iata": "B6153",
+                    "status": "active",
+                    "duration": 217,
+                    "delayed": 42,
+                    "dep_delayed": 52,
+                    "arr_delayed": 42,
+                    "aircraft_icao": null,
+                    "arr_time_ts": 1669856400,
+                    "dep_time_ts": 1669843380,
+                    "arr_estimated_ts": 1669858920,
+                    "dep_estimated_ts": 1669846500,
+                    "dep_actual_ts": 1669847160
+                },
+                {
+                    "airline_iata": "B6",
+                    "airline_icao": "JBU",
+                    "flight_iata": "B6153",
+                    "flight_icao": "JBU153",
+                    "flight_number": "153",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "A33",
+                    "dep_time": "2022-11-30 14:23",
+                    "dep_time_utc": "2022-11-30 21:23",
+                    "dep_estimated": "2022-11-30 15:15",
+                    "dep_estimated_utc": "2022-11-30 22:15",
+                    "dep_actual": "2022-11-30 15:26",
+                    "dep_actual_utc": "2022-11-30 22:26",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": "59",
+                    "arr_baggage": null,
+                    "arr_time": "2022-11-30 20:00",
+                    "arr_time_utc": "2022-12-01 01:00",
+                    "arr_estimated": "2022-11-30 20:42",
+                    "arr_estimated_utc": "2022-12-01 01:42",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "active",
+                    "duration": 217,
+                    "delayed": 42,
+                    "dep_delayed": 52,
+                    "arr_delayed": 42,
+                    "aircraft_icao": "A320",
+                    "arr_time_ts": 1669856400,
+                    "dep_time_ts": 1669843380,
+                    "arr_estimated_ts": 1669858920,
+                    "dep_estimated_ts": 1669846500,
+                    "dep_actual_ts": 1669847160
+                },
+                {
+                    "airline_iata": "WN",
+                    "airline_icao": "SWA",
+                    "flight_iata": "WN2744",
+                    "flight_icao": "SWA2744",
+                    "flight_number": "2744",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "C45",
+                    "dep_time": "2022-11-30 13:50",
+                    "dep_time_utc": "2022-11-30 20:50",
+                    "dep_estimated": "2022-11-30 16:09",
+                    "dep_estimated_utc": "2022-11-30 23:09",
+                    "dep_actual": "2022-11-30 16:09",
+                    "dep_actual_utc": "2022-11-30 23:09",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": "55",
+                    "arr_baggage": null,
+                    "arr_time": "2022-11-30 19:25",
+                    "arr_time_utc": "2022-12-01 00:25",
+                    "arr_estimated": "2022-11-30 21:24",
+                    "arr_estimated_utc": "2022-12-01 02:24",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "active",
+                    "duration": 215,
+                    "delayed": 119,
+                    "dep_delayed": 139,
+                    "arr_delayed": 119,
+                    "aircraft_icao": "B738",
+                    "arr_time_ts": 1669854300,
+                    "dep_time_ts": 1669841400,
+                    "arr_estimated_ts": 1669861440,
+                    "dep_estimated_ts": 1669849740,
+                    "dep_actual_ts": 1669849740
+                },
+                {
+                    "airline_iata": "WN",
+                    "airline_icao": "SWA",
+                    "flight_iata": "WN2519",
+                    "flight_icao": "SWA2519",
+                    "flight_number": "2519",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "C33",
+                    "dep_time": "2022-11-30 16:20",
+                    "dep_time_utc": "2022-11-30 23:20",
+                    "dep_estimated": "2022-11-30 16:33",
+                    "dep_estimated_utc": "2022-11-30 23:33",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": null,
+                    "arr_baggage": null,
+                    "arr_time": "2022-11-30 21:55",
+                    "arr_time_utc": "2022-12-01 02:55",
+                    "arr_estimated": "2022-11-30 21:49",
+                    "arr_estimated_utc": "2022-12-01 02:49",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "scheduled",
+                    "duration": 215,
+                    "delayed": 13,
+                    "dep_delayed": 13,
+                    "arr_delayed": null,
+                    "aircraft_icao": "B38M",
+                    "arr_time_ts": 1669863300,
+                    "dep_time_ts": 1669850400,
+                    "arr_estimated_ts": 1669862940,
+                    "dep_estimated_ts": 1669851180
+                },
+                {
+                    "airline_iata": "UA",
+                    "airline_icao": "UAL",
+                    "flight_iata": "UA2375",
+                    "flight_icao": "UAL2375",
+                    "flight_number": "2375",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "B21",
+                    "dep_time": "2022-11-30 13:55",
+                    "dep_time_utc": "2022-11-30 20:55",
+                    "dep_estimated": "2022-11-30 17:24",
+                    "dep_estimated_utc": "2022-12-01 00:24",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": "42",
+                    "arr_baggage": "7",
+                    "arr_time": "2022-11-30 19:31",
+                    "arr_time_utc": "2022-12-01 00:31",
+                    "arr_estimated": "2022-11-30 22:34",
+                    "arr_estimated_utc": "2022-12-01 03:34",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "scheduled",
+                    "duration": 216,
+                    "delayed": 183,
+                    "dep_delayed": 209,
+                    "arr_delayed": 183,
+                    "aircraft_icao": "A319",
+                    "arr_time_ts": 1669854660,
+                    "dep_time_ts": 1669841700,
+                    "arr_estimated_ts": 1669865640,
+                    "dep_estimated_ts": 1669854240
+                },
+                {
+                    "airline_iata": "UA",
+                    "airline_icao": "UAL",
+                    "flight_iata": "UA442",
+                    "flight_icao": "UAL442",
+                    "flight_number": "442",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "B17",
+                    "dep_time": "2022-11-30 16:10",
+                    "dep_time_utc": "2022-11-30 23:10",
+                    "dep_estimated": "2022-11-30 18:00",
+                    "dep_estimated_utc": "2022-12-01 01:00",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": "44",
+                    "arr_baggage": "7",
+                    "arr_time": "2022-11-30 21:47",
+                    "arr_time_utc": "2022-12-01 02:47",
+                    "arr_estimated": "2022-11-30 23:17",
+                    "arr_estimated_utc": "2022-12-01 04:17",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "scheduled",
+                    "duration": 217,
+                    "delayed": 90,
+                    "dep_delayed": 110,
+                    "arr_delayed": 90,
+                    "aircraft_icao": "A319",
+                    "arr_time_ts": 1669862820,
+                    "dep_time_ts": 1669849800,
+                    "arr_estimated_ts": 1669868220,
+                    "dep_estimated_ts": 1669856400
+                },
+                {
+                    "airline_iata": "UA",
+                    "airline_icao": "UAL",
+                    "flight_iata": "UA406",
+                    "flight_icao": "UAL406",
+                    "flight_number": "406",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "B19",
+                    "dep_time": "2022-11-30 15:20",
+                    "dep_time_utc": "2022-11-30 22:20",
+                    "dep_estimated": "2022-11-30 18:25",
+                    "dep_estimated_utc": "2022-12-01 01:25",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": "46",
+                    "arr_baggage": "7",
+                    "arr_time": "2022-11-30 20:57",
+                    "arr_time_utc": "2022-12-01 01:57",
+                    "arr_estimated": "2022-11-30 23:39",
+                    "arr_estimated_utc": "2022-12-01 04:39",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "scheduled",
+                    "duration": 217,
+                    "delayed": 162,
+                    "dep_delayed": 185,
+                    "arr_delayed": 162,
+                    "aircraft_icao": "A319",
+                    "arr_time_ts": 1669859820,
+                    "dep_time_ts": 1669846800,
+                    "arr_estimated_ts": 1669869540,
+                    "dep_estimated_ts": 1669857900
+                },
+                {
+                    "airline_iata": "DL",
+                    "airline_icao": "DAL",
+                    "flight_iata": "DL2013",
+                    "flight_icao": "DAL2013",
+                    "flight_number": "2013",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "A28",
+                    "dep_time": "2022-11-30 16:20",
+                    "dep_time_utc": "2022-11-30 23:20",
+                    "dep_estimated": "2022-11-30 18:45",
+                    "dep_estimated_utc": "2022-12-01 01:45",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "C",
+                    "arr_gate": "75",
+                    "arr_baggage": "4",
+                    "arr_time": "2022-11-30 21:57",
+                    "arr_time_utc": "2022-12-01 02:57",
+                    "arr_estimated": "2022-12-01 00:22",
+                    "arr_estimated_utc": "2022-12-01 05:22",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "scheduled",
+                    "duration": 217,
+                    "delayed": 145,
+                    "dep_delayed": 145,
+                    "arr_delayed": 145,
+                    "aircraft_icao": "A321",
+                    "arr_time_ts": 1669863420,
+                    "dep_time_ts": 1669850400,
+                    "arr_estimated_ts": 1669872120,
+                    "dep_estimated_ts": 1669859100
+                },
+                {
+                    "airline_iata": "UA",
+                    "airline_icao": "UAL",
+                    "flight_iata": "UA1554",
+                    "flight_icao": "UAL1554",
+                    "flight_number": "1554",
+                    "dep_iata": "DEN",
+                    "dep_icao": "KDEN",
+                    "dep_terminal": null,
+                    "dep_gate": "B25",
+                    "dep_time": "2022-11-30 17:35",
+                    "dep_time_utc": "2022-12-01 00:35",
+                    "dep_estimated": "2022-11-30 19:05",
+                    "dep_estimated_utc": "2022-12-01 02:05",
+                    "arr_iata": "LGA",
+                    "arr_icao": "KLGA",
+                    "arr_terminal": "B",
+                    "arr_gate": "44",
+                    "arr_baggage": "7",
+                    "arr_time": "2022-11-30 23:14",
+                    "arr_time_utc": "2022-12-01 04:14",
+                    "arr_estimated": "2022-12-01 00:29",
+                    "arr_estimated_utc": "2022-12-01 05:29",
+                    "cs_airline_iata": null,
+                    "cs_flight_number": null,
+                    "cs_flight_iata": null,
+                    "status": "scheduled",
+                    "duration": 219,
+                    "delayed": 75,
+                    "dep_delayed": 90,
+                    "arr_delayed": 75,
+                    "aircraft_icao": "A319",
+                    "arr_time_ts": 1669868040,
+                    "dep_time_ts": 1669854900,
+                    "arr_estimated_ts": 1669872540,
+                    "dep_estimated_ts": 1669860300
+                }
+            ]
+        },
+        "location": {
+            "departure": {
+                "country": "United States",
+                "city": "Denver"
+            },
+            "destination": {
+                "country": "United States",
+                "city": "New York"
+            }
+        }
+    }
+}
