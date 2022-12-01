@@ -763,7 +763,7 @@ function dataToDisplayData(responseData) {
     const avgPrecip = averagePrecipitation(weather);
     
     error = false;
-    return {
+    let displayData = {
         data: {
             weather: {
                 avgTemp: avgTemp,
@@ -780,6 +780,12 @@ function dataToDisplayData(responseData) {
                 error: error
             }
         ]
+    };
+
+    return {
+        data: responseData,
+        message: alertMessage,
+        error: error
     };
 
     // TODO filter data for user display here
