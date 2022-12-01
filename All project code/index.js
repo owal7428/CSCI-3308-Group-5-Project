@@ -711,15 +711,16 @@ function dataToDisplayData(responseData) {
     if (responseData.weather.data === -1 || responseData.flight.data === -1) {
         alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
         error = true;
-    } else {
-        error = false;
-    }
+        // early return: don't filter data if API request(s) failed.
+        return {
+            data: responseData,
+            message: alertMessage,
+            error: error
+        };
+    
+    error = false;
 
-    return {
-        data: responseData,
-        message: alertMessage,
-        error: error
-    }; 
+    // TODO filter data for user display here
 }
 
 // Weather API access: using meteomatics.com
