@@ -715,9 +715,29 @@ function averageTemperature(weather) {
 
     // Return both results
     return {
-        avgTempC: avgTempC,
-        avgTempF: avgTempF
+        C: avgTempC,
+        F: avgTempF
     };
+}
+
+function averagePrecipitation(weather) {
+    const precipitationObject = weather.data.find(i => i.parameter === "precip_24h:mm"); // searches weather data for object containing precipitation data
+    const dates = precipitationObject.coordinates[0].dates; // only first coordinate because we only have one weather point to work with
+
+    // Get the average precipitation in mm
+    let sumMM = 0;
+    dates.forEach(date => {
+        sumC += date.value;
+    });
+    const avgPrecipMM = sumMM / dates.length;
+
+    const avgPrecipIn = avgPrecipMM / 25.4; // get average inches
+
+    // return both results
+    return {
+        mm: avgPrecipMM,
+        in: avgPrecipIn
+    }
 }
 
 // Convert responseData from API responses to the format we use on displaying to the user.
@@ -740,12 +760,26 @@ function dataToDisplayData(responseData) {
     }
 
     const avgTemp = averageTemperature(weather);
+    const avgPrecip = averagePrecipitation(weather);
     
     error = false;
     return {
-        data: responseData,
-        message: alertMessage,
-        error: error
+        data: {
+            weather: {
+                avgTemp: avgTemp,
+                avgPrecip: avgPrecip
+            },
+            flights: [
+                // build flight list here with only relevant data for the user. 
+            ]
+        },
+        alerts: [
+            // (maybe) build alerts here
+            {
+                message: message,
+                error: error
+            }
+        ]
     };
 
     // TODO filter data for user display here
