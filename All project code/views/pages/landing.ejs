@@ -1,13 +1,18 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
     <main>
-        <div class="p-3 mb-2 bg-secondary text-black">
+        <div class="container-fluid" style ="background-color: #A7c7e7;">
         <div class="container pb-4">
             <div class="row align-items-center">
+            
             <div class="container py-1" style= "position:relative; top: 150px; right:80px;">
                 <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center text-center text-lg-start">
+                    <div class = "fade-in-text">
                     <h1>Welcome To Airfare Affairs</h1>
+                    </div>
+                    <div class ="fade-in-text2">
                     <p>Your dream vacation awaits. Book now and save hundreds of hours planning!</p> 
+                    </div>
                 </div>
             </div>
                 <div class="col-3">
@@ -29,7 +34,7 @@
                     </div>
                 </div>
             </div>
-            <div class="container py-1" style="width: 65%; position:relative; left: 400px; top: -100px;">
+            <div class="container py-1" style="width: 65%; position:relative; left: 400px; top: -150px;">
                 <div id="carouselExampleFade" class="carousel slide carousel-fade" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item">
@@ -63,11 +68,34 @@
             </div>    
           </div>      
         </div>
-        <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="../../resources/images/location_pin_007.jpg" alt="Card image cap">
-            <div class="card-body">
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+
+        <div class = "fade-in-image">
+        <div class="row">
+        <div class = "col-sm-4">
+        <div class="card" style="width: 20rem; background-color:#dae3ec; position:relative; left: 100px; top:80px;">
+            <img class="card-img-center" style = "width: 10rem; position:relative; left:85px; top: 20px" src="images/google-location-icon-16.png" alt="Card image cap">
+            <div class="card-body" style= "position:relative; top: 15px; left:60px; color: black;">
+              <h6 class="card-text-center">Find the perfect spot</h6>
             </div>
           </div>
+        </div>
+        <div class = "col-sm-4">
+            <div class="card" style="width: 20rem; background-color:#dae3ec; position:relative; left: 100px; top:80px;">
+                <img class="card-img-center" style = "width: 14rem; position:relative; left:60px; top: 20px" src="images/airplane-icon-png-png-22.png" alt="Card image cap">
+                <div class="card-body" style= "position:relative; top: 15px; left:85px; color: black;">
+                  <h6 class="card-text-center">Book Your Flight.</h6>
+                </div>
+              </div>
+            </div>
+            <div class = "col-sm-4">
+                <div class="card" style="width: 20rem; background-color:#dae3ec; position:relative; left: 100px;top:80px;">
+                    <img class="card-img-center" style = "width: 13rem; position:relative; left:60px; top: 20px" src="images/157785.png" alt="Card image cap">
+                    <div class="card-body" style= "position:relative; top: 15px; left:83px; color: black;">
+                      <h6 class="card-text-center">Sit back and relax</h6>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
     </main>
 <%- include ('../partials/footer') %>

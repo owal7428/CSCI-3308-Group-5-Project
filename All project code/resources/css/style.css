@@ -15,3 +15,27 @@ body {
 {
     color: black;
 }
+.fade-in-image { animation: fadeIn 2s; }
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+.fade-in-text {
+    font-family: Arial;
+    font-size: 50px;
+    animation: fadeIn 3s;
+  }
+.fade-in-text2 {
+    font-family: Arial;
+    font-size: 15px;
+    animation: fadeIn 3s;
+  }
+  
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+  }
+
+  
