@@ -748,7 +748,7 @@ function dataToDisplayData(responseData) {
     // add an error message to frontend if an api request failed.
     let alertMessage;
     let error;
-    if (responseData.weather.data === -1 || responseData.flight.data === -1) {
+    if (responseData.weather == undefined || responseData.flight == undefined || responseData.weather.data === -1 || responseData.flight.data === -1) {
         alertMessage = "Please enter Valid City and Country into Arrival and Departure Fields"
         error = true;
         // early return: don't filter data if API request(s) failed.
