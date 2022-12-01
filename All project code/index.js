@@ -717,8 +717,15 @@ function dataToDisplayData(responseData) {
             message: alertMessage,
             error: error
         };
+    }
     
     error = false;
+
+    return {
+        data: responseData,
+        message: alertMessage,
+        error: error
+    };
 
     // TODO filter data for user display here
 }
