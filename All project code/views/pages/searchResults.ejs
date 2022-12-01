@@ -11,8 +11,8 @@
         <div class="container">
             <h1>Weather in <%= location.destination.city %>, <%= location.destination.country %></h1>
             <div class="container">
-                <h2>Temperature (Celcius): <%= data.weather.avgTemp.C %></h2>
-                <h2>Precipitation (Milimeters): <%= data.weather.avgPrecip.mm %></h2>
+                <h2>Temperature: <%= data.weather.avgTemp.C %>&#8451;, <%= data.weather.avgTemp.F %>&#8457; </h2>
+                <h2>Precipitation: <%= data.weather.avgPrecip.mm %>mm, <%= data.weather.avgPrecip.in %>in</h2>
                 <br>
             <!--Flight results-->
             

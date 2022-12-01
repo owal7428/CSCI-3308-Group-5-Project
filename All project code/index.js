@@ -715,8 +715,8 @@ function averageTemperature(weather) {
 
     // Return both results
     return {
-        C: avgTempC,
-        F: avgTempF
+        C: Math.round(avgTempC),
+        F: Math.round(avgTempF)
     };
 }
 
@@ -735,8 +735,8 @@ function averagePrecipitation(weather) {
 
     // return both results
     return {
-        mm: avgPrecipMM,
-        in: avgPrecipIn
+        mm: Math.round(avgPrecipMM),
+        in: Math.round(avgPrecipIn)
     };
 }
 
