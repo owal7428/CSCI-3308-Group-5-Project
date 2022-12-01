@@ -775,6 +775,7 @@ function dataToDisplayData(responseData) {
                 // build flight list here with only relevant data for the user. 
             ]
         },
+        location: responseData.location,
         alerts: [
             // (maybe) build alerts here
             {

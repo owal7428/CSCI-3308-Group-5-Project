@@ -20,6 +20,16 @@
             }
         ]
     },
+    "location": {
+        "departure": {
+            "country": "United States",
+            "city": "Denver"
+        },
+        "destination": {
+            "country": "United States",
+            "city": "New York"
+        }
+    },
     "alerts": [
         // TODO
     ]
