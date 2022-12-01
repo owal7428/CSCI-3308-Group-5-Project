@@ -23,12 +23,58 @@ const exampleTrip2 = {
     city: 'London'
 }
 
-const userTrips = [exampleTrip1, exampleTrip2];
+const exampleTrip3 = {
+    departure: new Date('11-21-2022'),
+    arrival: new Date('12-20-2022'),
+    tempAvg: 65.5,
+    windAvg: 15.4,
+    airline: 'Spirit Airlines',
+    airport: 'Denver International Airport',
+    country: 'France',
+    city: 'Paris'
+}
+
+const exampleTrip4 = {
+    departure: new Date('11-21-2022'),
+    arrival: new Date('12-20-2022'),
+    tempAvg: 65.5,
+    windAvg: 15.4,
+    airline: 'Spirit Airlines',
+    airport: 'Denver International Airport',
+    country: 'Germany',
+    city: 'Berlin'
+}
+
+const exampleTrip5 = {
+    departure: new Date('11-21-2022'),
+    arrival: new Date('12-20-2022'),
+    tempAvg: 65.5,
+    windAvg: 15.4,
+    airline: 'Spirit Airlines',
+    airport: 'Denver International Airport',
+    country: 'Mexico',
+    city: 'Mexico City'
+}
+
+const exampleTrip6 = {
+    departure: new Date('11-21-2022'),
+    arrival: new Date('12-20-2022'),
+    tempAvg: 65.5,
+    windAvg: 15.4,
+    airline: 'Spirit Airlines',
+    airport: 'Denver International Airport',
+    country: 'Australia',
+    city: 'Sydney'
+}
+
+const userTrips = [exampleTrip1, exampleTrip2, exampleTrip3, exampleTrip4, exampleTrip5, exampleTrip6];
 
 
 const CALENDAR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 let maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //Can be changed if the current year is a leap year
+
+const colors = ['rgb(21, 208, 102)', 'rgb(218, 34, 18)', 'rgb(158, 18, 218)', 'rgb(18, 25, 218)', 'rgb(218, 18, 201)']
 
 let globalDate; //Stores what date the user is currently looking at (always a sunday for normalization)
 let globalMonth; //Stores what month the user is currently looking at
@@ -214,6 +260,7 @@ function change_calendar(operation) {
                     const tripCard = document.createElement('div');
                     tripCard.classList.add('tripCard');
                     tripCard.setAttribute('onclick', `open_trip_modal(${tripObj.index})`);
+                    tripCard.setAttribute('style', `background-color: ${colors[tripObj.index % 5]};`);
                     tripCard.innerHTML = `${tripObj.trip.city}`;
                     body.appendChild(tripCard);
                 }
