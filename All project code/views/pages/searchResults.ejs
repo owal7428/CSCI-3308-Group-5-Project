@@ -25,7 +25,7 @@
                             <th>Departure</th>
                             <th>Arrival</th>
                             <th>Airline</th>
-                            <!-- <th>Flight Number</th> -->
+                            <th>Flight Number</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,18 +37,17 @@
                         <td><%= flight.depAirport %></td>
                         <td><%= flight.arrAirport %></td>
                         <td><%= flight.airline %></td>
+                        <td><%= flight.flightNumber %></td>
                     
                         <td>
                             <!-- TODO finalize filtering data to add to addToCalendar -->
                             <form action="/addToCalendar" method="POST">
-                                <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% // flight.flight_date %>">
-                                <input type="hidden" class="form-control" id="depAirport" name="depAirport" value="<% // flight.departure.airport %>">
-                                <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% // flight.arrival.airport %>">
-                                <input type="hidden" class="form-control" id="airline" name="airline" value="<% // flight.airline.name %>">
-                                <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% // flight.flight.iata %>">
-                                <input type="hidden" class="form-control" id="depTime" name="depTime" value="<% // flight.departure.schedules %>">
-                                <input type="hidden" class="form-control" id="country" name="country" value="<% // data.destination.country %>">
-                                <input type="hidden" class="form-control" id="city" name="city" value="<% // data.destination.city %>">
+                                <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% flight.depDate %>">
+                                <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% flight.arrAirport %>">
+                                <input type="hidden" class="form-control" id="airline" name="airline" value="<% flight.airline %>">
+                                <input type="hidden" class="form-control" id="country" name="country" value="<% location.country %>">
+                                <input type="hidden" class="form-control" id="city" name="city" value="<% location.city %>">
+                                <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% flight.flightNumber %>">
                                 <button type = "submit" class="btn btn-primary" id="submit_button" >Add to Calendar</button>
                             </form>
                         </td>

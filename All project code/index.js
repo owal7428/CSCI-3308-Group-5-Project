@@ -705,7 +705,8 @@ function getFlightList(flightsData) {
                 depDate: depDateTime.date,
                 depTime: depDateTime.time,
                 airline_icao: flight.airline_icao,
-                airline: airlineObj.name
+                airline: airlineObj.name,
+                flightNumber: flight.flight_iata
             };
     
             // add flight data to flight array
