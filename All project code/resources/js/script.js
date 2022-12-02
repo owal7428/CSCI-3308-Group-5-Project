@@ -43,7 +43,7 @@ const exampleTrip6 = {
     city: 'Sydney'
 }
 
-const userTrips = [exampleTrip1, exampleTrip2, exampleTrip3, exampleTrip4, exampleTrip5, exampleTrip6];
+let userTrips = [];
 
 
 const CALENDAR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -60,11 +60,23 @@ let currentDate; //Stores the current date in reality. Used to highlight the cur
 
 let TRIP_MODAL;
 
-function initialize_calendar() { //Called at page load or when the user wants to return to the current date
+function initialize_calendar(trips) { //Called at page load or when the user wants to return to the current date
+
 
     if(!document.getElementById('calendar')) { //Checks if this is indeed the profile page (this function is called on every body load)
         return;
     }
+
+    if(trips) {
+        userTrips = JSON.parse(decodeURIComponent(trips));
+        userTrips.forEach(tripInfo => {
+            tripInfo.departure = new Date(tripInfo.departure),
+            tripInfo.arrival = new Date(tripInfo.arrival)
+        })
+        ADD_TRIP_MODAL = new bootstrap.Modal(document.getElementById('trip-modal'));
+    }
+
+    
 
     let today = new Date();
     currentDate = today.getDate();
@@ -75,7 +87,7 @@ function initialize_calendar() { //Called at page load or when the user wants to
     checkLeapYear();
     week = 0; //Because this is calling the current date, the week offset is 0
 
-    TRIP_MODAL = new bootstrap.Modal(document.getElementById('trip-modal'));
+    
 
     change_calendar(); //Will cause the default case in the switch statement so no variables are manipulated before building the calendar
 }
@@ -235,7 +247,6 @@ function change_calendar(operation) {
                 if(tripObj.started && !tripObj.ended) {
                     const tripCard = document.createElement('div');
                     tripCard.classList.add('tripCard');
-                    tripCard.setAttribute('onclick', `open_trip_modal(${tripObj.index})`);
                     tripCard.setAttribute('style', `background-color: ${colors[tripObj.index % 5]};`); //Modulo to access the color array. Keeps the same color for each trip regardless of what week is currently being viewed
                     tripCard.innerHTML = `${tripObj.trip.city}`;
                     body.appendChild(tripCard);
@@ -245,6 +256,17 @@ function change_calendar(operation) {
                 }
             })
         }
+
+        const addButton = document.createElement('div');
+        addButton.classList.add('tripCard');
+        addButton.classList.add('invisibleButton');
+        addButton.setAttribute('id', `button${CALENDAR_DAYS.indexOf(day)}`);
+        addButton.setAttribute('onmouseover', `show_button(${CALENDAR_DAYS.indexOf(day)})`);
+        addButton.setAttribute('onmouseout', `hide_button(${CALENDAR_DAYS.indexOf(day)})`);
+        addButton.innerHTML = '+';
+        addButton.setAttribute('onclick', `open_trip_modal(${CALENDAR_DAYS.indexOf(day)})`)
+
+        body.appendChild(addButton);
 
         card.appendChild(body);
 
@@ -314,12 +336,29 @@ function findTripsThisWeek(startDate, endDate) {
 
 function open_trip_modal(index) {
 
-    const trip = userTrips[index];
+    let tempDate = new Date(`${globalMonth}-${globalDate}-${globalYear}`);
+    tempDate.setDate(tempDate.getDate() + index);
 
-    document.querySelector('#tripDestination').innerHTML = trip.city;
-    document.querySelector('#departureDay').innerHTML = `Leaving: ${trip.departure.toDateString()}`;
-    document.querySelector('#returnDay').innerHTML = `Returning: ${trip.arrival.toDateString()}`;
+    const startDate = document.querySelector('#startDate');
+
+    startDate.setAttribute('value', `${tempDate.getFullYear()}-${tempDate.getMonth() < 9 ? '0' + (tempDate.getMonth() + 1) : tempDate.getMonth() + 1}-${tempDate.getDate() < 10 ? '0' + tempDate.getDate() : tempDate.getDate()}`);
 
 
-    TRIP_MODAL.show();
+    ADD_TRIP_MODAL.show();
+}
+
+function show_button(index) {
+    const button = document.querySelector(`#button${index}`);
+
+    button.classList.remove('invisibleButton');
+    button.classList.add('visibleButton');
+    button.innerHTML = `Add Trip`;
+}
+
+function hide_button(index) {
+    const button = document.querySelector(`#button${index}`);
+
+    button.classList.remove('visibleButton');
+    button.classList.add('invisibleButton');
+    button.innerHTML = '+';
 }

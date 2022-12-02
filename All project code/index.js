@@ -79,11 +79,7 @@ app.post("/register", async (req, res) => {
         req.session.user = username;
         req.session.user.flight_api_key = process.env.flight_api_key;
         req.session.save();
-        res.render("pages/profile", {
-            user: req.session.user,
-            message: "Your account was sucessfully created! Happy Hunting!",
-            error: false
-        });
+        res.redirect('/profile')
     })
     .catch(() => {
         res.render("pages/register", {
@@ -184,8 +180,47 @@ app.use(auth);
 
 /*Code for pages not including login and register go in after here*/
 
-app.get("/profile", (req, res) => {
-    res.render("pages/profile", {user: req.session.user}); //Sends the username so it can be displayed at the top of the profile page
+app.get("/profile", async function(req, res) {
+
+
+    const tripQuery = `SELECT TO_CHAR(date_start, 'mm-dd-yyyy') AS date_start, TO_CHAR(date_end, 'mm-dd-yyyy') AS date_end, city, country FROM trips
+                        INNER JOIN users_to_trips
+                        ON users_to_trips.trip_id = trips.trip_id
+                        INNER JOIN users
+                        ON users.user_id = users_to_trips.user_id
+                        WHERE users.username = $1;`;
+                        
+
+
+    let trips = [];
+
+
+
+    await db.any(tripQuery, [req.session.user])
+        .then(response => {
+            response.forEach(trip => {
+                const tripInfo = {
+                    departure: trip.date_start,
+                    arrival: trip.date_end,
+                    city: trip.city,
+                    country: trip.country
+                }
+                trips.push(tripInfo);
+            })
+        })
+        .catch(error => {
+            res.render('pages/search', {
+                error: true,
+                message: error
+            })
+        })
+    
+
+
+    res.render("pages/profile", {
+        user: req.session.user,
+        trips: JSON.stringify(trips)
+    }); //Sends the username so it can be displayed at the top of the profile page
 });
 
 /**
@@ -750,6 +785,55 @@ app.post('/addFlight', async function(req, res) {
             });
         })
     
+});
+
+app.post('/addTrip', async function (req, res) {
+    const usernameQuery = `SELECT user_id FROM users WHERE username = $1;`;
+    const tripInsertQuery = `INSERT INTO trips(date_start, date_end, city, country) VALUES ($1, $2, $3, $4) RETURNING trip_id;`;
+    const linkQuery = `INSERT INTO users_to_trips(user_id, trip_id) VALUES ($1, $2);`;
+
+
+    let userID;
+    let tripID;
+
+    await db.any(usernameQuery, [req.session.user])
+    .then(async function(response) {
+        userID = response[0].user_id;
+
+        await db.any(tripInsertQuery, [req.body.startDate, req.body.endDate, req.body.city, req.body.country])
+            .then(async function (response) {
+                tripID = response[0].trip_id;
+
+
+                await db.any(linkQuery, [userID, tripID])
+                    .then(() => {
+                        console.log('Successful');
+                        res.redirect('/profile');
+                    })
+                    .catch(error => {
+                        console.log(`Unsuccessful ${error}`);
+                        res.render('pages/search', {
+                            error: true,
+                            message: `Problem linking trip to your profile: ${error}`
+                        });
+                    })
+
+            })
+            .catch(error => {
+                console.log(`Unsuccessful ${error}`);
+                res.render('pages/search', {
+                    error: true,
+                    message: `Problem adding trip to your profile: ${error}`
+                });
+            })
+    }).catch(error => {
+        console.log(`Unsuccessful ${error}`);
+        res.render('pages/search', {
+            error: true,
+            message: `Problem finding your profile: ${error}`
+        });
+    })
+
 })
 
 app.get("/logout", (req, res) => {
