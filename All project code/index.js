@@ -190,10 +190,18 @@ app.get("/profile", async function(req, res) {
                         INNER JOIN users
                         ON users.user_id = users_to_trips.user_id
                         WHERE users.username = $1;`;
+
+    const flightQuery = `SELECT TO_CHAR(flight_date, 'mm-dd-yyyy') AS flight_date, TO_CHAR(flight_time, 'HH:MI') AS flight_time, flight_number, airline, airport, country, city FROM flights
+                            INNER JOIN users_to_flights
+                            ON users_to_flights.flight_id = flights.flight_id
+                            INNER JOIN users
+                            ON users.user_id = users_to_flights.user_id
+                            WHERE users.username = $1;`;
                         
 
 
     let trips = [];
+    let flights = [];
 
 
 
@@ -215,12 +223,34 @@ app.get("/profile", async function(req, res) {
                 message: error
             })
         })
+
+    await db.any(flightQuery, [req.session.user])
+        .then(response => {
+            response.forEach(flight => {
+                const flightInfo = {
+                    flightDate: flight.flight_date,
+                    flightTime: flight.flight_time,
+                    flightNumber: flight.flight_number,
+                    airline: flight.airline,
+                    airport: flight.airport,
+                    country: flight.country,
+                    city: flight.city
+                }
+                flights.push(flightInfo);
+            })
+        }).catch(error => {
+            res.render('pages/search', {
+                error: true,
+                message: error
+            })
+        })
     
 
 
     res.render("pages/profile", {
         user: req.session.user,
-        trips: JSON.stringify(trips)
+        trips: JSON.stringify(trips),
+        flights: JSON.stringify(flights)
     }); //Sends the username so it can be displayed at the top of the profile page
 });
 
@@ -856,28 +886,24 @@ app.post('/searchWeather', (req, res) => {
 app.post('/addFlight', async function(req, res) {
 
     const usernameQuery = `SELECT user_id FROM users WHERE username = $1;`;
-    const tripInsertQuery = `INSERT INTO user_flights(flight_date, flight_number, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6) RETURNING trip_id;`;
-    const linkQuery = `INSERT INTO users_to_flights(user_id, trip_id) VALUES ($1, $2);`
+    const tripInsertQuery = `INSERT INTO flights(flight_date, flight_time, flight_number, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING flight_id;`;
+    const linkQuery = `INSERT INTO users_to_flights(user_id, flight_id) VALUES ($1, $2);`
 
     let userID;
-    let tripID;
+    let flightID;
 
     await db.any(usernameQuery, [req.session.user])
         .then(async function(response) {
             userID = response[0].user_id;
 
-            await db.any(tripInsertQuery, [req.body.flightDate, req.body.flightNumber, req.body.airline, req.body.airport, req.body.country, req.body.city])
+            await db.any(tripInsertQuery, [req.body.flightDate, req.body.flightTime, req.body.flightNumber, req.body.airline, req.body.airport, req.body.country, req.body.city])
                 .then(async function (response) {
-                    tripID = response[0].trip_id;
+                    flightID = response[0].flight_id;
 
-                    await db.any(linkQuery, [userID, tripID])
+                    await db.any(linkQuery, [userID, flightID])
                         .then(() => {
                             console.log('Successful');
-                            res.render("pages/profile", {
-                                user: req.session.user,
-                                message: "Flight Successfully Saved to Your Profile",
-                                error: false
-                            });
+                            res.redirect('/profile');
                         })
                         .catch(error => {
                             console.log(`Unsuccessful ${error}`);

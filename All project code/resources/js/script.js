@@ -1,49 +1,5 @@
-//Script code goes here
-
-
-const exampleTrip1 = {
-    departure: new Date('11-30-2022'),
-    arrival: new Date('1-6-2023'),
-    country: 'Spain',
-    city: 'Madrid'
-}
-
-const exampleTrip2 = {
-    departure: new Date('11-21-2022'),
-    arrival: new Date('12-20-2022'),
-    country: 'United Kingdom',
-    city: 'London'
-}
-
-const exampleTrip3 = {
-    departure: new Date('11-21-2022'),
-    arrival: new Date('12-20-2022'),
-    country: 'France',
-    city: 'Paris'
-}
-
-const exampleTrip4 = {
-    departure: new Date('11-21-2022'),
-    arrival: new Date('12-20-2022'),
-    country: 'Germany',
-    city: 'Berlin'
-}
-
-const exampleTrip5 = {
-    departure: new Date('11-21-2022'),
-    arrival: new Date('12-20-2022'),
-    country: 'Mexico',
-    city: 'Mexico City'
-}
-
-const exampleTrip6 = {
-    departure: new Date('11-21-2022'),
-    arrival: new Date('12-20-2022'),
-    country: 'Australia',
-    city: 'Sydney'
-}
-
 let userTrips = [];
+let userFlights = [];
 
 
 const CALENDAR_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -52,28 +8,37 @@ let maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]; //Can be changed
 
 const colors = ['rgb(21, 208, 102)', 'rgb(218, 34, 18)', 'rgb(158, 18, 218)', 'rgb(18, 25, 218)', 'rgb(218, 18, 201)']
 
+const randomIndex = Math.floor(Math.random() * 4);
+
 let globalDate; //Stores what date the user is currently looking at (always a sunday for normalization)
 let globalMonth; //Stores what month the user is currently looking at
 let globalYear; //Stores what year the user is currently looking at
 let week; //Stores the offset of weeks that the user is currently on (0 means the week of the current date)
 let currentDate; //Stores the current date in reality. Used to highlight the current date on the calendar
 
-let TRIP_MODAL;
+let ADD_TRIP_MODAL;
+let VIEW_TRIP_MODAL;
 
-function initialize_calendar(trips) { //Called at page load or when the user wants to return to the current date
+function initialize_calendar(trips, flights) { //Called at page load or when the user wants to return to the current date
 
 
     if(!document.getElementById('calendar')) { //Checks if this is indeed the profile page (this function is called on every body load)
         return;
     }
 
-    if(trips) {
+    if(trips && flights) {
         userTrips = JSON.parse(decodeURIComponent(trips));
         userTrips.forEach(tripInfo => {
             tripInfo.departure = new Date(tripInfo.departure),
             tripInfo.arrival = new Date(tripInfo.arrival)
         })
-        ADD_TRIP_MODAL = new bootstrap.Modal(document.getElementById('trip-modal'));
+
+        userFlights = JSON.parse(decodeURIComponent(flights));
+        userFlights.forEach(flightInfo => {
+            flightInfo.flightDate = new Date(flightInfo.flightDate);
+        })
+        ADD_TRIP_MODAL = new bootstrap.Modal(document.getElementById('add-trip-modal'));
+        VIEW_TRIP_MODAL = new bootstrap.Modal(document.getElementById('view-flight-modal'));
     }
 
     
@@ -201,6 +166,7 @@ function change_calendar(operation) {
     tempFullDateEnd.setDate(tempFullDateEnd.getDate() + 6); //Sets a range for the week (stores the saturday of the current week)
 
     let tripsThisWeek = findTripsThisWeek(tempFullDate, tempFullDateEnd);
+    let flightsThisWeek = findFlightsThisWeek(tempFullDate, tempFullDateEnd);
 
 
     CALENDAR_DAYS.forEach(day => {
@@ -235,6 +201,25 @@ function change_calendar(operation) {
 
         body.classList.add('event-container');
 
+        if(flightsThisWeek.length > 0) {
+            flightsThisWeek.forEach(flightObj => {
+                const flightDate = flightObj.flight.flightDate.getDate();
+                if(flightDate === tempDate) {
+                    const flightCard = document.createElement('div');
+                    flightCard.classList.add('tripCard');
+                    if(flightObj.index === -1) {
+                        flightCard.setAttribute('style', `background-color: black;`);
+                    }
+                    else {
+                        flightCard.setAttribute('style', `background-color: ${colors[(flightObj.index + randomIndex) % 5]};`);
+                    }
+                    flightCard.innerHTML = `Flight to ${flightObj.flight.city}`;
+                    flightCard.setAttribute('onclick', `open_flight_modal(${userFlights.indexOf(flightObj.flight)})`);
+                    body.appendChild(flightCard);
+                }
+            })
+        }
+
         if(tripsThisWeek.length > 0) { //Function to populate a day with trip cards. Only runs if there are trips scheduled for that week
             tripsThisWeek.forEach(tripObj => {
                 const tripStart = tripObj.trip.departure.getDate(); //Stores the start date of tha trip 
@@ -247,7 +232,7 @@ function change_calendar(operation) {
                 if(tripObj.started && !tripObj.ended) {
                     const tripCard = document.createElement('div');
                     tripCard.classList.add('tripCard');
-                    tripCard.setAttribute('style', `background-color: ${colors[tripObj.index % 5]};`); //Modulo to access the color array. Keeps the same color for each trip regardless of what week is currently being viewed
+                    tripCard.setAttribute('style', `background-color: ${colors[(tripObj.index + randomIndex) % 5]};`); //Modulo to access the color array. Keeps the same color for each trip regardless of what week is currently being viewed
                     tripCard.innerHTML = `${tripObj.trip.city}`;
                     body.appendChild(tripCard);
                 }
@@ -264,9 +249,10 @@ function change_calendar(operation) {
         addButton.setAttribute('onmouseover', `show_button(${CALENDAR_DAYS.indexOf(day)})`);
         addButton.setAttribute('onmouseout', `hide_button(${CALENDAR_DAYS.indexOf(day)})`);
         addButton.innerHTML = '+';
-        addButton.setAttribute('onclick', `open_trip_modal(${CALENDAR_DAYS.indexOf(day)})`)
+        addButton.setAttribute('onclick', `open_add_trip_modal(${CALENDAR_DAYS.indexOf(day)})`)
 
         body.appendChild(addButton);
+
 
         card.appendChild(body);
 
@@ -333,8 +319,28 @@ function findTripsThisWeek(startDate, endDate) {
     return returnedTrips;
 }
 
+function findFlightsThisWeek(startDate, endDate) {
+    let returnedFlights = [];
+    userFlights.forEach(flight => {
+        let flightDate = flight.flightDate;
+        let index = -1;
+        userTrips.forEach(trip => {
+            if(trip.city === flight.city) {
+                index = userTrips.indexOf(trip);
+            }
+        })
+        if(flightDate >= startDate && flightDate <= endDate) {
+            returnedFlights.push({
+                flight: flight,
+                index: index
+            });
+        }
+    })
+    return returnedFlights;
+}
 
-function open_trip_modal(index) {
+
+function open_add_trip_modal(index) {
 
     let tempDate = new Date(`${globalMonth}-${globalDate}-${globalYear}`);
     tempDate.setDate(tempDate.getDate() + index);
@@ -345,6 +351,37 @@ function open_trip_modal(index) {
 
 
     ADD_TRIP_MODAL.show();
+}
+
+function open_flight_modal(index) {
+
+    const flight = userFlights[index];
+    const flightTime = flight.flightTime.split(':');
+    let timeString;
+
+    if(parseInt(flightTime[0]) > 12) {
+        timeString = `${flightTime[0] - 12}:${flightTime[1]} PM`;
+    }
+    else if (parseInt(flightTime[0]) === 12) {
+        timeString = `${flightTime[0]}:${flightTime[1]} PM`;
+    }
+    else {
+        timeString = `${flightTime[0]}:${flightTime[1]} AM`;
+    }
+
+
+    document.querySelector('#destination').innerHTML = `Flight to ${flight.city}, ${flight.country}`;
+    document.querySelector('#date').innerHTML = `Date: ${flight.flightDate.toDateString()}`;
+    document.querySelector('#time').innerHTML = `Time: ${timeString}`;
+    document.querySelector('#airline').innerHTML = `Airline: ${flight.airline}`;
+    document.querySelector('#airport').innerHTML = `Arriving at ${flight.airport}`;
+    document.querySelector('#flight-number').innerHTML = `Flight Number: ${flight.flightNumber}`;
+    
+
+
+
+
+    VIEW_TRIP_MODAL.show();
 }
 
 function show_button(index) {

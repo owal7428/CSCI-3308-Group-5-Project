@@ -1,14 +1,15 @@
 DROP TABLE IF EXISTS users CASCADE;
-CREATE TABLE IF NOT EXISTS users(
+CREATE TABLE users(
     user_id SERIAL PRIMARY KEY,
     username VARCHAR(32) NOT NULL, 
     password VARCHAR(128) NOT NULL
 );
 
-DROP TABLE IF EXISTS user_flights CASCADE;
-CREATE TABLE IF NOT EXISTS user_flights(
+DROP TABLE IF EXISTS flights CASCADE;
+CREATE TABLE flights(
     flight_id SERIAL PRIMARY KEY,
     flight_date DATE,
+    flight_time TIME,
     flight_number VARCHAR(6),
     airline VARCHAR(60),
     airport VARCHAR(60),
@@ -17,12 +18,12 @@ CREATE TABLE IF NOT EXISTS user_flights(
 );
 
 DROP TABLE IF EXISTS users_to_flights CASCADE;
-CREATE TABLE IF NOT EXISTS flights_to_users(
+CREATE TABLE users_to_flights(
     user_id INTEGER,
     flight_id INTEGER,
 
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users(user_id),
-    CONSTRAINT fk_flight FOREIGN KEY (flight_id) REFERENCES user_flights(flight_id)
+    CONSTRAINT fk_flight FOREIGN KEY (flight_id) REFERENCES flights(flight_id)
 );
 
 DROP TABLE IF EXISTS trips CASCADE;

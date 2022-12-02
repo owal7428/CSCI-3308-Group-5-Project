@@ -3,9 +3,6 @@
 
     <main>
         <!--Alert message-->
-        <div class="container">
-            <%- include ('../partials/message.ejs') %>
-        </div>
         <% if(error === false){ %>
         <!--Main functionality-->
         <div class="container">
@@ -48,13 +45,14 @@
                         
                             <td>
                                 <!-- TODO finalize filtering data to add to addToCalendar -->
-                                <form action="/addToCalendar" method="POST">
-                                    <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% flight.depDate %>">
-                                    <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% flight.arrAirport %>">
-                                    <input type="hidden" class="form-control" id="airline" name="airline" value="<% flight.airline %>">
-                                    <input type="hidden" class="form-control" id="country" name="country" value="<% location.country %>">
-                                    <input type="hidden" class="form-control" id="city" name="city" value="<% location.city %>">
-                                    <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% flight.flightNumber %>">
+                                <form action="/addFlight" method="POST">
+                                    <input type="date" class="form-control" id="flightDate" name="flightDate" value=<%- `"${flight.depDate}"` %> hidden>
+                                    <input type="time" class="form-control" id="flightTime" name="flightTime" value=<%- `"${flight.depTime}"` %> hidden>
+                                    <input type="text" class="form-control" id="airpot" name="airport" value=<%- `"${flight.arrAirport}"` %> hidden>
+                                    <input type="text" class="form-control" id="airline" name="airline" value=<%- `"${flight.airline}"` %> hidden>
+                                    <input type="text" class="form-control" id="country" name="country" value=<%- `"${location.destination.country}"` %> hidden>
+                                    <input type="text" class="form-control" id="city" name="city" value=<%- `"${location.destination.city}"` %> hidden>
+                                    <input type="text" class="form-control" id="flightNumber" name="flightNumber" value=<%- `"${flight.flightNumber}"` %> hidden>
                                     <button type = "submit" class="btn btn-primary" id="submit_button" >Add to Calendar</button>
                                 </form>
                             </td>
