@@ -100,3 +100,22 @@ body {
     text-decoration: underline;
 }
 
+.tripCard {
+    color: white;
+    text-align: center;
+    height: 30px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.invisibleButton {
+    background-color: transparent;
+    color: rgba(128, 128, 128, 0.582);
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(128, 128, 128, 0.582);
+}
+
+.visibleButton {
+    background-color: red;
+}

@@ -13,3 +13,51 @@
         <button class="btn btn-secondary col" onClick="change_calendar('nextMonth')">Next Month</button>
     </div>
 </div>
+
+<div class="modal fade" id="add-trip-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Trip Details:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/addTrip" method="POST">
+                <div class="modal-body">
+                    <h4>Destination:</h4>
+                    <label class="form-label" for="city">City:</label>
+                    <input class="form-control" type="text" name="city">
+                    <label class="form-label" for="country">Country:</label>
+                    <input class="form-control" type="text" name="country">
+                    <h4>Dates:</h4>
+                    <label class="form-label" for="startDate">Departure:</label>
+                    <input class="form-control" type="date" id="startDate" name="startDate">
+                    <label class="form-label" for="endDate">Returning:</label>
+                    <input class="form-control" type="date" name="endDate">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Trip</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="view-flight-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Flight Details:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <h2 id="destination"></h2>
+                <p id="date"></p>
+                <p id="time"></p>
+                <p id="airline"></p>
+                <p id="airport"></p>
+                <p id="flight-number"></p>
+            </div>
+        </div>
+    </div>
+</div>

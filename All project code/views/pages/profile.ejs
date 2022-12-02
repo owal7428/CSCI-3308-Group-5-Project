@@ -1,10 +1,16 @@
 <%- include ('../partials/header') %>
 <%- include ('../partials/menu') %>
+<%- include ('../partials/message') %>
 
+<% const tripArray = encodeURIComponent(`${trips}`); %>
+<% const flightArray = encodeURIComponent(`${flights}`); %>
 
+<body onLoad=<%- `"initialize_calendar('${tripArray}','${flightArray}')"` %>>
 <div class="container">
     <h1><%- user %>'s Trips</h1>
     <%- include ('../partials/calendar') %>
 </div>
 
 <%- include ('../partials/footer') %>
+
+</body>
