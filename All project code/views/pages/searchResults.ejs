@@ -26,14 +26,18 @@
                             <th>Arrival</th>
                             <th>Airline</th>
                             <th>Flight Number</th>
+                            <!-- empty so bar extends correctly -->
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
                     <!-- TODO filter data in backend to show only user-relevant results -->
                     <% data.flights.forEach(flight => { %>
                     <tr>
+                        <% let suffix = flight.depTime >= 12 ? "PM":"AM"; 
+                        displayTime = ((parseInt(flight.depTime) + 11) % 12 + 1) + ":" + flight.depTime.split(":")[1] +  " " + suffix; %>
                         <td><%= flight.depDate %></td>
-                        <td><%= flight.depTime %></td>
+                        <td><%=  displayTime %></td>
                         <td><%= flight.depAirport %></td>
                         <td><%= flight.arrAirport %></td>
                         <td><%= flight.airline %></td>
