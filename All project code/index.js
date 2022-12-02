@@ -415,7 +415,7 @@ async function cityToIATA(locationInput){
         country = country.toUpperCase();
     }
     console.log("Code:", countryCode);
-    await axios({
+    return await axios({
         // url for API-Ninja
         url:'https://api.api-ninjas.com/v1/airports',
         method: 'GET',
@@ -432,23 +432,12 @@ async function cityToIATA(locationInput){
         // shows devs if correct call
         console.log("Successful API call to API-Ninja for city to Airport API");
         console.log(JSON.stringify(results.data));
-        //sets lat and long for weather and flight API
-        var i = 0;
-        results.data.forEach(result => {
-            if (result.iata != "")
-            {
-                iataRes = results.data[i].iata;
-            }
-            i++;
-        });
-        // verifying that lat and long are as I expect 
-        console.log("IATA: ", iataRes);
+        return results.data;
     }).catch(error => {
         // Handle errors (API call may have failed!)
         console.log(`Airport to City API call failed! Error:\n${error}`);
         return -1;
     })
-    return iataRes;
 }
 
 // Perform API query to weather API
@@ -500,7 +489,6 @@ async function searchFlights(flightQuery) {
 
     console.log("Arrival IATA:", arrIata);
     console.log("Departure IATA:", depIata);
-    
     return await axios({
         url: "https://airlabs.co/api/v9/schedules",
         method: 'GET',
@@ -568,16 +556,53 @@ async function searchQuery(locationInput) {
         // optionalParameters: {}
     };
 
-    // Prepare flight query
-    const flightQuery = {
-        dep_iata: dep_iata,
-        arr_iata: arr_iata,
-    }
-
-    // Perform API queries, waiting for their response.
     const weatherData = await searchWeather(weatherQuery);
-    const flightData = await searchFlights(flightQuery);
-    console.log("FLIGHTDATA: ", flightData);
+    let depIataList = [];
+    // let flightListData = [];
+
+    dep_iata.forEach(dep => {
+        if(dep.iata != undefined && dep.iata !== ''){
+            depIataList.push(dep.iata);
+        }
+    });
+
+    // for(var i = 0; i < dep_iata.length; i++){
+    //     if(dep_iata[i].iata != undefined && dep_iata[i].iata !== ''){
+    //         depIataList[i] = dep_iata[i].iata;
+    //     }
+    //     // flightQueries.push();
+    // }
+
+    console.log("DEPLIST:", JSON.stringify(depIataList));
+    let arrIataList = [];
+    // for (var i = 0; i < arr_iata.length; i++) {
+    //     if(arr_iata[i].iata != undefined && arr_iata[i].iata !== ''){
+    //         arrIataList[i] = arr_iata[i].iata;
+    //     }
+    // }
+
+    arr_iata.forEach(arr => {
+        if(arr.iata != undefined && arr.iata !== ''){
+            arrIataList.push(arr.iata);
+        }
+    });
+    console.log("ARRLIST:", JSON.stringify(arrIataList));
+    let searchFlightResults = [];
+    for(var i = 0; i < depIataList.length; i++){
+        for(var k = 0; k < arrIataList.length; k++){
+            let flightQuery = {
+                dep_iata: depIataList[i],
+                arr_iata: arrIataList[k]
+            }
+            searchFlightResults.push(... await searchFlights(flightQuery));
+        }
+    }
+    console.log("RESULTS: ", JSON.stringify(searchFlightResults));
+
+
+    // const flightData = await searchFlights(flightQuery);
+    // console.log("FLIGHTS LIST DATA:", JSON.stringify(flightListData[0]));
+   
     // Return results from API queries.
     return {
         weather: {
@@ -585,7 +610,7 @@ async function searchQuery(locationInput) {
             format: weatherQuery.dataFormat
         },
         flight: {
-            data: flightData,
+            data: searchFlightResults,
         },
         location: {
             departure: departureInput,
@@ -689,11 +714,14 @@ function parseUTCTime(utcTime) {
 
 function getFlightList(flightsData) {
     let flights = []; // our list of flights
-
-    // Loop through flight data and take what we need
+    // console.log("DATA:", JSON.stringify(flightsData));
     flightsData.forEach(flight => {
+        // Loop through flight data and take what we need
         if (flight.status === "scheduled") {
-            const airlineObj = airlineJSON.find(i => i.icao === flight.airline_icao); // convert airline icao to airline name.
+            let airlineObj = airlineJSON.find(i => i.icao === flight.airline_icao); // convert airline icao to airline name.
+            if(airlineObj == undefined){
+                airlineObj = {name: flight.airline_icao};
+            }
     
             const depDateTime = parseUTCTime(flight.dep_time_utc); // parse day/time from UTC time
     
@@ -713,8 +741,10 @@ function getFlightList(flightsData) {
             flights.push(flightIns);
         }
     });
+    
 
     // return resulting list
+    // console.log("FLIGHTS:", JSON.stringify(flights));
     return flights;
 }
 
@@ -722,9 +752,9 @@ function getFlightList(flightsData) {
 function dataToDisplayData(responseData) {
     // for now, just pass the same data (with added error message).
     // TODO make conversion based on frontend needs.
-
+    console.log("RESPONSE:", responseData);
     // add an error message to frontend if an api request failed.
-    if (responseData.weather == undefined || responseData.flight == undefined || responseData.weather.data === -1 || responseData.flight.data === -1) {
+    if (responseData.weather == undefined || responseData.flight == undefined || responseData.weather.data === -1 || responseData.flight.data === -1 || responseData.location.destination.country == undefined || responseData.location.destination.country === -1 || responseData.location.destination.city == undefined || responseData.location.destination.city === -1) {
         // early return: don't filter data if API request(s) failed.
         return {
             message: "Please enter Valid City and Country into Arrival and Departure Fields",
