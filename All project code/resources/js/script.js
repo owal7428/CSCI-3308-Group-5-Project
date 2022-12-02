@@ -4,10 +4,6 @@
 const exampleTrip1 = {
     departure: new Date('11-30-2022'),
     arrival: new Date('1-6-2023'),
-    tempAvg: 65.5,
-    windAvg: 15.4,
-    airline: 'American Airlines',
-    airport: 'Denver International Airport',
     country: 'Spain',
     city: 'Madrid'
 }
@@ -15,10 +11,6 @@ const exampleTrip1 = {
 const exampleTrip2 = {
     departure: new Date('11-21-2022'),
     arrival: new Date('12-20-2022'),
-    tempAvg: 65.5,
-    windAvg: 15.4,
-    airline: 'Spirit Airlines',
-    airport: 'Denver International Airport',
     country: 'United Kingdom',
     city: 'London'
 }
@@ -26,10 +18,6 @@ const exampleTrip2 = {
 const exampleTrip3 = {
     departure: new Date('11-21-2022'),
     arrival: new Date('12-20-2022'),
-    tempAvg: 65.5,
-    windAvg: 15.4,
-    airline: 'Spirit Airlines',
-    airport: 'Denver International Airport',
     country: 'France',
     city: 'Paris'
 }
@@ -37,10 +25,6 @@ const exampleTrip3 = {
 const exampleTrip4 = {
     departure: new Date('11-21-2022'),
     arrival: new Date('12-20-2022'),
-    tempAvg: 65.5,
-    windAvg: 15.4,
-    airline: 'Spirit Airlines',
-    airport: 'Denver International Airport',
     country: 'Germany',
     city: 'Berlin'
 }
@@ -48,10 +32,6 @@ const exampleTrip4 = {
 const exampleTrip5 = {
     departure: new Date('11-21-2022'),
     arrival: new Date('12-20-2022'),
-    tempAvg: 65.5,
-    windAvg: 15.4,
-    airline: 'Spirit Airlines',
-    airport: 'Denver International Airport',
     country: 'Mexico',
     city: 'Mexico City'
 }
@@ -59,10 +39,6 @@ const exampleTrip5 = {
 const exampleTrip6 = {
     departure: new Date('11-21-2022'),
     arrival: new Date('12-20-2022'),
-    tempAvg: 65.5,
-    windAvg: 15.4,
-    airline: 'Spirit Airlines',
-    airport: 'Denver International Airport',
     country: 'Australia',
     city: 'Sydney'
 }
@@ -343,9 +319,6 @@ function open_trip_modal(index) {
     document.querySelector('#tripDestination').innerHTML = trip.city;
     document.querySelector('#departureDay').innerHTML = `Leaving: ${trip.departure.toDateString()}`;
     document.querySelector('#returnDay').innerHTML = `Returning: ${trip.arrival.toDateString()}`;
-    document.querySelector('#airline').innerHTML = `Airline: ${trip.airline}`;
-    document.querySelector('#temperature').innerHTML = `Average Temperature: ${trip.tempAvg}`;
-    document.querySelector('#windSpeed').innerHTML = `Average Wind Speed: ${trip.windAvg}`;
 
 
     TRIP_MODAL.show();
