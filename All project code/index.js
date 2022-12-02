@@ -700,27 +700,31 @@ app.post('/cityToCoor', (req, res) => {
         })
 });
 
-app.post('/addTrip', async function(req, res) {
+app.post('/addFlight', async function(req, res) {
 
     const usernameQuery = `SELECT user_id FROM users WHERE username = $1;`;
-    const tripInsertQuery = `INSERT INTO user_trips(departure, arrival, windSpeedAvg, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING trip_id;`;
-    const linkQuery = `INSERT INTO user_trips_to_users(user_id, trip_id) VALUES ($1, $2);`
+    const tripInsertQuery = `INSERT INTO user_flights(flight_date, flight_number, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6) RETURNING trip_id;`;
+    const linkQuery = `INSERT INTO users_to_flights(user_id, trip_id) VALUES ($1, $2);`
 
     let userID;
     let tripID;
 
-    await db.any(usernameQuery, [req.body.username])
+    await db.any(usernameQuery, [req.session.user])
         .then(async function(response) {
             userID = response[0].user_id;
 
-            await db.any(tripInsertQuery, [req.body.departure, req.body.arrival, req.body.windSpeedAvg, req.body.temperatureAvg, req.body.airline, req.body.airport, req.body.country, req.body.city])
+            await db.any(tripInsertQuery, [req.body.flightDate, req.body.flightNumber, req.body.airline, req.body.airport, req.body.country, req.body.city])
                 .then(async function (response) {
                     tripID = response[0].trip_id;
 
                     await db.any(linkQuery, [userID, tripID])
                         .then(() => {
                             console.log('Successful');
-                            res.redirect('/profile');
+                            res.render("pages/profile", {
+                                user: req.session.user,
+                                message: "Flight Successfully Saved to Your Profile",
+                                error: false
+                            });
                         })
                         .catch(error => {
                             console.log(`Unsuccessful ${error}`);
