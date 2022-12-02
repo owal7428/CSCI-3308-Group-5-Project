@@ -21,10 +21,10 @@ This project was completed using a combination of the following frameworks: Java
 Vision Statement: 
 For adventurers, who want to broaden their horizons with their own tailored experience. Airfare Affairs is a travel manager that provides personalized search and booking capabilities based on preferences. Unlike booking.com, our product creates a full itinerary based on multiple filters, such as: location, weather, and price. 
 
-No prerequisite software is needed to run this website, unless running locally in which case Docker is recommended.
+Prerequisite software is needed to run this website, such as Chrome browser or Chromium based browser. If you are running locally, unless running locally Docker is recommended.
 
 How to Run Website Locally:
-In order to run the website locally, 4 API keys are needed, one from airlabs for their Flight API, instructions can be found in detail for this on pull request INSERT HERE, Meteomatics for their weather API, instructions for this can be found on pull request #37, and 2 API Ninja API's for City to coordinates and city to IATA code, both instructions can be found in pull request #56. After API Keys are obtained download Docker or a similar application and start the container. If using docker use docker-compose up -d. This will host the website on localhost:3000, where you will be able to access all the features of the website.
+In order to run the website locally, 3 API keys are needed, one from airlabs for their Flight API, instructions can be found in detail for this on pull request #73, Meteomatics for their weather API, instructions for this can be found on pull request #37, and 2 API Ninja API's for City to coordinates and city to IATA code, both instructions can be found in pull request #56, and both use the same API key. After API Keys are obtained download Docker or a similar application and start the container. If using docker use docker-compose up -d. This will host the website on localhost:3000, where you will be able to access all the features of the website.
 
 
 Communication Plan:
