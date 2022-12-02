@@ -58,6 +58,34 @@
                 <p id="airport"></p>
                 <p id="flight-number"></p>
             </div>
+            <div class="modal-footer">
+                <form action="/removeFlight" method="POST">
+                    <input type="number" id="flightID" name="flightID" hidden>
+                    <button class="btn btn-danger" type="submit">Remove Flight</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="view-trip-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Trip:</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                    <h2 id="tripDestination"></h2>
+                    <p id="tripDeparture"></p>
+                    <p id="tripReturn"></p>
+            </div>
+            <div class="modal-footer">
+                <form action="/removeTrip" method="POST">
+                    <input type="number" id="tripID" name="tripID" hidden>
+                    <button class="btn btn-danger" type="submit">Remove Trip</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
