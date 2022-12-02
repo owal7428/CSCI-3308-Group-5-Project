@@ -351,13 +351,13 @@ async function cityToCoordinates(locationInput, res) {
     }).then(results => {
         // shows devs if correct call
         console.log("Successful API call to API-Ninja for city to coordinates");
-        console.log(JSON.stringify(results.data));
+        // console.log(JSON.stringify(results.data));
         //sets lat and long for weather and flight API
         latitude = results.data[0].latitude;
         longitude = results.data[0].longitude;
         // verifying that lat and long are as I expect 
-        console.log("latitude: ", latitude);
-        console.log("longitude: ", longitude);
+        // console.log("latitude: ", latitude);
+        // console.log("longitude: ", longitude);
     }).catch(error=> {
         // Handle errors (API call may have failed!)
         console.log('City to Coordinates API call failed! Error:');
@@ -395,7 +395,7 @@ async function cityToIATA(locationInput){
     // ensures that the first letter of the city is capitalized, as thats what API requires
     // var city = tempCity[0].toUpperCase() + tempCity.slice(1);
     // ensures city is what Dev expects
-    console.log("city:", city);
+    // console.log("city:", city);
     //declares country code
     var countryCode;
     // checks if the code is typed in as JSON or as the code itself
@@ -414,7 +414,7 @@ async function cityToIATA(locationInput){
     else{
         country = country.toUpperCase();
     }
-    console.log("Code:", countryCode);
+    // console.log("Code:", countryCode);
     return await axios({
         // url for API-Ninja
         url:'https://api.api-ninjas.com/v1/airports',
@@ -431,7 +431,7 @@ async function cityToIATA(locationInput){
     }).then(results => {
         // shows devs if correct call
         console.log("Successful API call to API-Ninja for city to Airport API");
-        console.log(JSON.stringify(results.data));
+        // console.log(JSON.stringify(results.data));
         return results.data;
     }).catch(error => {
         // Handle errors (API call may have failed!)
@@ -487,8 +487,8 @@ async function searchFlights(flightQuery) {
     const arrIata = flightQuery.arr_iata;
     const depIata = flightQuery.dep_iata;
 
-    console.log("Arrival IATA:", arrIata);
-    console.log("Departure IATA:", depIata);
+    // console.log("Arrival IATA:", arrIata);
+    // console.log("Departure IATA:", depIata);
     return await axios({
         url: "https://airlabs.co/api/v9/schedules",
         method: 'GET',
@@ -566,27 +566,17 @@ async function searchQuery(locationInput) {
         }
     });
 
-    // for(var i = 0; i < dep_iata.length; i++){
-    //     if(dep_iata[i].iata != undefined && dep_iata[i].iata !== ''){
-    //         depIataList[i] = dep_iata[i].iata;
-    //     }
-    //     // flightQueries.push();
-    // }
-
-    console.log("DEPLIST:", JSON.stringify(depIataList));
+    // console.log("DEPLIST:", JSON.stringify(depIataList));
     let arrIataList = [];
-    // for (var i = 0; i < arr_iata.length; i++) {
-    //     if(arr_iata[i].iata != undefined && arr_iata[i].iata !== ''){
-    //         arrIataList[i] = arr_iata[i].iata;
-    //     }
-    // }
 
     arr_iata.forEach(arr => {
         if(arr.iata != undefined && arr.iata !== ''){
             arrIataList.push(arr.iata);
         }
     });
-    console.log("ARRLIST:", JSON.stringify(arrIataList));
+
+    // console.log("ARRLIST:", JSON.stringify(arrIataList));
+
     let searchFlightResults = [];
     for(var i = 0; i < depIataList.length; i++){
         for(var k = 0; k < arrIataList.length; k++){
@@ -597,7 +587,7 @@ async function searchQuery(locationInput) {
             searchFlightResults.push(... await searchFlights(flightQuery));
         }
     }
-    console.log("RESULTS: ", JSON.stringify(searchFlightResults));
+    // console.log("RESULTS: ", JSON.stringify(searchFlightResults));
 
 
     // const flightData = await searchFlights(flightQuery);
@@ -774,7 +764,7 @@ function dataToDisplayData(responseData) {
         error: false
     };
 
-    console.log(`Display Data thing:\n${JSON.stringify(displayData)}`);
+    // console.log(`Display Data object:\n${JSON.stringify(displayData)}`);
 
     return displayData;
 }
