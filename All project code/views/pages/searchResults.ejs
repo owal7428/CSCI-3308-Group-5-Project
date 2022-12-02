@@ -6,50 +6,66 @@
         <div class="container">
             <%- include ('../partials/message.ejs') %>
         </div>
-
+        <% if(error === false){ %>
         <!--Main functionality-->
         <div class="container">
-            <h1>Search Results for <%= data.destination.city %>, <%= data.destination.country %></h1>
+            <h1>Weather in <%= location.destination.city %>, <%= location.destination.country %></h1>
             <div class="container">
-                <% if (data.weather.data !== -1) { %>
-                    <% let weatherData = data.weather.data; %>
-                    <h2>Temperature (Celcius): <%= weatherData[0].coordinates[0].dates[0].value %></h2>
-                    <h2>Precipitation (Milimeters): <%= weatherData[0].coordinates[0].dates[0].value %></h2>
-                    <br>
-                <% } %>
-                <!--Flight results-->
-                <% let flights = data.flight_data.data; %>
-                <% if (flights != null)
-                { %>
-                <h2>Recommended flights</h2>
+                <h2>Temperature: <%= data.weather.avgTemp.C %>&#8451;, <%= data.weather.avgTemp.F %>&#8457; </h2>
+                <h2>Precipitation: <%= data.weather.avgPrecip.mm %>mm, <%= data.weather.avgPrecip.in %>in</h2>
+                <br>
+            <!--Flight results-->
+            
+            <% if (data.flights.length <= 0) { %>
+                <h3>We're sorry, there are no flights to <%= location.destination.city %> currently scheduled!</h3>
+            <% } else { %>
+                <h2> Available Flights</h2>
                 <table class="table">
-                <thead>
-                    <tr>
-                        <th>Flight Date</th>
-                        <th>Departure</th>
-                        <th>Arrival</th>
-                        <th>Airline</th>
-                        <th>Flight Number</th>
-                        <th>Departure Time</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% flights.forEach(flight => 
-                    { %>
-                    <tr>
-                        <td><%= flight.flight_date %></td>
-                        <td><%= flight.departure.airport %></td>
-                        <td><%= flight.arrival.airport %></td>
-                        <td><%= flight.airline.name %></td>
-                        <td><%= flight.flight.iata %></td>
-                        <td><%= flight.departure.scheduled %></td>
-                    </tr>
-                    <% }); %>
-                </tbody>
+                    <thead>
+                        <tr>
+                            <th>Flight Date</th>
+                            <th>Flight Time</th>
+                            <th>Departure</th>
+                            <th>Arrival</th>
+                            <th>Airline</th>
+                            <th>Flight Number</th>
+                            <!-- empty so bar extends correctly -->
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <!-- filter data in backend to show only user-relevant results -->
+                        <% data.flights.forEach(flight => { %>
+                        <tr>
+                            <% let suffix = flight.depTime >= 12 ? "PM":"AM"; 
+                            displayTime = ((parseInt(flight.depTime) + 11) % 12 + 1) + ":" + flight.depTime.split(":")[1] +  " " + suffix; %>
+                            <td><%= flight.depDate %></td>
+                            <td><%=  displayTime %></td>
+                            <td><%= flight.depAirport %></td>
+                            <td><%= flight.arrAirport %></td>
+                            <td><%= flight.airline %></td>
+                            <td><%= flight.flightNumber %></td>
+                        
+                            <td>
+                                <!-- TODO finalize filtering data to add to addToCalendar -->
+                                <form action="/addToCalendar" method="POST">
+                                    <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% flight.depDate %>">
+                                    <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% flight.arrAirport %>">
+                                    <input type="hidden" class="form-control" id="airline" name="airline" value="<% flight.airline %>">
+                                    <input type="hidden" class="form-control" id="country" name="country" value="<% location.country %>">
+                                    <input type="hidden" class="form-control" id="city" name="city" value="<% location.city %>">
+                                    <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% flight.flightNumber %>">
+                                    <button type = "submit" class="btn btn-primary" id="submit_button" >Add to Calendar</button>
+                                </form>
+                            </td>
+                            </tr>
+                        <% }); %>
+                    </tbody>
                 </table>
                 <% } %>
             </div>
         </div>
+        <% } %>
     </main>
 
 <%- include ('../partials/footer') %>

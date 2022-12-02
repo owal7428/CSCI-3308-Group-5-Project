@@ -1,0 +1,26 @@
+[
+    {
+        "icao": "KJFK",
+        "iata": "JFK",
+        "name": "John F Kennedy International Airport",
+        "city": "New York",
+        "region": "New York",
+        "country": "US",
+        "elevation_ft": "13",
+        "latitude": "40.63980103",
+        "longitude": "-73.77890015",
+        "timezone": "America/New_York"
+    },
+    {
+        "icao": "KLGA",
+        "iata": "LGA",
+        "name": "La Guardia Airport",
+        "city": "New York",
+        "region": "New York",
+        "country": "US",
+        "elevation_ft": "21",
+        "latitude": "40.77719879",
+        "longitude": "-73.87259674",
+        "timezone": "America/New_York"
+    }
+]
