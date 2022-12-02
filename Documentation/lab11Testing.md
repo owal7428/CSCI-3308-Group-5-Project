@@ -3,11 +3,9 @@ People planning a trip will be the target users of our web service.
 All tests will be performed in the development enviroment.
 
 User Test Acceptance Cases:
-Home Page:
+Landing Page:
 - Test for successful rendering of login/register page
 - Test for saved user session
-
-Register Page:
 - Test for successful rendering landing page
 - Test for rendering login page if user says they already have an account 
 
@@ -61,7 +59,7 @@ Calendar:
   - Pass overlapping times to throw "times cannot overlap for events" 
 
 Calendar Test Cases:
-- Valid: {Hiking, 11/01/2021, 3:00 PM - 4:00PM, Hiking the flatirons}
+- Valid: {Madrid, 11/30/2022, 12/03/2022}
 - Invalid: { , 11/01/1989, 1:00 AM - 2:00 AM}, {Kayaking, 11/01/2021, 3:30PM - 5:30 PM (if valid case is already inputed), kayaking at the bay)
 
 Weather API Endpoint:
