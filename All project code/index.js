@@ -53,7 +53,7 @@ app.use(express.static(__dirname + '/resources'));
 // Sets "/" location to redirect to /login page. We may want to change this to /home (or have /home located here at /)
 app.get("/", (req, res) => {
     if(req.session.user) {
-        res.redirect("/main");
+        res.redirect("/profile");
     }
     else {
         res.redirect("/landing");
@@ -79,7 +79,8 @@ app.post("/register", async (req, res) => {
         req.session.user = username;
         req.session.user.flight_api_key = process.env.flight_api_key;
         req.session.save();
-        res.render("pages/main", {
+        res.render("pages/profile", {
+            user: req.session.user,
             message: "Your account was sucessfully created! Happy Hunting!",
             error: false
         });
@@ -140,7 +141,7 @@ app.post("/login", async (req, res) => {
             req.session.user = username;
             req.session.user.flight_api_key = process.env.flight_api_key;
             req.session.save();
-            res.redirect("/main");
+            res.redirect("/profile");
 
             // early return to prevent race-conditions due to asynchronous behavior
             return;
@@ -185,68 +186,6 @@ app.use(auth);
 
 app.get("/profile", (req, res) => {
     res.render("pages/profile", {user: req.session.user}); //Sends the username so it can be displayed at the top of the profile page
-});
-
-//using axios Check status for flights that scheduled
-//plug lat and long into 
-//https://airlabs.co/docs/flights
-// database configuration
-
-app.get("/flights", (req, res) => {
-    res.render("pages/flights", {
-        results: [],
-    });
-});
-
-app.post("/flights", (req, res) => {
-    axios({
-        url: "http://api.aviationstack.com/v1/flights",
-        method: 'GET',
-        dataType:'json',
-        params: {
-            "access_key": process.env.flight_api_key,
-            "limit": 40,
-            "flight_status": "scheduled",
-            "arr_iata": req.body.city,
-        }
-    })
-    .then(results => {
-        console.log("Successful API call");
-        console.log(results.data);
-        res.render("pages/flights", {
-            results: results.data,
-        });
-    })
-    .catch(error => {
-        // Handle errors
-        console.log("Failed API call");
-        console.log(process.env.flight_api_key);
-        console.log(error.message);
-        res.render("pages/flights", {
-            results: [],
-            error: true,
-            message: error.message,
-        });
-    });
-});
-
-// The fields to render on the search page to make the search request.
-const weatherFields = [
-    // name is the js parameter name to be used in POST requests. Label is what is shown to the user.
-    {name: "startTime", label: "Start Time", required: true},
-    {name: "endTime", label: "End Time", required: true},
-    {name: "locationLatitude", label: "Location Latitude", required: true},
-    {name: "locationLongitude", label: "Location Longitude", required: true},
-    {name: "requestParameters", label: "Request Parameters", required: true},
-    {name: "dataFormat", label: "Data Format", required: true},
-    {name: "optionalParameters", label: "Optional Parameters", required: false},
-];
-
-// Display weather search page
-app.get("/searchWeather", (req, res) => {
-    res.render("pages/searchWeather", {
-        searchFields: weatherFields
-    });
 });
 
 /**
@@ -761,34 +700,57 @@ app.post('/cityToCoor', (req, res) => {
         })
 });
 
+app.post('/addFlight', async function(req, res) {
 
-function insertIntoDB(usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP)
-{
-    var query = `INSERT INTO users_trips(username, departure, arrival, windSpeedAvg, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
+    const usernameQuery = `SELECT user_id FROM users WHERE username = $1;`;
+    const tripInsertQuery = `INSERT INTO user_flights(flight_date, flight_number, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6) RETURNING trip_id;`;
+    const linkQuery = `INSERT INTO users_to_flights(user_id, trip_id) VALUES ($1, $2);`
 
-    db.any(query, [usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP])
-    .then(() => {
-        req.session.save();
-        res.render("pages/main", {
-            message: "Trip Succesfully Saved!",
-            error: false
-        });
-    })
-    .catch(() => {
-        res.render("pages/main", {
-            message: "Trip Saving Failed!",
-            error: true
-        });
-    });
-}
+    let userID;
+    let tripID;
 
+    await db.any(usernameQuery, [req.session.user])
+        .then(async function(response) {
+            userID = response[0].user_id;
 
+            await db.any(tripInsertQuery, [req.body.flightDate, req.body.flightNumber, req.body.airline, req.body.airport, req.body.country, req.body.city])
+                .then(async function (response) {
+                    tripID = response[0].trip_id;
 
+                    await db.any(linkQuery, [userID, tripID])
+                        .then(() => {
+                            console.log('Successful');
+                            res.render("pages/profile", {
+                                user: req.session.user,
+                                message: "Flight Successfully Saved to Your Profile",
+                                error: false
+                            });
+                        })
+                        .catch(error => {
+                            console.log(`Unsuccessful ${error}`);
+                            res.render('pages/search', {
+                                error: true,
+                                message: `Problem linking trip to your profile: ${error}`
+                            });
+                        })
 
-
-app.get("/main", (req, res) => {
-    res.render("pages/main");
-});
+                })
+                .catch(error => {
+                    console.log(`Unsuccessful ${error}`);
+                    res.render('pages/search', {
+                        error: true,
+                        message: `Problem adding trip to your profile: ${error}`
+                    });
+                })
+        }).catch(error => {
+            console.log(`Unsuccessful ${error}`);
+            res.render('pages/search', {
+                error: true,
+                message: `Problem finding your profile: ${error}`
+            });
+        })
+    
+})
 
 app.get("/logout", (req, res) => {
     req.session.destroy();
