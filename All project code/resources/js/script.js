@@ -17,6 +17,7 @@ let week; //Stores the offset of weeks that the user is currently on (0 means th
 let currentDate; //Stores the current date in reality. Used to highlight the current date on the calendar
 
 let ADD_TRIP_MODAL;
+let VIEW_FLIGHT_MODAL;
 let VIEW_TRIP_MODAL;
 
 function initialize_calendar(trips, flights) { //Called at page load or when the user wants to return to the current date
@@ -38,7 +39,8 @@ function initialize_calendar(trips, flights) { //Called at page load or when the
             flightInfo.flightDate = new Date(flightInfo.flightDate);
         })
         ADD_TRIP_MODAL = new bootstrap.Modal(document.getElementById('add-trip-modal'));
-        VIEW_TRIP_MODAL = new bootstrap.Modal(document.getElementById('view-flight-modal'));
+        VIEW_FLIGHT_MODAL = new bootstrap.Modal(document.getElementById('view-flight-modal'));
+        VIEW_TRIP_MODAL = new bootstrap.Modal(document.getElementById('view-trip-modal'));
     }
 
     
@@ -234,6 +236,7 @@ function change_calendar(operation) {
                     tripCard.classList.add('tripCard');
                     tripCard.setAttribute('style', `background-color: ${colors[(tripObj.index + randomIndex) % 5]};`); //Modulo to access the color array. Keeps the same color for each trip regardless of what week is currently being viewed
                     tripCard.innerHTML = `${tripObj.trip.city}`;
+                    tripCard.setAttribute('onclick', `open_trip_modal(${userTrips.indexOf(tripObj.trip)})`);
                     body.appendChild(tripCard);
                 }
                 if(tripEnd.getFullYear() === tempYear && (tripEnd.getMonth() + 1) === tempMonth && tripEnd.getDate() === tempDate) {
@@ -376,10 +379,24 @@ function open_flight_modal(index) {
     document.querySelector('#airline').innerHTML = `Airline: ${flight.airline}`;
     document.querySelector('#airport').innerHTML = `Arriving at ${flight.airport}`;
     document.querySelector('#flight-number').innerHTML = `Flight Number: ${flight.flightNumber}`;
+    document.querySelector('#flightID').value = flight.flightID;
     
 
 
 
+
+    VIEW_FLIGHT_MODAL.show();
+}
+
+function open_trip_modal(index) {
+
+    const trip = userTrips[index];
+
+    document.querySelector('#tripDestination').innerHTML = `Trip to ${trip.city}, ${trip.country}`;
+    document.querySelector('#tripDeparture').innerHTML = `Leaving: ${trip.departure.toDateString()}`;
+    document.querySelector('#tripReturn').innerHTML = `Returning: ${trip.arrival.toDateString()}`;
+
+    document.querySelector('#tripID').value = trip.tripID;
 
     VIEW_TRIP_MODAL.show();
 }

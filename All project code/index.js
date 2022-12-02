@@ -184,14 +184,14 @@ app.use(auth);
 app.get("/profile", async function(req, res) {
 
 
-    const tripQuery = `SELECT TO_CHAR(date_start, 'mm-dd-yyyy') AS date_start, TO_CHAR(date_end, 'mm-dd-yyyy') AS date_end, city, country FROM trips
+    const tripQuery = `SELECT trips.trip_id, TO_CHAR(date_start, 'mm-dd-yyyy') AS date_start, TO_CHAR(date_end, 'mm-dd-yyyy') AS date_end, city, country FROM trips
                         INNER JOIN users_to_trips
                         ON users_to_trips.trip_id = trips.trip_id
                         INNER JOIN users
                         ON users.user_id = users_to_trips.user_id
                         WHERE users.username = $1;`;
 
-    const flightQuery = `SELECT TO_CHAR(flight_date, 'mm-dd-yyyy') AS flight_date, TO_CHAR(flight_time, 'HH:MI') AS flight_time, flight_number, airline, airport, country, city FROM flights
+    const flightQuery = `SELECT flights.flight_id, TO_CHAR(flight_date, 'mm-dd-yyyy') AS flight_date, TO_CHAR(flight_time, 'HH:MI') AS flight_time, flight_number, airline, airport, country, city FROM flights
                             INNER JOIN users_to_flights
                             ON users_to_flights.flight_id = flights.flight_id
                             INNER JOIN users
@@ -209,6 +209,7 @@ app.get("/profile", async function(req, res) {
         .then(response => {
             response.forEach(trip => {
                 const tripInfo = {
+                    tripID: trip.trip_id,
                     departure: trip.date_start,
                     arrival: trip.date_end,
                     city: trip.city,
@@ -228,6 +229,7 @@ app.get("/profile", async function(req, res) {
         .then(response => {
             response.forEach(flight => {
                 const flightInfo = {
+                    flightID: flight.flight_id,
                     flightDate: flight.flight_date,
                     flightTime: flight.flight_time,
                     flightNumber: flight.flight_number,
@@ -978,6 +980,55 @@ app.post('/addTrip', async function (req, res) {
         });
     })
 
+})
+
+app.post('/removeFlight', async function(req, res) {
+    const deleteQuery = `DELETE FROM users_to_flights WHERE flight_id = $1;`;
+    const deleteQuery2 = `DELETE FROM flights WHERE flight_id = $1;`;
+
+    await db.any(deleteQuery, [parseInt(req.body.flightID)])
+        .then(async function() {
+            await db.any(deleteQuery2, [parseInt(req.body.flightID)])
+                .then(() => {
+                    res.redirect('/profile');
+                })
+                .catch(error => {
+                    res.render('pages/search', {
+                        error: true,
+                        message: `Could not remove flight: ${error}`
+                    })
+                })
+        })
+        .catch(error => {
+            res.render('pages/search', {
+                error: true,
+                message: `Could not remove flight: ${error}`
+            })
+        });
+})
+
+app.post('/removeTrip', async function(req, res) {
+    const deleteQuery = `DELETE FROM users_to_trips WHERE trip_id = $1;`;
+    const deleteQuery2 = `DELETE FROM trips WHERE trip_id = $1;`;
+
+    await db.any(deleteQuery, [parseInt(req.body.tripID)])
+        .then(async function() {
+            await db.any(deleteQuery2, [parseInt(req.body.tripID)])
+                .then(() => {
+                    res.redirect('/profile');
+                })
+                .catch(error => {
+                    res.render('pages/search', {
+                        error: true,
+                        message: `Could not remove trip: ${error}`
+                    })
+                })
+        }).catch(error => {
+            res.render('pages/search', {
+                error: true,
+                message: `Could not remove trip: ${error}`
+            })
+        })
 })
 
 
