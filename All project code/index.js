@@ -79,7 +79,8 @@ app.post("/register", async (req, res) => {
         req.session.user = username;
         req.session.user.flight_api_key = process.env.flight_api_key;
         req.session.save();
-        res.render("pages/profile", req.session.user, {
+        res.render("pages/profile", {
+            user: req.session.user,
             message: "Your account was sucessfully created! Happy Hunting!",
             error: false
         });
@@ -699,26 +700,53 @@ app.post('/cityToCoor', (req, res) => {
         })
 });
 
+app.post('/addTrip', async function(req, res) {
 
-function insertIntoDB(usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP)
-{
-    var query = `INSERT INTO users_trips(username, departure, arrival, windSpeedAvg, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`
+    const usernameQuery = `SELECT user_id FROM users WHERE username = $1;`;
+    const tripInsertQuery = `INSERT INTO user_trips(departure, arrival, windSpeedAvg, temperatureAvg, airline, airport, country, city) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING trip_id;`;
+    const linkQuery = `INSERT INTO user_trips_to_users(user_id, trip_id) VALUES ($1, $2);`
 
-    db.any(query, [usernameP, departureP, arrivalP, windSpeedAvgP, temperatureAvgP, airlineP, airportP, countryP, cityP])
-    .then(() => {
-        req.session.save();
-        res.render("pages/profile", {
-            message: "Trip Succesfully Saved!",
-            error: false
-        });
-    })
-    .catch(() => {
-        res.render("pages/profile", {
-            message: "Trip Saving Failed!",
-            error: true
-        });
-    });
-}
+    let userID;
+    let tripID;
+
+    await db.any(usernameQuery, [req.body.username])
+        .then(async function(response) {
+            userID = response[0].user_id;
+
+            await db.any(tripInsertQuery, [req.body.departure, req.body.arrival, req.body.windSpeedAvg, req.body.temperatureAvg, req.body.airline, req.body.airport, req.body.country, req.body.city])
+                .then(async function (response) {
+                    tripID = response[0].trip_id;
+
+                    await db.any(linkQuery, [userID, tripID])
+                        .then(() => {
+                            console.log('Successful');
+                            res.redirect('/profile');
+                        })
+                        .catch(error => {
+                            console.log(`Unsuccessful ${error}`);
+                            res.render('pages/search', {
+                                error: true,
+                                message: `Problem linking trip to your profile: ${error}`
+                            });
+                        })
+
+                })
+                .catch(error => {
+                    console.log(`Unsuccessful ${error}`);
+                    res.render('pages/search', {
+                        error: true,
+                        message: `Problem adding trip to your profile: ${error}`
+                    });
+                })
+        }).catch(error => {
+            console.log(`Unsuccessful ${error}`);
+            res.render('pages/search', {
+                error: true,
+                message: `Problem finding your profile: ${error}`
+            });
+        })
+    
+})
 
 app.get("/logout", (req, res) => {
     req.session.destroy();
