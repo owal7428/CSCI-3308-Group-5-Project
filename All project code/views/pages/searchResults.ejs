@@ -16,6 +16,9 @@
                 <br>
             <!--Flight results-->
             
+            <% if (data.flights.length <= 0) { %>
+                <h3>We're sorry, there are no flights to <%= location.destination.city %> currently scheduled!</h3>
+            <% } else { %>
                 <h2> Available Flights</h2>
                 <table class="table">
                     <thead>
@@ -31,34 +34,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                    <!-- TODO filter data in backend to show only user-relevant results -->
-                    <% data.flights.forEach(flight => { %>
-                    <tr>
-                        <% let suffix = flight.depTime >= 12 ? "PM":"AM"; 
-                        displayTime = ((parseInt(flight.depTime) + 11) % 12 + 1) + ":" + flight.depTime.split(":")[1] +  " " + suffix; %>
-                        <td><%= flight.depDate %></td>
-                        <td><%=  displayTime %></td>
-                        <td><%= flight.depAirport %></td>
-                        <td><%= flight.arrAirport %></td>
-                        <td><%= flight.airline %></td>
-                        <td><%= flight.flightNumber %></td>
-                    
-                        <td>
-                            <!-- TODO finalize filtering data to add to addToCalendar -->
-                            <form action="/addToCalendar" method="POST">
-                                <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% flight.depDate %>">
-                                <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% flight.arrAirport %>">
-                                <input type="hidden" class="form-control" id="airline" name="airline" value="<% flight.airline %>">
-                                <input type="hidden" class="form-control" id="country" name="country" value="<% location.country %>">
-                                <input type="hidden" class="form-control" id="city" name="city" value="<% location.city %>">
-                                <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% flight.flightNumber %>">
-                                <button type = "submit" class="btn btn-primary" id="submit_button" >Add to Calendar</button>
-                            </form>
-                        </td>
-                        </tr>
-                    <% }); %>
+                    <!-- filter data in backend to show only user-relevant results -->
+                        <% data.flights.forEach(flight => { %>
+                        <tr>
+                            <% let suffix = flight.depTime >= 12 ? "PM":"AM"; 
+                            displayTime = ((parseInt(flight.depTime) + 11) % 12 + 1) + ":" + flight.depTime.split(":")[1] +  " " + suffix; %>
+                            <td><%= flight.depDate %></td>
+                            <td><%=  displayTime %></td>
+                            <td><%= flight.depAirport %></td>
+                            <td><%= flight.arrAirport %></td>
+                            <td><%= flight.airline %></td>
+                            <td><%= flight.flightNumber %></td>
+                        
+                            <td>
+                                <!-- TODO finalize filtering data to add to addToCalendar -->
+                                <form action="/addToCalendar" method="POST">
+                                    <input type="hidden" class="form-control" id="flightDate" name="flightDate" value="<% flight.depDate %>">
+                                    <input type="hidden" class="form-control" id="arrAirpot" name="arrAirport" value="<% flight.arrAirport %>">
+                                    <input type="hidden" class="form-control" id="airline" name="airline" value="<% flight.airline %>">
+                                    <input type="hidden" class="form-control" id="country" name="country" value="<% location.country %>">
+                                    <input type="hidden" class="form-control" id="city" name="city" value="<% location.city %>">
+                                    <input type="hidden" class="form-control" id="flightNumber" name="flightNumber" value="<% flight.flightNumber %>">
+                                    <button type = "submit" class="btn btn-primary" id="submit_button" >Add to Calendar</button>
+                                </form>
+                            </td>
+                            </tr>
+                        <% }); %>
                     </tbody>
                 </table>
+                <% } %>
             </div>
         </div>
         <% } %>
