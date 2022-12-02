@@ -79,7 +79,8 @@ app.post("/register", async (req, res) => {
         req.session.user = username;
         req.session.user.flight_api_key = process.env.flight_api_key;
         req.session.save();
-        res.render("pages/profile", req.session.user, {
+        res.render("pages/profile", {
+            user: req.session.user,
             message: "Your account was sucessfully created! Happy Hunting!",
             error: false
         });
