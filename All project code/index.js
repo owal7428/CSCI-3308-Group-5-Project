@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 const axios = require('axios');
+var airlineJSON = require('./resources/airlineIata.json');
 
 const dbConfig = {
     host: 'db',
@@ -303,15 +304,36 @@ function generateMeteomaticsRequestURL(startTime, endTime, locationLatitude, loc
     return url;
 }
 
+// imports the countries JSON file that containes the names of all countries as well as their 2 character ISO code
+var countryJson = require('./resources/countries.json');
+const { response } = require('express');
+
 // Adds latitude/longitude coordinates using country and city
-async function cityToCoordinates(locationInput) {
-    // Perform city/country conversion to latitude/longitude coordinates here.
-    const country = locationInput.country;
-    const city = locationInput.city;
+async function cityToCoordinates(locationInput, res) {
+    // declares the country and city inputs
+    var country = locationInput.country;
+    var city = locationInput.city;
+    // API call requires uppercase 2-digit ISO code
+    var countryCode;
+    // declares latitude and longitude
     var latitude = 0;
     var longitude = 0;
+    // alert messages for error handling
     let alertMessage;
     let error = false;
+    // if the user inputs anything greater than 2 characters, we must search the JSON file to convert to the 2-char ISO code
+    if(country.length > 2){
+        country = country.toLowerCase();
+        for(var i = 0; i < countryJson.length; i++){
+            if(countryJson[i].name == country){
+                countryCode = countryJson[i].code;
+            }
+        }
+    }
+    // if the user input is 2 characters, we make it uppercase to pass to api
+    else{
+        country = country.toUpperCase();
+    }
     // axios call to API-Ninja geocoding api to return latitude and longitude from city and country input 
     await axios({
         // url for API-Ninja
@@ -323,29 +345,31 @@ async function cityToCoordinates(locationInput) {
         },
         params: { 
             'city': city,
-            'country': country
+            'country': countryCode
         }
 
     }).then(results => {
         // shows devs if correct call
         console.log("Successful API call to API-Ninja for city to coordinates");
-        console.log(JSON.stringify(results.data));
+        // console.log(JSON.stringify(results.data));
         //sets lat and long for weather and flight API
         latitude = results.data[0].latitude;
         longitude = results.data[0].longitude;
         // verifying that lat and long are as I expect 
-        console.log("latitude: ", latitude);
-        console.log("longitude: ", longitude);
-    }).catch(error => {
+        // console.log("latitude: ", latitude);
+        // console.log("longitude: ", longitude);
+    }).catch(error=> {
         // Handle errors (API call may have failed!)
-        console.log(`City to Coordinates API call failed! Error:\n${error}`);
+        console.log('City to Coordinates API call failed! Error:');
+        console.log(error.message);
         return -1;
     })
-    // return vals for weather and flight API
-    if((latitude == 0 && longitude == 0) |(latitude == undefined && longitude == undefined)){
-        console.log('Invalid coordinates:');
+    // If the API call succeeded, but didn't return anything of value
+    if((latitude == 0 && longitude == 0) ||(latitude == undefined && longitude == undefined)){
+        console.log('Invalid coordinates');
         return -1;
     }
+    // return vals for weather and flight API
     else{
         return {
             country: country,
@@ -355,9 +379,6 @@ async function cityToCoordinates(locationInput) {
         }
     }
 }
-
-// imports the countries JSON file that containes the names of all countries as well as their 2 character ISO code
-var countryJson = require('./resources/countries.json')
 
 /*
     Tested with:
@@ -369,40 +390,32 @@ var countryJson = require('./resources/countries.json')
 
 */
 async function cityToIATA(locationInput){
-    var tempCity = locationInput.city;
-    var tempCountry = locationInput.country;
+    var city = locationInput.city;
+    var country = locationInput.country;
     // ensures that the first letter of the city is capitalized, as thats what API requires
-    var city = tempCity[0].toUpperCase() + tempCity.slice(1);
+    // var city = tempCity[0].toUpperCase() + tempCity.slice(1);
     // ensures city is what Dev expects
-    console.log("city:", city);
+    // console.log("city:", city);
     //declares country code
     var countryCode;
     // checks if the code is typed in as JSON or as the code itself
-    var flag = 0;
     // declares the result of the API as the iata code
     var iataRes = "";
     // capitalizes the first letter in each word in the country name
-    var country = tempCountry.split(' ');
-    for (let i = 0; i < country.length; i++) {
-        country[i] = country[i][0].toUpperCase() + country[i].substr(1);
-    }
-    country = country.join(' ');
-    /* this for loop searchs the JSON file that converts every country name to the country code. 
-    Because of this, the user must input the two country code, or the exact name of the country, or it will not 
-    be found, and the API will not work.
-`   */
-    for(var i = 0; i < countryJson.length; i++){
-        if(countryJson[i].name == country){
-            countryCode = countryJson[i].code;
-            flag = 1;
+    if(country.length > 2){
+        country = country.toLowerCase();
+        for(var i = 0; i < countryJson.length; i++){
+            if(countryJson[i].name == country){
+                countryCode = countryJson[i].code;
+                break;
+            }
         }
     }
-    // if the code was originally typed in then it will just equal the code
-    if(flag == 0){
-        countryCode = country.toUpperCase();
+    else{
+        country = country.toUpperCase();
     }
-    console.log("Code:", countryCode);
-    await axios({
+    // console.log("Code:", countryCode);
+    return await axios({
         // url for API-Ninja
         url:'https://api.api-ninjas.com/v1/airports',
         method: 'GET',
@@ -411,31 +424,20 @@ async function cityToIATA(locationInput){
             'X-Api-Key': process.env.CITYCOOR_KEY
         },
         params: { 
-            'country': countryCode,
             'city': city,
+            'country': countryCode
         }
 
     }).then(results => {
         // shows devs if correct call
         console.log("Successful API call to API-Ninja for city to Airport API");
-        console.log(JSON.stringify(results.data));
-        //sets lat and long for weather and flight API
-        var i = 0;
-        results.data.forEach(result => {
-            if (result.iata != "")
-            {
-                iataRes = results.data[i].iata;
-            }
-            i++;
-        });
-        // verifying that lat and long are as I expect 
-        console.log("IATA: ", iataRes);
+        // console.log(JSON.stringify(results.data));
+        return results.data;
     }).catch(error => {
         // Handle errors (API call may have failed!)
         console.log(`Airport to City API call failed! Error:\n${error}`);
         return -1;
     })
-    return iataRes;
 }
 
 // Perform API query to weather API
@@ -467,7 +469,7 @@ async function searchWeather(weatherQuery) {
             responseData = results.data;
         }
 
-        //console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
+        // console.log(`Weather API call succeeded! Response:\n${JSON.stringify(responseData)}`);
 
         return responseData;
     }).catch(error => {
@@ -479,30 +481,29 @@ async function searchWeather(weatherQuery) {
     });
 }
 
+
 // Perform API query to flight API
 async function searchFlights(flightQuery) {
     const arrIata = flightQuery.arr_iata;
     const depIata = flightQuery.dep_iata;
 
-    console.log(arrIata);
-    console.log(depIata);
-    
-    return axios({
-        url: "http://api.aviationstack.com/v1/flights",
+    // console.log("Arrival IATA:", arrIata);
+    // console.log("Departure IATA:", depIata);
+    return await axios({
+        url: "https://airlabs.co/api/v9/schedules",
         method: 'GET',
         dataType:'json',
         params: {
-            "access_key": process.env.flight_api_key,
-            "limit": 40,
-            "flight_status": "scheduled",
+            "api_key": process.env.flight_api_key,
             "arr_iata": arrIata,
             "dep_iata": depIata,
         }
     })
     .then(results => {
         console.log("Successful flight API call");
-        //console.log(results.data);
-        return results.data;
+        // console.log(JSON.stringify(results.data));
+        // console.log(results.data);
+        return results.data.response;
     })
     .catch(error => {
         // Handle errors
@@ -529,6 +530,10 @@ async function searchQuery(locationInput) {
     const dep_iata = await cityToIATA(departureInput);
     const arr_iata = await cityToIATA(arrivalInput);
 
+    if(locationInput === -1 || locationInput == undefined){
+        console.log("Invalid Location Input in Search Query!");
+    }
+
     // Input data to weather API
     const weatherQuery = {
         time: {
@@ -551,30 +556,63 @@ async function searchQuery(locationInput) {
         // optionalParameters: {}
     };
 
-    // Prepare flight query
-    const flightQuery = {
-        dep_iata: dep_iata,
-        arr_iata: arr_iata,
-    }
-
-    // Perform API queries, waiting for their response.
     const weatherData = await searchWeather(weatherQuery);
-    const flightData = await searchFlights(flightQuery);
+    let depIataList = [];
+    // let flightListData = [];
 
+    dep_iata.forEach(dep => {
+        if(dep.iata != undefined && dep.iata !== ''){
+            depIataList.push(dep.iata);
+        }
+    });
+
+    // console.log("DEPLIST:", JSON.stringify(depIataList));
+    let arrIataList = [];
+
+    arr_iata.forEach(arr => {
+        if(arr.iata != undefined && arr.iata !== ''){
+            arrIataList.push(arr.iata);
+        }
+    });
+
+    // console.log("ARRLIST:", JSON.stringify(arrIataList));
+
+    let searchFlightResults = [];
+    for(var i = 0; i < depIataList.length; i++){
+        for(var k = 0; k < arrIataList.length; k++){
+            let flightQuery = {
+                dep_iata: depIataList[i],
+                arr_iata: arrIataList[k]
+            }
+            searchFlightResults.push(... await searchFlights(flightQuery));
+        }
+    }
+    // console.log("RESULTS: ", JSON.stringify(searchFlightResults));
+
+
+    // const flightData = await searchFlights(flightQuery);
+    // console.log("FLIGHTS LIST DATA:", JSON.stringify(flightListData[0]));
+   
     // Return results from API queries.
     return {
         weather: {
             data: weatherData,
             format: weatherQuery.dataFormat
         },
-        flight_data: flightData,
-        destination: arrivalInput,
+        flight: {
+            data: searchFlightResults,
+        },
+        location: {
+            departure: departureInput,
+            destination: arrivalInput
+        }
     };
 }
 
 app.get("/search", async (req, res) => {
     res.render("pages/search");
 });
+
 
 app.post("/search", async (req, res) => {
     const locationInput = {
@@ -588,12 +626,19 @@ app.post("/search", async (req, res) => {
 
     // Data receieved back from any APIs.
     const responseData = await searchQuery(locationInput);
-
     // Data we need in a usable form for frontend.
     const displayData = dataToDisplayData(responseData);
+    
+    // console.log(`Final Search Response JSON:\n${JSON.stringify(displayData)}`);
 
+    if(displayData.error === true){
+        // If there is an error, keep user on the search page and display an error
+        res.render("pages/search", displayData);
+    }
+    else {
+        res.render("pages/searchResults", displayData);
+    }
     // render the searchResults.ejs page with usable displayable data.
-    res.render("pages/searchResults", displayData);
 });
 
 // Converts a string separated by divisor into an array, with whitespace trimmed from elements
@@ -609,24 +654,119 @@ function stringToArray(str, divisor=",") {
     return array;
 }
 
+function averageTemperature(weather) {
+    const temperatureObject = weather.data.find(i => i.parameter === "t_2m:C"); // searches weather data for object containing temperature data
+    const dates = temperatureObject.coordinates[0].dates; // only first coordinate because we only have one weather point to work with
+
+    // Get the average temperature in Celcius
+    let sumC = 0;
+    dates.forEach(date => {
+        sumC += date.value;
+    });
+    const avgTempC = sumC / dates.length;
+
+    const avgTempF = (avgTempC * 1.8) + 32; // get average fahrenheit 
+
+    // Return both results
+    return {
+        C: Math.round(avgTempC),
+        F: Math.round(avgTempF)
+    };
+}
+
+function averagePrecipitation(weather) {
+    const precipitationObject = weather.data.find(i => i.parameter === "precip_24h:mm"); // searches weather data for object containing precipitation data
+    const dates = precipitationObject.coordinates[0].dates; // only first coordinate because we only have one weather point to work with
+
+    // Get the average precipitation in mm
+    let sumMM = 0;
+    dates.forEach(date => {
+        sumMM += date.value;
+    });
+    const avgPrecipMM = sumMM / dates.length;
+
+    const avgPrecipIn = avgPrecipMM / 25.4; // get average inches
+
+    // return both results
+    return {
+        mm: Math.round(avgPrecipMM),
+        in: Math.round(avgPrecipIn)
+    };
+}
+
+function parseUTCTime(utcTime) {
+    const dateTime = utcTime.split(" ");
+    return {
+        date: dateTime[0],
+        time: dateTime[1]
+    };
+}
+
+function getFlightList(flightsData) {
+    let flights = []; // our list of flights
+    // console.log("DATA:", JSON.stringify(flightsData));
+    flightsData.forEach(flight => {
+        // Loop through flight data and take what we need
+        if (flight.status === "scheduled") {
+            let airlineObj = airlineJSON.find(i => i.icao === flight.airline_icao); // convert airline icao to airline name.
+            if(airlineObj == undefined){
+                airlineObj = {name: flight.airline_icao};
+            }
+    
+            const depDateTime = parseUTCTime(flight.dep_time_utc); // parse day/time from UTC time
+    
+            // Create flight object that we do want
+            const flightIns = {
+                depAirport: flight.dep_iata,
+                arrAirport: flight.arr_iata,
+                depUTC: flight.dep_time_utc,
+                depDate: depDateTime.date,
+                depTime: depDateTime.time,
+                airline_icao: flight.airline_icao,
+                airline: airlineObj.name,
+                flightNumber: flight.flight_iata
+            };
+    
+            // add flight data to flight array
+            flights.push(flightIns);
+        }
+    });
+    
+
+    // return resulting list
+    // console.log("FLIGHTS:", JSON.stringify(flights));
+    return flights;
+}
+
 // Convert responseData from API responses to the format we use on displaying to the user.
 function dataToDisplayData(responseData) {
     // for now, just pass the same data (with added error message).
     // TODO make conversion based on frontend needs.
-
-    // add an error message to frontend if the weather api request failed.
-    let alertMessage;
-    let error = false;
-    if (responseData.weather.data === -1) {
-        alertMessage = "Weather API request failed! Error code -1"
-        error = true;
+    console.log("RESPONSE:", responseData);
+    // add an error message to frontend if an api request failed.
+    if (responseData.weather == undefined || responseData.flight == undefined || responseData.weather.data === -1 || responseData.flight.data === -1 || responseData.location.destination.country == undefined || responseData.location.destination.country === -1 || responseData.location.destination.city == undefined || responseData.location.destination.city === -1) {
+        // early return: don't filter data if API request(s) failed.
+        return {
+            message: "Please enter Valid City and Country into Arrival and Departure Fields",
+            error: true
+        };
     }
 
-    return {
-        data: responseData,
-        message: alertMessage,
-        error: error
-    }; 
+    let displayData = {
+        data: {
+            weather: {
+                avgTemp: averageTemperature(responseData.weather),
+                avgPrecip: averagePrecipitation(responseData.weather)
+            },
+            flights: getFlightList(responseData.flight.data)
+        },
+        location: responseData.location,
+        error: false
+    };
+
+    // console.log(`Display Data object:\n${JSON.stringify(displayData)}`);
+
+    return displayData;
 }
 
 // Weather API access: using meteomatics.com
@@ -677,28 +817,6 @@ app.post('/searchWeather', (req, res) => {
 
 });
 
-app.post('/cityToCoor', (req, res) => {
-    console.log("Running /cityToCoor GET request");
-    axios({
-        url:'https://api.api-ninjas.com/v1/geocoding?city=' + req.body.city,
-        method: 'GET',
-        dataType: 'json',
-        auth: {
-            password: 'HfqSVakCENMtM5+oOpg4VQ==iL4iiSdkwIl6D76k',
-        }
-    })
-        .then(results => {
-            console.log(results.data);
-        })
-        .catch(error => {
-            // Handle errors (API call may have failed!)
-            console.log(error);
-            res.render('pages/weatherResults.ejs', {
-                message: `Axios API call failed for City to Coordinates API! Error: ${error}`,
-                error: true
-            });
-        })
-});
 
 app.post('/addFlight', async function(req, res) {
 
@@ -751,6 +869,14 @@ app.post('/addFlight', async function(req, res) {
         })
     
 })
+
+
+
+
+
+app.get("/main", (req, res) => {
+    res.render("pages/main");
+});
 
 app.get("/logout", (req, res) => {
     req.session.destroy();
